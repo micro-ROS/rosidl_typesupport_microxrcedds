@@ -150,7 +150,7 @@ rosidl_write_generator_arguments(
 add_custom_command(
   OUTPUT ${_generated_msg_files} ${_generated_srv_files}
   COMMAND ${PYTHON_EXECUTABLE} ${rosidl_typesupport_micrortps_c_BIN}
-  --generator-arguments-filo "${generator_arguments_file}"
+  --generator-arguments-file "${generator_arguments_file}"
   DEPENDS ${target_dependencies} ${_dds_idl_files}
   COMMENT "Generating C type support for eProsima Micro RTPS"
   VERBATIM

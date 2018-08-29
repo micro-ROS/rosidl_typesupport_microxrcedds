@@ -1,6 +1,6 @@
 // generated from rosidl_typesupport_micrortps_c/resource/msg__type_support_c.cpp.em
 // generated code does not contain a copyright notice
-
+/*
 @##########################################################################
 @# EmPy template for generating <msg>__type_support_c.cpp files for micrortps
 @#
@@ -491,3 +491,4 @@ ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c
 #if defined(__cplusplus)
 }
 #endif
+*/
