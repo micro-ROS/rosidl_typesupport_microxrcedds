@@ -53,10 +53,7 @@
 // includes and forward declarations of message dependencies and their conversion functions
 
 @# // Include the message header for each non-primitive field.
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
+
 
 @{
 includes = {}
@@ -116,7 +113,6 @@ const rosidl_message_type_support_t *
 @# // Make callback functions specific to this message type.
 
 //using __ros_msg_type = @(pkg)__@(subfolder)__@(type);
-//using MicroBuffer = void;
 typedef @(pkg)__@(subfolder)__@(type) __ros_msg_type;
 
 static bool __cdr_serialize(
@@ -501,6 +497,3 @@ ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c
   return &__type_support;
 }
 
-#if defined(__cplusplus)
-}
-#endif

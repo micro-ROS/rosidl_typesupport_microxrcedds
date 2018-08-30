@@ -141,7 +141,7 @@ add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix} SHARED
 
 #if(WIN32)
 #  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#    PRIVATE "ROSIDL_TYPESUPPORT_FASTRTPS_CPP_BUILDING_DLL_${PROJECT_NAME}")
+#    PRIVATE "ROSIDL_TYPESUPPORT_MICRORTPS_CPP_BUILDING_DLL_${PROJECT_NAME}")
 #  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
 #    PRIVATE "EPROSIMA_USER_DLL_EXPORT")
 #endif()
@@ -252,13 +252,13 @@ if(BUILD_TESTING AND rosidl_generate_interfaces_ADD_LINTER_TESTS)
   if(NOT _generated_msg_files STREQUAL "" OR NOT _generated_srv_files STREQUAL "")
     find_package(ament_cmake_cppcheck REQUIRED)
     ament_cppcheck(
-      TESTNAME "cppcheck_rosidl_typesupport_fastrtps_c"
+      TESTNAME "cppcheck_rosidl_typesupport_micrortps_c"
       ${_generated_msg_files} ${_generated_srv_files})
 
     find_package(ament_cmake_cpplint REQUIRED)
     get_filename_component(_cpplint_root "${_output_path}" DIRECTORY)
     ament_cpplint(
-      TESTNAME "cpplint_rosidl_typesupport_fastrtps_c"
+      TESTNAME "cpplint_rosidl_typesupport_micrortps_c"
       # the generated code might contain longer lines for templated types
       MAX_LINE_LENGTH 999
       ROOT "${_cpplint_root}"
@@ -266,7 +266,7 @@ if(BUILD_TESTING AND rosidl_generate_interfaces_ADD_LINTER_TESTS)
 
     find_package(ament_cmake_uncrustify REQUIRED)
     ament_uncrustify(
-      TESTNAME "uncrustify_rosidl_typesupport_fastrtps_c"
+      TESTNAME "uncrustify_rosidl_typesupport_micrortps_c"
       # the generated code might contain longer lines for templated types
       MAX_LINE_LENGTH 999
       ${_generated_msg_files} ${_generated_srv_files})

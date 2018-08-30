@@ -4,7 +4,7 @@
   <name>micrortps_client_cmake_module</name>
   <version>0.5.1</version>
   <description>Provide CMake module to find eProsima MicroRTPS.</description>
-  <maintainer email="dthomas@osrfoundation.org">Dirk Thomas</maintainer>
+  <maintainer email="javiermoreno@eprisma.com">Javier Moreno</maintainer>
   <license>Apache License 2.0</license>
   <author>Ricardo González</author>
 
