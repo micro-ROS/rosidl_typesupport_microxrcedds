@@ -36,7 +36,7 @@
 #include "@(pkg)/@(subfolder)/@(header_file_name)__functions.h"
 
 //#include "fastcdr/Cdr.h"
-//#include <microcdr/microcdr.h>
+#include <microcdr/microcdr.h>
 
 #ifndef _WIN32
 # pragma GCC diagnostic push
@@ -118,7 +118,6 @@ const rosidl_message_type_support_t *
 //using __ros_msg_type = @(pkg)__@(subfolder)__@(type);
 //using MicroBuffer = void;
 typedef @(pkg)__@(subfolder)__@(type) __ros_msg_type;
-typedef void MicroBuffer;
 
 static bool __cdr_serialize(
   const void * untyped_ros_message,
