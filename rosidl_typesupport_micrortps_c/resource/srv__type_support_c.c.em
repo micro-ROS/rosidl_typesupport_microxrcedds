@@ -1,6 +1,5 @@
-// generated from rosidl_typesupport_micrortps_c/resource/srv__type_support_c.cpp.em
+// generated from rosidl_typesupport_micrortps_c/resource/srv__type_support_c.c.em
 // generated code does not contain a copyright notice
-/*
 @#######################################################################
 @# EmPy template for generating <srv>__type_support_c.cpp files
 @#
@@ -12,11 +11,11 @@
 @
 #include "@(spec.pkg_name)/srv/@(get_header_filename_from_msg_name(spec.srv_name))__rosidl_typesupport_micrortps_c.h"
 
-// Provides the definition of the service_type_support_callbacks_t struct.
-#include <rosidl_typesupport_micrortps_cpp/service_type_support.h>
-
-#include "rosidl_typesupport_cpp/service_type_support.hpp"
+// Provides the rosidl_typesupport_micrortps_c__identifier symbol declaration.
 #include "rosidl_typesupport_micrortps_c/identifier.h"
+// Provides the definition of the servicetype_support_callbacks_t struct.
+#include "rosidl_typesupport_micrortps_c/service_type_support.h"
+
 
 #include "@(spec.pkg_name)/msg/rosidl_typesupport_micrortps_c__visibility_control.h"
 @{req_header_file_name = get_header_filename_from_msg_name(spec.srv_name + '__request')}@
@@ -40,7 +39,7 @@ static service_type_support_callbacks_t callbacks = {
 };
 
 static rosidl_service_type_support_t handle = {
-  rosidl_typesupport_micrortps_c__identifier,
+  ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_VALUE, //rosidl_typesupport_micrortps_c__identifier,
   &callbacks,
   get_service_typesupport_handle_function,
 };
@@ -53,4 +52,3 @@ ROSIDL_TYPESUPPORT_INTERFACE__SERVICE_SYMBOL_NAME(rosidl_typesupport_micrortps_c
 #if defined(__cplusplus)
 }
 #endif
-*/

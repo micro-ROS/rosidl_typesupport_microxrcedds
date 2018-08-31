@@ -12,35 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROSIDL_TYPESUPPORT_FASTRTPS_CPP__MESSAGE_TYPE_SUPPORT_H_
-#define ROSIDL_TYPESUPPORT_FASTRTPS_CPP__MESSAGE_TYPE_SUPPORT_H_
+#ifndef ROSIDL_TYPESUPPORT_MICRORTPS_CPP__MESSAGE_TYPE_SUPPORT_H_
+#define ROSIDL_TYPESUPPORT_MICRORTPS_CPP__MESSAGE_TYPE_SUPPORT_H_
 
 #include "rosidl_generator_c/message_type_support_struct.h"
 
-//#include <fastcdr/Cdr.h>
+//#include <microcdr/microcdr.h>
 
 typedef struct message_type_support_callbacks_t
 {
   const char * package_name_;
   const char * message_name_;
 
-  /*
   // Function for message serialization
   bool (* cdr_serialize)(
     const void * untyped_ros_message,
-    eprosima::fastcdr::Cdr & cdr);
+    void * cdr);
 
   // Function for message deserialization
   bool (* cdr_deserialize)(
-    eprosima::fastcdr::Cdr & cdr,
+    void * cdr,
     void * untyped_ros_message);
 
   // Function to get size of data
   uint32_t (* get_serialized_size)(const void *);
 
   // Function for type support initialization
-  size_t (* max_serialized_size)(bool & full_bounded);
-  */
+  size_t (* max_serialized_size)(bool full_bounded);
+  
 } message_type_support_callbacks_t;
 
-#endif  // ROSIDL_TYPESUPPORT_FASTRTPS_CPP__MESSAGE_TYPE_SUPPORT_H_
+#endif  // ROSIDL_TYPESUPPORT_MICRORTPS_CPP__MESSAGE_TYPE_SUPPORT_H_

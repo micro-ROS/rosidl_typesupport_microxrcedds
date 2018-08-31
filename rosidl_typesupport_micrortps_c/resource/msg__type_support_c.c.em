@@ -1,6 +1,5 @@
-// generated from rosidl_typesupport_micrortps_c/resource/msg__type_support_c.cpp.em
+// generated from rosidl_typesupport_micrortps_c/resource/msg__type_support_c.c.em
 // generated code does not contain a copyright notice
-/*
 @##########################################################################
 @# EmPy template for generating <msg>__type_support_c.cpp files for micrortps
 @#
@@ -21,21 +20,23 @@
 @
 #include "@(spec.base_type.pkg_name)/@(subfolder)/@(get_header_filename_from_msg_name(spec.base_type.type))__rosidl_typesupport_micrortps_c.h"
 
-#include <cassert>
-#include <limits>
-#include <string>
+//#include <cassert>
+//#include <limits>
+//#include <string>
+#include <stdint.h>
 
 // Provides the rosidl_typesupport_micrortps_c__identifier symbol declaration.
 #include "rosidl_typesupport_micrortps_c/identifier.h"
 // Provides the definition of the message_type_support_callbacks_t struct.
-#include "rosidl_typesupport_micrortps_cpp/message_type_support.h"
+#include "rosidl_typesupport_micrortps_c/message_type_support.h"
 
 #include "@(pkg)/msg/rosidl_typesupport_micrortps_c__visibility_control.h"
 @{header_file_name = get_header_filename_from_msg_name(type)}@
 #include "@(pkg)/@(subfolder)/@(header_file_name)__struct.h"
 #include "@(pkg)/@(subfolder)/@(header_file_name)__functions.h"
 
-#include "fastcdr/Cdr.h"
+//#include "fastcdr/Cdr.h"
+#include <microcdr/microcdr.h>
 
 #ifndef _WIN32
 # pragma GCC diagnostic push
@@ -52,10 +53,7 @@
 // includes and forward declarations of message dependencies and their conversion functions
 
 @# // Include the message header for each non-primitive field.
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
+
 
 @{
 includes = {}
@@ -102,7 +100,7 @@ size_t get_serialized_size_@(key[0])__msg__@(key[1])(
 ROSIDL_TYPESUPPORT_MICRORTPS_C_IMPORT_@(pkg)
 @[  end if]@
 size_t max_serialized_size_@(key[0])__msg__@(key[1])(
-  bool & full_bounded,
+  bool full_bounded,
   size_t current_alignment);
 
 @[  if key[0] != pkg]@
@@ -114,12 +112,14 @@ const rosidl_message_type_support_t *
 
 @# // Make callback functions specific to this message type.
 
-using __ros_msg_type = @(pkg)__@(subfolder)__@(type);
+//using __ros_msg_type = @(pkg)__@(subfolder)__@(type);
+typedef @(pkg)__@(subfolder)__@(type) __ros_msg_type;
 
 static bool __cdr_serialize(
   const void * untyped_ros_message,
-  eprosima::fastcdr::Cdr & cdr)
+  MicroBuffer * cdr)
 {
+  /*
   if (!untyped_ros_message) {
     fprintf(stderr, "ros message handle is null\n");
     return false;
@@ -204,13 +204,15 @@ static bool __cdr_serialize(
   }
 
 @[end for]@
+*/
   return true;
 }
 
 static bool __cdr_deserialize(
-  eprosima::fastcdr::Cdr & cdr,
+  MicroBuffer * cdr,
   void * untyped_ros_message)
 {
+  /*
   if (!untyped_ros_message) {
     fprintf(stderr, "ros message handle is null\n");
     return false;
@@ -310,6 +312,7 @@ else:
   }
 
 @[end for]@
+*/
   return true;
 }
 
@@ -318,6 +321,7 @@ size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
   const void * untyped_ros_message,
   size_t current_alignment)
 {
+  /*
 @[if not spec.fields]@
   (void)untyped_ros_message;
   (void)current_alignment;
@@ -340,20 +344,20 @@ size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @[    else]@
     size_t array_size = ros_message->@(field.name).size;
     auto array_ptr = ros_message->@(field.name).data;
-    current_alignment += padding +
-      eprosima::fastcdr::Cdr::alignment(current_alignment, padding);
+    //current_alignment += padding +
+      //eprosima::fastcdr::Cdr::alignment(current_alignment, padding);
 @[    end if]@
 @[    if field.type.type == 'string']@
     for (size_t index = 0; index < array_size; ++index) {
-      current_alignment += padding +
-        eprosima::fastcdr::Cdr::alignment(current_alignment, padding) +
+      //current_alignment += padding +
+        //eprosima::fastcdr::Cdr::alignment(current_alignment, padding) +
         array_ptr[index].size + 1;
     }
 @[    elif field.type.is_primitive_type()]@
     (void)array_ptr;
     size_t item_size = sizeof(array_ptr[0]);
-    current_alignment += array_size * item_size +
-      eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
+    //current_alignment += array_size * item_size +
+      //eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
 @[    else]
     for (size_t index = 0; index < array_size; ++index) {
       current_alignment += get_serialized_size_@(field.type.pkg_name)__msg__@(field.type.type)(
@@ -363,14 +367,14 @@ size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
   }
 @[  else]@
 @[    if field.type.type == 'string']@
-  current_alignment += padding +
-    eprosima::fastcdr::Cdr::alignment(current_alignment, padding) +
+  //current_alignment += padding +
+    //eprosima::fastcdr::Cdr::alignment(current_alignment, padding) +
     ros_message->@(field.name).size + 1;
 @[    elif field.type.is_primitive_type()]@
   {
     size_t item_size = sizeof(ros_message->@(field.name));
-    current_alignment += item_size +
-      eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
+    //current_alignment += item_size +
+      //eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
   }
 @[    else]
   current_alignment += get_serialized_size_@(field.type.pkg_name)__msg__@(field.type.type)(
@@ -384,20 +388,23 @@ size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @[else]@
   return current_alignment - initial_alignment;
 @[end if]@
+*/
+return 0;
 }
 
 static uint32_t __get_serialized_size(const void * untyped_ros_message)
 {
-  return static_cast<uint32_t>(
+  return (uint32_t)(
     get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(
       untyped_ros_message, 0));
 }
 
 ROSIDL_TYPESUPPORT_MICRORTPS_C_PUBLIC_@(spec.base_type.pkg_name)
 size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(
-  bool & full_bounded,
+  bool full_bounded,
   size_t current_alignment)
 {
+  /*
   size_t initial_alignment = current_alignment;
 
   const size_t padding = 4;
@@ -415,8 +422,8 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @[    end if]@
 @[    if not field.type.array_size or field.type.is_upper_bound]@
     full_bounded = false;
-    current_alignment += padding +
-      eprosima::fastcdr::Cdr::alignment(current_alignment, padding);
+    //current_alignment += padding +
+      //eprosima::fastcdr::Cdr::alignment(current_alignment, padding);
 @[    end if]@
 @[  else]@
     size_t array_size = 1;
@@ -427,10 +434,10 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
     for (size_t index = 0; index < array_size; ++index) {
       current_alignment += padding +
 @[    if field.type.string_upper_bound]@
-        eprosima::fastcdr::Cdr::alignment(current_alignment, padding) +
-        @(field.type.string_upper_bound) + 1;
+        //eprosima::fastcdr::Cdr::alignment(current_alignment, padding) +
+        //@(field.type.string_upper_bound) + 1;
 @[    else]@
-        eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + 1;
+        //eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + 1;
 @[    end if]@
     }
 @[  elif field.type.is_primitive_type()]@
@@ -438,13 +445,13 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
     current_alignment += array_size * sizeof(uint8_t);
 @[    elif field.type.type == 'int16' or field.type.type == 'uint16']
     current_alignment += array_size * sizeof(uint16_t) +
-      eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint16_t));
+      //eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint16_t));
 @[    elif field.type.type == 'int32' or field.type.type == 'uint32' or field.type.type == 'float32']
     current_alignment += array_size * sizeof(uint32_t) +
-      eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
+      //eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
 @[    elif field.type.type == 'int64' or field.type.type == 'uint64' or field.type.type == 'float64']
     current_alignment += array_size * sizeof(uint64_t) +
-      eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint64_t));
+      //eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint64_t));
 @[    end if]@
 @[  else]
     for (size_t index = 0; index < array_size; ++index) {
@@ -457,9 +464,11 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @[end for]@
 
   return current_alignment - initial_alignment;
+  */
+  return 0;
 }
 
-static size_t __max_serialized_size(bool & full_bounded)
+static size_t __max_serialized_size(bool full_bounded)
 {
   return max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(
     full_bounded, 0);
@@ -478,7 +487,7 @@ static message_type_support_callbacks_t __callbacks = {
 };
 
 static rosidl_message_type_support_t __type_support = {
-  rosidl_typesupport_micrortps_c__identifier,
+  ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_VALUE, //rosidl_typesupport_micrortps_c__identifier,
   &__callbacks,
   get_message_typesupport_handle_function,
 };
@@ -488,7 +497,3 @@ ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c
   return &__type_support;
 }
 
-#if defined(__cplusplus)
-}
-#endif
-*/

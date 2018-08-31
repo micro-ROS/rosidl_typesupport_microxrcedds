@@ -1,7 +1,6 @@
 // generated from
 // rosidl_typesupport_micrortps_c/resource/msg__rosidl_typesupport_micrortps_c.h.em
 // generated code does not contain a copyright notice
-/*
 @#######################################################################
 @# EmPy template for generating
 @# <msg>__rosidl_typesupport_micrortps_c.h files
@@ -25,6 +24,8 @@ header_guard_variable = '__'.join([x.upper() for x in header_guard_parts]) + '_'
 #define @(header_guard_variable)
 
 #include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 #include "rosidl_generator_c/message_type_support_struct.h"
 #include "rosidl_typesupport_interface/macros.h"
@@ -43,7 +44,7 @@ size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 
 ROSIDL_TYPESUPPORT_MICRORTPS_C_PUBLIC_@(spec.base_type.pkg_name)
 size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(
-  bool & full_bounded,
+  bool full_bounded,
   size_t current_alignment);
 
 ROSIDL_TYPESUPPORT_MICRORTPS_C_PUBLIC_@(spec.base_type.pkg_name)
@@ -55,4 +56,3 @@ const rosidl_message_type_support_t *
 #endif
 
 #endif  // @(header_guard_variable)
-*/

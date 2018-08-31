@@ -21,15 +21,19 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-# find_package(microcdr REQUIRED)
-# find_package(micrortps_client REQUIRED)
+find_package(micrortps_client_cmake_module QUIET)
+find_package(microcdr REQUIRED CONFIG)
+find_package(micrortps_client REQUIRED CONFIG)
+find_package(MicroRTPS_Client REQUIRED MODULE)
 
 find_package(ament_cmake_python REQUIRED)
 
-# ament_export_dependencies(rmw)
+ament_export_dependencies(micrortps_client)
+ament_export_dependencies(rmw)
 ament_export_dependencies(rosidl_cmake)
 ament_export_dependencies(rosidl_generator_c)
 ament_export_dependencies(rosidl_generator_dds_idl)
+
 ament_export_include_directories(include)
 
 ament_python_install_package(${PROJECT_NAME})
@@ -39,7 +43,10 @@ if(WIN32)
   target_compile_definitions(${PROJECT_NAME}
     PRIVATE "ROSIDL_TYPESUPPORT_MICRORTPS_C_BUILDING_DLL")
 endif()
-target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_include_directories(${PROJECT_NAME} 
+  PUBLIC 
+  include
+)
 ament_export_libraries(${PROJECT_NAME})
 
 ament_index_register_resource("rosidl_typesupport_c")

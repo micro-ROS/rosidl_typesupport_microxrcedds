@@ -15,18 +15,12 @@
 #ifndef ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_H_
 #define ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_H_
 
+#define ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_VALUE "rosidl_typesupport_micrortps_c"
+
 #include "rosidl_typesupport_micrortps_c/visibility_control.h"
 
-#if __cplusplus
-extern "C"
-{
-#endif
-
 ROSIDL_TYPESUPPORT_MICRORTPS_C_PUBLIC
-extern const char * rosidl_typesupport_micrortps_c__identifier;
+const char * rosidl_typesupport_micrortps_c__identifier;
 
-#if __cplusplus
-}
-#endif
 
 #endif  // ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_H_

@@ -1,7 +1,6 @@
 // generated from
 // rosidl_typesupport_micrortps_c/resource/srv__rosidl_typesupport_micrortps_c.h.em
 // generated code does not contain a copyright notice
-/*
 @#######################################################################
 @# EmPy template for generating
 @# <srv>__rosidl_typesupport_micrortps_c.h files
@@ -40,4 +39,3 @@ const rosidl_service_type_support_t *
 #endif
 
 #endif  // @(header_guard_variable)
-*/

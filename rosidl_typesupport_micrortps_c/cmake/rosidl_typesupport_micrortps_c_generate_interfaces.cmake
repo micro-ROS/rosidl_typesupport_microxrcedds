@@ -1,4 +1,4 @@
-# Copyright 2016 Open Source Robotics Foundation, Inc.
+# Copyright 2014-2015 Open Source Robotics Foundation, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,51 +11,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# find_package(microcdr REQUIRED)
-# find_package(micrortps_client REQUIRED)
 
-set(_dds_idl_files "")
-set(_dds_idl_base_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_dds_idl")
-foreach(_idl_file ${rosidl_generate_interfaces_IDL_FILES})
-  get_filename_component(_extension "${_idl_file}" EXT)
-  if(_extension STREQUAL ".msg")
-    get_filename_component(_parent_folder "${_idl_file}" DIRECTORY)
-    get_filename_component(_parent_folder "${_parent_folder}" NAME)
-    get_filename_component(_name "${_idl_file}" NAME_WE)
-    list(APPEND _dds_idl_files
-      "${_dds_idl_base_path}/${PROJECT_NAME}/${_parent_folder}/dds_micrortps/${_name}_.idl")
-  endif()
-endforeach()
+find_package(micrortps_client_cmake_module QUIET)
+find_package(microcdr REQUIRED CONFIG)
+find_package(micrortps_client REQUIRED CONFIG)
+find_package(MicroRTPS_Client REQUIRED MODULE)
 
+
+# list msg files 
 set(_ros_idl_files "")
 foreach(_idl_file ${rosidl_generate_interfaces_IDL_FILES})
   get_filename_component(_extension "${_idl_file}" EXT)
   # Skip .srv files
-  # if(_extension STREQUAL ".msg")
-    list(APPEND _ros_idl_files "${_idl_file}")
-  # endif()
-endforeach()
-
-rosidl_generate_dds_interfaces(
-  ${rosidl_generate_interfaces_TARGET}__dds_micrortps_idl
-  IDL_FILES ${_ros_idl_files}
-  DEPENDENCY_PACKAGE_NAMES ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES}
-  OUTPUT_SUBFOLDERS "dds_micrortps"
-)
-
-set(_dds_idl_files "")
-set(_dds_idl_base_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_dds_idl")
-foreach(_idl_file ${rosidl_generate_interfaces_IDL_FILES})
-  get_filename_component(_extension "${_idl_file}" EXT)
   if(_extension STREQUAL ".msg")
-    get_filename_component(_parent_folder "${_idl_file}" DIRECTORY)
-    get_filename_component(_parent_folder "${_parent_folder}" NAME)
-    get_filename_component(_name "${_idl_file}" NAME_WE)
-    list(APPEND _dds_idl_files
-      "${_dds_idl_base_path}/${PROJECT_NAME}/${_parent_folder}/dds_micrortps/${_name}_.idl")
+    list(APPEND _ros_idl_files "${_idl_file}")
   endif()
 endforeach()
 
+
+# list mesgs and srvs
 set(_output_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_micrortps_c/${PROJECT_NAME}")
 set(_generated_msg_files "")
 set(_generated_srv_files "")
@@ -73,61 +47,43 @@ foreach(_idl_file ${rosidl_generate_interfaces_IDL_FILES})
     else()
       message(FATAL_ERROR "Interface file with unknown parent folder: ${_idl_file}")
     endif()
+
     list(APPEND ${_var2} "${_output_path}/${_parent_folder}/${_header_name}__rosidl_typesupport_micrortps_c.h")
-    list(APPEND ${_var2} "${_output_path}/${_parent_folder}/dds_micrortps_c/${_header_name}__type_support_c.cpp")
+    list(APPEND ${_var2} "${_output_path}/${_parent_folder}/dds_micrortps/${_header_name}__type_support_c.c")
   elseif(_extension STREQUAL ".srv")
     list(APPEND _generated_srv_files "${_output_path}/srv/${_header_name}__rosidl_typesupport_micrortps_c.h")
-    list(APPEND _generated_srv_files "${_output_path}/srv/dds_micrortps_c/${_header_name}__type_support_c.cpp")
+    list(APPEND _generated_srv_files "${_output_path}/srv/dds_micrortps/${_header_name}__type_support_c.c")
   else()
     message(FATAL_ERROR "Interface file with unknown extension: ${_idl_file}")
   endif()
 endforeach()
 
-# If not on Windows, disable some warnings with micrortps's generated code
-if(NOT WIN32)
-  set(_micrortps_compile_flags)
-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(_micrortps_compile_flags
-      "-Wno-deprecated-register"
-      "-Wno-return-type-c-linkage"
-      "-Wno-unused-parameter"
-    )
-  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(_micrortps_compile_flags
-      # no-strict-aliasing necessary only for Release builds
-      "-Wno-strict-aliasing"
-      "-Wno-unused-parameter"
-    )
-  endif()
-  if(NOT _micrortps_compile_flags STREQUAL "")
-    string(REPLACE ";" " " _micrortps_compile_flags "${_micrortps_compile_flags}")
-  endif()
-endif()
 
+# list dependences
 set(_dependency_files "")
 set(_dependencies "")
 foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
   foreach(_idl_file ${${_pkg_name}_INTERFACE_FILES})
-    get_filename_component(_extension "${_idl_file}" EXT)
+  get_filename_component(_extension "${_idl_file}" EXT)
     if(_extension STREQUAL ".msg")
-      get_filename_component(_parent_folder "${_idl_file}" DIRECTORY)
-      get_filename_component(_parent_folder "${_parent_folder}" NAME)
-      get_filename_component(_name "${_idl_file}" NAME_WE)
-      set(_abs_idl_file "${${_pkg_name}_DIR}/../${_parent_folder}/dds_micrortps/${_name}_.idl")
-      normalize_path(_abs_idl_file "${_abs_idl_file}")
-      list(APPEND _dependency_files "${_abs_idl_file}")
       set(_abs_idl_file "${${_pkg_name}_DIR}/../${_idl_file}")
       normalize_path(_abs_idl_file "${_abs_idl_file}")
+      list(APPEND _dependency_files "${_abs_idl_file}")
       list(APPEND _dependencies "${_pkg_name}:${_abs_idl_file}")
     endif()
   endforeach()
 endforeach()
 
+
+# check if all templates exits
 set(target_dependencies
   "${rosidl_typesupport_micrortps_c_BIN}"
   ${rosidl_typesupport_micrortps_c_GENERATOR_FILES}
-  "${rosidl_typesupport_micrortps_c_TEMPLATE_DIR}/msg__type_support_c.cpp.em"
-  "${rosidl_typesupport_micrortps_c_TEMPLATE_DIR}/srv__type_support_c.cpp.em"
+  "${rosidl_typesupport_micrortps_c_TEMPLATE_DIR}/msg__rosidl_typesupport_micrortps_c.h.em"
+  "${rosidl_typesupport_micrortps_c_TEMPLATE_DIR}/msg__type_support_c.c.em"
+  "${rosidl_typesupport_micrortps_c_TEMPLATE_DIR}/srv__rosidl_typesupport_micrortps_c.h.em"
+  "${rosidl_typesupport_micrortps_c_TEMPLATE_DIR}/srv__type_support_c.c.em"
+  ${rosidl_generate_interfaces_IDL_FILES}
   ${_dependency_files})
 foreach(dep ${target_dependencies})
   if(NOT EXISTS "${dep}")
@@ -135,6 +91,8 @@ foreach(dep ${target_dependencies})
   endif()
 endforeach()
 
+
+# generate script argument file 
 set(generator_arguments_file "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_micrortps_c__arguments.json")
 rosidl_write_generator_arguments(
   "${generator_arguments_file}"
@@ -147,6 +105,8 @@ rosidl_write_generator_arguments(
   ADDITIONAL_FILES ${_dds_idl_files}
 )
 
+
+# execute python script
 add_custom_command(
   OUTPUT ${_generated_msg_files} ${_generated_srv_files}
   COMMAND ${PYTHON_EXECUTABLE} ${rosidl_typesupport_micrortps_c_BIN}
@@ -155,6 +115,7 @@ add_custom_command(
   COMMENT "Generating C type support for eProsima Micro RTPS"
   VERBATIM
 )
+
 
 # generate header to switch between export and import for a specific package
 set(_visibility_control_file
@@ -166,62 +127,54 @@ configure_file(
   @ONLY
 )
 
+
 set(_target_suffix "__rosidl_typesupport_micrortps_c")
 
-link_directories(${micrortps_LIBRARY_DIRS})
+
+# link_directories(${micrortps_LIBRARY_DIRS})
+
+
+# generate micrortps typesupport shared library 
 add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix} SHARED
   ${_generated_msg_files} ${_generated_srv_files})
+
+
+#if(WIN32)
+#  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+#    PRIVATE "ROSIDL_TYPESUPPORT_MICRORTPS_CPP_BUILDING_DLL_${PROJECT_NAME}")
+#  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+#    PRIVATE "EPROSIMA_USER_DLL_EXPORT")
+#endif()
+
+
+# set build properties
 if(rosidl_generate_interfaces_LIBRARY_NAME)
   set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     PROPERTIES OUTPUT_NAME "${rosidl_generate_interfaces_LIBRARY_NAME}${_target_suffix}")
 endif()
 set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   PROPERTIES CXX_STANDARD 14)
-if(micrortps_GLIBCXX_USE_CXX11_ABI_ZERO)
-  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-    PRIVATE micrortps_GLIBCXX_USE_CXX11_ABI_ZERO)
-endif()
-ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  "micrortps"
-  "rmw"
-  "rosidl_typesupport_micrortps_c"
-  "rosidl_generator_c"
-  "rosidl_typesupport_interface")
-if(WIN32)
-  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-    PRIVATE "ROSIDL_TYPESUPPORT_MICRORTPS_C_BUILDING_DLL_${PROJECT_NAME}")
-  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-    PRIVATE "NDDS_USER_DLL_EXPORT_${PROJECT_NAME}")
-endif()
-
 if(NOT WIN32)
   set(_target_compile_flags "-Wall -Wextra -Wpedantic")
 else()
   set(_target_compile_flags
-    "/W4"  # Enable level 3 warnings
-    "/wd4100"  # Ignore unreferenced formal parameter warnings
-    "/wd4127"  # Ignore conditional expression is constant warnings
-    "/wd4275"  # Ignore "an exported class derived from a non-exported class" warnings
-    "/wd4305"  # Ignore "initializing: truncation from..." warnings
-    "/wd4458"  # Ignore class hides member variable warnings
-    "/wd4701"  # Ignore unused variable warnings
+    "/W4"
   )
 endif()
 string(REPLACE ";" " " _target_compile_flags "${_target_compile_flags}")
 set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   PROPERTIES COMPILE_FLAGS "${_target_compile_flags}")
+
+
+# include .h directories
 target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   PUBLIC
   ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c
   ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_micrortps_c
 )
-ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  "micrortps"
-  "rosidl_typesupport_micrortps_c"
-  "${PROJECT_NAME}__rosidl_typesupport_micrortps_c")
 foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
-  set(_msg_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/msg/dds_micrortps_c")
-  set(_srv_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/srv/dds_micrortps_c")
+  set(_msg_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/msg/dds_micrortps")
+  set(_srv_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/srv/dds_micrortps")
   normalize_path(_msg_include_dir "${_msg_include_dir}")
   normalize_path(_srv_include_dir "${_srv_include_dir}")
   target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
@@ -232,35 +185,54 @@ foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
   ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     ${_pkg_name})
 endforeach()
-target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c
-)
 
+
+# set ament depencencies
+ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  "micrortps_client"
+  #"rmw"
+  "rosidl_typesupport_micrortps_c"
+  "rosidl_typesupport_interface"
+  "${PROJECT_NAME}__rosidl_typesupport_micrortps_c")
+
+
+# link libraries
+target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} micrortps_client microcdr)
+target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c)
+
+
+# add dependencies 
 add_dependencies(
   ${rosidl_generate_interfaces_TARGET}
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
 )
-# add_dependencies(
-#   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#   ${rosidl_generate_interfaces_TARGET}__rosidl_typesupport_micrortps_cpp
-# )
-# add_dependencies(
-#   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#   ${rosidl_generate_interfaces_TARGET}__cpp
-# )
 add_dependencies(
+  ${rosidl_generate_interfaces_TARGET}
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  ${rosidl_generate_interfaces_TARGET}__dds_micrortps_idl
 )
+#add_dependencies(
+#  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
+#  ${rosidl_generate_interfaces_TARGET}__rosidl_typesupport_micrortps_c
+#)
+#add_dependencies(
+#  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
+#  ${rosidl_generate_interfaces_TARGET}__c
+#)
 
+
+# install
 if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
   install(
     DIRECTORY "${_output_path}/"
     DESTINATION "include/${PROJECT_NAME}"
-    PATTERN "*.cpp" EXCLUDE
+    PATTERN "*.c" EXCLUDE
   )
 
-  if(NOT _generated_msg_files STREQUAL "" OR NOT _generated_srv_files STREQUAL "")
+  if(
+    NOT _generated_msg_files STREQUAL "" OR
+    NOT _generated_srv_files STREQUAL ""
+  )
     ament_export_include_directories(include)
   endif()
 
@@ -274,6 +246,8 @@ if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
   ament_export_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix})
 endif()
 
+
+# test
 if(BUILD_TESTING AND rosidl_generate_interfaces_ADD_LINTER_TESTS)
   if(NOT _generated_msg_files STREQUAL "" OR NOT _generated_srv_files STREQUAL "")
     find_package(ament_cmake_cppcheck REQUIRED)
