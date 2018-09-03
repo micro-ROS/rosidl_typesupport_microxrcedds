@@ -34,8 +34,8 @@ extern "C"
 static service_type_support_callbacks_t callbacks = {
   "@(spec.pkg_name)",
   "@(spec.srv_name)",
-  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(spec.pkg_name), srv, @(spec.srv_name)_Request)(),
-  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(spec.pkg_name), srv, @(spec.srv_name)_Response)(),
+  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(spec.pkg_name), srv, @(spec.srv_name)_Request),
+  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(spec.pkg_name), srv, @(spec.srv_name)_Response)
 };
 
 static rosidl_service_type_support_t handle = {
