@@ -23,10 +23,6 @@
 #include <stdint.h>
 #include <stdio.h>
 
-//#include <micrortps/client/client.h>
-//#include <micrortps/client/core/serialization/xrce_protocol.h>
-//#include <micrortps/client/core/session/submessage.h>
-
 // Provides the rosidl_typesupport_micrortps_c__identifier symbol declaration.
 #include "rosidl_typesupport_micrortps_c/identifier.h"
 // Provides the definition of the message_type_support_callbacks_t struct.
@@ -50,11 +46,10 @@
 # pragma GCC diagnostic pop
 #endif
 
-// includes and forward declarations of message dependencies and their conversion functions
+#define MICRORTPS_PADDING sizeof(uint32_t)
+
 
 @# // Include the message header for each non-primitive field.
-
-
 @{
 includes = {}
 for field in spec.fields:
@@ -74,11 +69,13 @@ for field in spec.fields:
             includes[key] = set([])
         includes[key].add(field.name)
 }@
+@[if sorted(includes.keys())]@
+// includes and forward declarations of message dependencies and their conversion functions
+@[end if]@
 @[for key in sorted(includes.keys())]@
 #include "@(key)"  // @(', '.join(includes[key]))
 @[end for]@
-
-// forward declare type support functions
+@#
 @{
 forward_declares = {}
 for field in spec.fields:
@@ -88,6 +85,9 @@ for field in spec.fields:
             forward_declares[key] = set([])
         forward_declares[key].add(field.name)
 }@
+@[if sorted(forward_declares.keys())]@
+// forward declare type support functions
+@[end if]@
 @[for key in sorted(forward_declares.keys())]@
 @[  if key[0] != pkg]@
 ROSIDL_TYPESUPPORT_MICRORTPS_C_IMPORT_@(pkg)
@@ -107,26 +107,31 @@ const rosidl_message_type_support_t *
 @[end for]@
 
 @# // Make callback functions specific to this message type.
-
+@#
 static bool __cdr_serialize(const void * untyped_ros_message, MicroBuffer * cdr)
 {
-  (void)cdr;
-
   bool Ok = true;
 
-  if (!untyped_ros_message) {
-    //fprintf(stderr, "ros message handle is null\n");
+  if (!untyped_ros_message) 
+  {
+    fprintf(stderr, "ros message handle is null\n");
     return false;
   }
 
-@[if spec.fields]@
+@[if not spec.fields]@
+  // No fields is a no-op.
+  (void)cdr;
+  (void)untyped_ros_message;
+@[else]@
   @(pkg)__@(subfolder)__@(type) * ros_message = (@(pkg)__@(subfolder)__@(type) *)(untyped_ros_message); (void)ros_message;
 @[end if]@
 
 @[for field in spec.fields]@
   // Field name: @(field.name) (@(field.type.type))
+  {
 @[  if field.type.is_array]@
-  // Arrays are not supported
+  // Arrays (upper bounded or unbounded) are not supported yet
+  (void)cdr;
   Ok = false;
 @#@[    if field.type.array_size and not field.type.is_upper_bound]@
 @#    size_t size = @(field.type.array_size);
@@ -178,64 +183,69 @@ static bool __cdr_serialize(const void * untyped_ros_message, MicroBuffer * cdr)
 @#    }
 @#    cdr << str->data;
 @[  elif field.type.type == 'bool']@
-  Ok &= serialize_bool(cdr, ros_message->@(field.name));
+    Ok &= serialize_bool(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'byte']@
-  Ok &= serialize_uint8_t(cdr, ros_message->@(field.name));
+    Ok &= serialize_uint8_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'char']@
-  Ok &= serialize_char(cdr, (char)ros_message->@(field.name));
+    Ok &= serialize_char(cdr, (char)ros_message->@(field.name));
 @[  elif field.type.type == 'float32']@
-  Ok &= serialize_float(cdr, ros_message->@(field.name));  
+    Ok &= serialize_float(cdr, ros_message->@(field.name));  
 @[  elif field.type.type == 'float64']@
-  Ok &= serialize_double(cdr, ros_message->@(field.name));
+    Ok &= serialize_double(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'int8']@
-  Ok &= serialize_char(cdr, (char)ros_message->@(field.name));
+    Ok &= serialize_char(cdr, (char)ros_message->@(field.name));
 @[  elif field.type.type == 'uint8']@
-  Ok &= serialize_uint8_t(cdr, ros_message->@(field.name));
+    Ok &= serialize_uint8_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'int16']@
-  Ok &= serialize_int16_t(cdr, ros_message->@(field.name));
+    Ok &= serialize_int16_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'uint16']@
-  Ok &= serialize_uint16_t(cdr, ros_message->@(field.name));
+    Ok &= serialize_uint16_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'int32']@
-  Ok &= serialize_int32_t(cdr, ros_message->@(field.name));
+    Ok &= serialize_int32_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'uint32']@
-  Ok &= serialize_uint32_t(cdr, ros_message->@(field.name));
+    Ok &= serialize_uint32_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'int64']@
-  Ok &= serialize_int64_t(cdr, ros_message->@(field.name));
+    Ok &= serialize_int64_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'uint64']@
-  Ok &= serialize_uint64_t(cdr, ros_message->@(field.name));
+    Ok &= serialize_uint64_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'string']@
-  Ok &= serialize_sequence_char(cdr, ros_message->@(field.name).data, (uint32_t)ros_message->@(field.name).size);
+    Ok &= serialize_sequence_char(cdr, ros_message->@(field.name).data, (uint32_t)ros_message->@(field.name).size);
 @[  elif field.type.is_primitive_type()]@
-  // Unkwnow primitive type
-  Ok = false;
+    // Unkwnow primitive type
+    Ok = false;
 @[  else]@
-  ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_serialize(&ros_message->@(field.name), cdr);
+    ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_serialize(&ros_message->@(field.name), cdr);
 @[  end if]@
+  }
 @[end for]@
   return Ok;
 }
 
 static bool __cdr_deserialize(MicroBuffer * cdr, void * untyped_ros_message)
 {
-  (void)cdr;
-
   bool Ok = true;
-  uint32_t Aux_uint32; (void)Aux_uint32;
-
-  if (!untyped_ros_message) {
-    //fprintf(stderr, "ros message handle is null\n");
+  
+  if (!untyped_ros_message) 
+  {
+    fprintf(stderr, "ros message handle is null\n");
     return false;
   }
 
-@[if spec.fields]@
+@[if not spec.fields]@
+  // No fields is a no-op.
+  (void)cdr;
+  (void)untyped_ros_message;
+@[else]@
   @(pkg)__@(subfolder)__@(type) * ros_message = (@(pkg)__@(subfolder)__@(type) *)(untyped_ros_message); (void)ros_message;
 @[end if]@
 
 @[for field in spec.fields]@
   // Field name: @(field.name) (@(field.type.type))
+  {
 @[  if field.type.is_array]@
-  // Arrays are not supported
-  Ok = false;
+    // Arrays (upper bounded or unbounded) are not supported yet
+    (void)cdr;
+    Ok = false;
 @#@[    if field.type.array_size and not field.type.is_upper_bound]@
 @#    size_t size = @(field.type.array_size);
 @#    auto array_ptr = ros_message->@(field.name);
@@ -303,40 +313,42 @@ static bool __cdr_deserialize(MicroBuffer * cdr, void * untyped_ros_message)
 @#      return false;
 @#    }
 @[  elif field.type.type == 'bool']@
-  Ok &= deserialize_bool(cdr, &ros_message->@(field.name));
+    Ok &= deserialize_bool(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'byte']@
-  Ok &= deserialize_uint8_t(cdr, &ros_message->@(field.name));
+    Ok &= deserialize_uint8_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'char']@
-  Ok &= deserialize_char(cdr, (char*)&ros_message->@(field.name));
+    Ok &= deserialize_char(cdr, (char*)&ros_message->@(field.name));
 @[  elif field.type.type == 'float32']@
-  Ok &= deserialize_float(cdr, &ros_message->@(field.name));  
+    Ok &= deserialize_float(cdr, &ros_message->@(field.name));  
 @[  elif field.type.type == 'float64']@
-  Ok &= deserialize_double(cdr, &ros_message->@(field.name));
+    Ok &= deserialize_double(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'int8']@
-  Ok &= deserialize_char(cdr, (char*)&ros_message->@(field.name));
+    Ok &= deserialize_char(cdr, (char*)&ros_message->@(field.name));
 @[  elif field.type.type == 'uint8']@
-  Ok &= deserialize_uint8_t(cdr, &ros_message->@(field.name));
+    Ok &= deserialize_uint8_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'int16']@
-  Ok &= deserialize_int16_t(cdr, &ros_message->@(field.name));
+    Ok &= deserialize_int16_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'uint16']@
-  Ok &= deserialize_uint16_t(cdr, &ros_message->@(field.name));
+    Ok &= deserialize_uint16_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'int32']@
-  Ok &= deserialize_int32_t(cdr, &ros_message->@(field.name));
+    Ok &= deserialize_int32_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'uint32']@
-  Ok &= deserialize_uint32_t(cdr, &ros_message->@(field.name));
+    Ok &= deserialize_uint32_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'int64']@
-  Ok &= deserialize_int64_t(cdr, &ros_message->@(field.name));
+    Ok &= deserialize_int64_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'uint64']@
-  Ok &= deserialize_uint64_t(cdr, &ros_message->@(field.name));
+    Ok &= deserialize_uint64_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'string']@
-  Ok &=  deserialize_sequence_char(cdr, ros_message->@(field.name).data, &Aux_uint32);
-  ros_message->@(field.name).size = (size_t)Aux_uint32;
+    uint32_t Aux_uint32;
+    Ok &=  deserialize_sequence_char(cdr, ros_message->@(field.name).data, &Aux_uint32);
+    ros_message->@(field.name).size = (size_t)Aux_uint32;
 @[  elif field.type.is_primitive_type()]@
-  // Unkwnow primitive type
-  Ok = false;
+    // Unkwnow primitive type
+    Ok = false;
 @[  else]@
-  ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_serialize(&ros_message->@(field.name), cdr);
+    ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_serialize(&ros_message->@(field.name), cdr);
 @[  end if]@
+  }
 @[end for]@
   return Ok;
 }
@@ -344,22 +356,21 @@ static bool __cdr_deserialize(MicroBuffer * cdr, void * untyped_ros_message)
 ROSIDL_TYPESUPPORT_MICRORTPS_C_PUBLIC_@(spec.base_type.pkg_name)
 size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(const void * untyped_ros_message, size_t current_alignment)
 {
-@[if spec.fields]@
-  @(pkg)__@(subfolder)__@(type) * ros_message = (@(pkg)__@(subfolder)__@(type) *)(untyped_ros_message);
-  size_t initial_alignment = current_alignment;
-  const size_t padding = 4;
-
-  (void)ros_message;
-  (void)padding;
-@[end if]@
+@[if not spec.fields]@
   (void)untyped_ros_message;
   (void)current_alignment;
+@[else]@
+  @(pkg)__@(subfolder)__@(type) * ros_message = (@(pkg)__@(subfolder)__@(type) *)(untyped_ros_message);
+  size_t initial_alignment = current_alignment;
+@[end if]@
 
 @[for field in spec.fields]@
   // field.name @(field.name) (@(field.type.type))
+  {
 @[  if field.type.is_array]@
-  // Arrays are not supported
-  return 0;
+    // Arrays (upper bounded or unbounded) are not supported yet
+    (void) ros_message;
+    return 0;
 @#  {
 @#@[    if field.type.array_size and not field.type.is_upper_bound]@
 @#    size_t array_size = @(field.type.array_size);
@@ -389,17 +400,18 @@ size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @[  else]@
 @[    if field.type.type == 'string']@
 @#  current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + ros_message->@(field.name).size + 1;
-  current_alignment += padding + get_alignment(current_alignment, padding) + ros_message->@(field.name).size + 1;
+    current_alignment += MICRORTPS_PADDING + get_alignment(current_alignment, MICRORTPS_PADDING) + ros_message->@(field.name).size + 1;
 @[    elif field.type.is_primitive_type()]@
 @#  {
 @#    size_t item_size = sizeof(ros_message->@(field.name));
 @#    current_alignment += item_size + eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
-  current_alignment += sizeof(ros_message->@(field.name)) + get_alignment(current_alignment, sizeof(ros_message->@(field.name)));
+    current_alignment += sizeof(ros_message->@(field.name)) + get_alignment(current_alignment, sizeof(ros_message->@(field.name)));
 @#  }
 @[    else]
-  current_alignment += get_serialized_size_@(field.type.pkg_name)__msg__@(field.type.type)(&(ros_message->@(field.name)), current_alignment);
+    current_alignment += get_serialized_size_@(field.type.pkg_name)__msg__@(field.type.type)(&(ros_message->@(field.name)), current_alignment);
 @[    end if]@
 @[  end if]@
+  }
 @[end for]@
 
 @[if not spec.fields]@
@@ -417,19 +429,18 @@ static uint32_t __get_serialized_size(const void * untyped_ros_message)
 ROSIDL_TYPESUPPORT_MICRORTPS_C_PUBLIC_@(spec.base_type.pkg_name)
 size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(bool full_bounded, size_t current_alignment)
 {
-  (void)full_bounded;
-
+@{full_bounded_Used = False}@
+@[if spec.fields]@
   size_t initial_alignment = current_alignment;
-  const size_t padding = 4; (void)padding;
-  size_t array_size = 1; (void)array_size;
-
+  size_t array_size = 1;
+@[end if]@
 
 @[for field in spec.fields]@
   // field.name @(field.name) (@(field.type.type))
   {
 @[  if field.type.is_array]@
-  // Arrays are not supported
-  return 0;
+    // Arrays (upper bounded or unbounded) are not supported yet
+    return 0;
 @#@[    if field.type.array_size]@
 @#    size_t array_size = @(field.type.array_size);
 @#@[    else]@
@@ -443,77 +454,54 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @[  end if]@
 @[  if field.type.type == 'string']@
     full_bounded = false;
-    for (size_t index = 0; index < array_size; ++index) {
+    for (size_t index = 0; index < array_size; ++index) 
+    {
 @[    if field.type.string_upper_bound]@
-        //current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + @(field.type.string_upper_bound) + 1;
-        current_alignment += padding + get_alignment(current_alignment, padding) + @(field.type.string_upper_bound) + 1;
+@#      current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + @(field.type.string_upper_bound) + 1;
+      current_alignment += MICRORTPS_PADDING + get_alignment(current_alignment, MICRORTPS_PADDING) + @(field.type.string_upper_bound) + 1;
 @[    else]@
-        //current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + 1;
-        current_alignment += padding + get_alignment(current_alignment, padding) + 1;
+@#      current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + 1;
+      current_alignment += MICRORTPS_PADDING + get_alignment(current_alignment, MICRORTPS_PADDING) + 1;
 @[    end if]@
     }
 @[  elif field.type.is_primitive_type()]@
-@[    if field.type.type == 'bool' or field.type.type == 'byte' or field.type.type == 'char' or field.type.type == 'uint8' or field.type.type == 'int8' ]
+@[    if field.type.type == 'bool' or field.type.type == 'byte' or field.type.type == 'char' or field.type.type == 'uint8' or field.type.type == 'int8' ]@
     current_alignment += array_size * sizeof(uint8_t);
-@[    elif field.type.type == 'int16' or field.type.type == 'uint16']
-    //current_alignment += array_size * sizeof(uint16_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint16_t));
+@[    elif field.type.type == 'int16' or field.type.type == 'uint16']@
+@#    current_alignment += array_size * sizeof(uint16_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint16_t));
     current_alignment += array_size * sizeof(uint16_t) + get_alignment(current_alignment, sizeof(uint16_t));
-@[    elif field.type.type == 'int32' or field.type.type == 'uint32' or field.type.type == 'float32']
-    //current_alignment += array_size * sizeof(uint32_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
+@[    elif field.type.type == 'int32' or field.type.type == 'uint32' or field.type.type == 'float32']@
+@#    current_alignment += array_size * sizeof(uint32_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
     current_alignment += array_size * sizeof(uint32_t) + get_alignment(current_alignment, sizeof(uint32_t));
-@[    elif field.type.type == 'int64' or field.type.type == 'uint64' or field.type.type == 'float64']
-    //current_alignment += array_size * sizeof(uint64_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint64_t));
+@[    elif field.type.type == 'int64' or field.type.type == 'uint64' or field.type.type == 'float64']@
+@#    current_alignment += array_size * sizeof(uint64_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint64_t));
     current_alignment += array_size * sizeof(uint64_t) + get_alignment(current_alignment, sizeof(uint64_t));
 @[    end if]@
-@[  else]
-    for (size_t index = 0; index < array_size; ++index) {
+@[  else]@
+@{    full_bounded_Used = True}@
+    for (size_t index = 0; index < array_size; ++index) 
+    {
       current_alignment += max_serialized_size_@(field.type.pkg_name)__msg__@(field.type.type)(full_bounded, current_alignment);
     }
 @[  end if]@
   }
 @[end for]@
 
+@[if full_bounded_Used == False]@
+  (void) full_bounded;
+@[end if]@
+@[if not spec.fields]@
+  (void) current_alignment;
+  return 0;
+@[else]@
   return current_alignment - initial_alignment;
+@[end if]@
 }
 
 static size_t __max_serialized_size(bool full_bounded)
 {
   return max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(full_bounded, 0);
 }
-
-
-/*
-static bool __write_topic(mrSession* session, mrStreamId stream_id, mrObjectId datawriter_id, const @(pkg)__@(subfolder)__@(type) * topic)
-{
-  bool written = false;
-
-  uint32_t topic_length = S1_size_of_topic(topic, 0);
-  uint32_t payload_length = 0;
-  payload_length = (uint16_t)(payload_length + 4); //request_id + object_id
-  payload_length = (uint16_t)(payload_length + 4); //topic_length (remove in future version to be compliant)
-
-  MicroBuffer mb;
-  if(prepare_stream_to_write(&session->streams, stream_id, (uint16_t)(payload_length + topic_length + SUBHEADER_SIZE), &mb))
-  {
-      (void) write_submessage_header(&mb, SUBMESSAGE_ID_WRITE_DATA, (uint16_t)(payload_length + topic_length), FORMAT_DATA);
-
-      WRITE_DATA_Payload_Data payload;
-      init_base_object_request(&session->info, datawriter_id, &payload.base);
-      (void) serialize_WRITE_DATA_Payload_Data(&mb, &payload);
-      (void) serialize_uint32_t(&mb, topic_length); //REMOVE: when topics have not a previous size in the agent.
-
-      MicroBuffer mb_topic;
-      init_micro_buffer(&mb_topic, mb.iterator, topic_length);
-      (void) S1_serialize_topic(&mb_topic, topic);
-
-      written = true;
-  }
-
-  return written;
-
-  return false;
-}
-*/
 
 
 @
@@ -535,7 +523,8 @@ static rosidl_message_type_support_t __type_support = {
 };
 
 const rosidl_message_type_support_t *
-ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(pkg), @(subfolder), @(msg))() {
+ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(pkg), @(subfolder), @(msg))() 
+{
   return &__type_support;
 }
 

@@ -45,7 +45,8 @@ static rosidl_service_type_support_t handle = {
 };
 
 const rosidl_service_type_support_t *
-ROSIDL_TYPESUPPORT_INTERFACE__SERVICE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(spec.pkg_name), @(spec.srv_name))() {
+ROSIDL_TYPESUPPORT_INTERFACE__SERVICE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(spec.pkg_name), @(spec.srv_name))() 
+{
   return &handle;
 }
 
