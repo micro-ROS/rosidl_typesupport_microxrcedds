@@ -110,7 +110,6 @@ const rosidl_message_type_support_t *
 
 static bool __cdr_serialize(const void * untyped_ros_message, MicroBuffer * cdr)
 {
-  (void)untyped_ros_message;
   (void)cdr;
 
   bool Ok = true;
@@ -219,7 +218,6 @@ static bool __cdr_serialize(const void * untyped_ros_message, MicroBuffer * cdr)
 static bool __cdr_deserialize(MicroBuffer * cdr, void * untyped_ros_message)
 {
   (void)cdr;
-  (void)untyped_ros_message;
 
   bool Ok = true;
   uint32_t Aux_uint32; (void)Aux_uint32;
