@@ -38,7 +38,13 @@ ament_export_include_directories(include)
 
 ament_python_install_package(${PROJECT_NAME})
 
-add_library(${PROJECT_NAME} SHARED src/identifier.c)
+
+if(BUILD_SHARED_LIBS)
+  add_library(${PROJECT_NAME} SHARED src/identifier.c)
+else()
+  add_library(${PROJECT_NAME} STATIC src/identifier.c)
+endif()
+
 if(WIN32)
   target_compile_definitions(${PROJECT_NAME}
     PRIVATE "ROSIDL_TYPESUPPORT_MICRORTPS_C_BUILDING_DLL")

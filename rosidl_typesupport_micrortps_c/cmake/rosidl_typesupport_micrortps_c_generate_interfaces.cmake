@@ -135,9 +135,13 @@ set(_target_suffix "__rosidl_typesupport_micrortps_c")
 
 
 # generate micrortps typesupport shared library 
-add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix} SHARED
-  ${_generated_msg_files} ${_generated_srv_files})
-
+if(BUILD_SHARED_LIBS)
+  add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix} SHARED
+    ${_generated_msg_files} ${_generated_srv_files})
+else()
+  add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix} STATIC
+    ${_generated_msg_files} ${_generated_srv_files})
+endif()
 
 #if(WIN32)
 #  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
