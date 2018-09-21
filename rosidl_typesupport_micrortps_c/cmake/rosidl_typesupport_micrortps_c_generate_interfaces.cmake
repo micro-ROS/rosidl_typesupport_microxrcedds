@@ -139,12 +139,10 @@ add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     ${_generated_msg_files} ${_generated_srv_files})
 
 
-#if(WIN32)
-#  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#    PRIVATE "ROSIDL_TYPESUPPORT_MICRORTPS_CPP_BUILDING_DLL_${PROJECT_NAME}")
-#  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#    PRIVATE "EPROSIMA_USER_DLL_EXPORT")
-#endif()
+if(WIN32)
+ target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+   PRIVATE "ROSIDL_TYPESUPPORT_MICRORTPS_C_BUILDING_DLL_${PROJECT_NAME}")
+endif()
 
 
 # set build properties
