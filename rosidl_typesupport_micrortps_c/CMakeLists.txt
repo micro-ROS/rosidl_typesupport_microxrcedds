@@ -39,7 +39,7 @@ ament_export_include_directories(include)
 ament_python_install_package(${PROJECT_NAME})
 
 
-add_library(${PROJECT_NAME} src/identifier.c)
+add_library(${PROJECT_NAME} src/identifier.c src/deserialize_buffer_utility.c)
 
 
 if(WIN32)

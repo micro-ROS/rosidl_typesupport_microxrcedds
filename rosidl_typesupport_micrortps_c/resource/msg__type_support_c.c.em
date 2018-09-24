@@ -27,6 +27,7 @@
 #include "rosidl_typesupport_micrortps_c/identifier.h"
 // Provides the definition of the message_type_support_callbacks_t struct.
 #include "rosidl_typesupport_micrortps_c/message_type_support.h"
+#include "rosidl_typesupport_micrortps_c/deserialize_buffer_utility.h"
 
 #include "@(pkg)/msg/rosidl_typesupport_micrortps_c__visibility_control.h"
 @{header_file_name = get_header_filename_from_msg_name(type)}@
@@ -340,8 +341,21 @@ static bool __cdr_deserialize(MicroBuffer * cdr, void * untyped_ros_message)
     Ok &= deserialize_uint64_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'string']@
     uint32_t Aux_uint32;
-    Ok &=  deserialize_sequence_char(cdr, ros_message->@(field.name).data, &Aux_uint32);
-    ros_message->@(field.name).size = (size_t)Aux_uint32;
+    size_t available_buffer_bytes;
+    void* buffer_write_pointer = GetWritePointer(&available_buffer_bytes);
+    if (buffer_write_pointer != NULL)
+    {
+        Ok &=  deserialize_sequence_char(cdr, buffer_write_pointer, &Aux_uint32);
+        // Set max deserialized
+        ros_message->@(field.name).data = buffer_write_pointer;
+        ros_message->@(field.name).size = (size_t)Aux_uint32;
+        ros_message->@(field.name).capacity = (size_t)Aux_uint32;
+        DecreaseAvailableBuffer(Aux_uint32);
+    }
+    else
+    {
+        Ok = false;
+    }
 @[  elif field.type.is_primitive_type()]@
     // Unkwnow primitive type
     Ok = false;
