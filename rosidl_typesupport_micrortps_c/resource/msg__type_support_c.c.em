@@ -345,7 +345,7 @@ static bool __cdr_deserialize(MicroBuffer * cdr, void * untyped_ros_message)
     void* buffer_write_pointer = GetWritePointer(&available_buffer_bytes);
     if (buffer_write_pointer != NULL)
     {
-        Ok &=  deserialize_sequence_char(cdr, buffer_write_pointer, &Aux_uint32);
+        Ok &=  deserialize_sequence_char(cdr, buffer_write_pointer, available_buffer_bytes, &Aux_uint32);
         // Set max deserialized
         ros_message->@(field.name).data = buffer_write_pointer;
         ros_message->@(field.name).size = (size_t)Aux_uint32;
