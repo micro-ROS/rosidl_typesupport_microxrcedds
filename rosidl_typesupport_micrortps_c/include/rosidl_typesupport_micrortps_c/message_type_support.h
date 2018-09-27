@@ -25,10 +25,10 @@ typedef struct message_type_support_callbacks_t
   const char * message_name_;
 
   // Function for message serialization
-  bool (* cdr_serialize)(const void * untyped_ros_message, MicroBuffer * cdr);
+  bool (* cdr_serialize)(const void * untyped_ros_message, mcBuffer * cdr);
 
   // Function for message deserialization
-  bool (* cdr_deserialize)(MicroBuffer * cdr, void * untyped_ros_message);
+  bool (* cdr_deserialize)(mcBuffer * cdr, void * untyped_ros_message);
 
   // Function to get size of data
   uint32_t (* get_serialized_size)(const void *);

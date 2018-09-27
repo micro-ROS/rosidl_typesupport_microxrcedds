@@ -18,8 +18,8 @@
 
 
 static size_t buffer_size_ = 0;
-static void* buffer_ = NULL;
-static void* write_pointer_ = NULL;
+static uint8_t* buffer_ = NULL;
+static uint8_t* write_pointer_ = NULL;
 
 
 void ResetBuffer(void* buffer, size_t buffer_size)
