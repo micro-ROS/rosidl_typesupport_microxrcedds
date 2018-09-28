@@ -51,7 +51,7 @@ void* GetWritePointer(size_t* bytes_available)
 
 void DecreaseAvailableBuffer(size_t used_bytes)
 {
-	write_pointer_ += used_bytes;
+	write_pointer_ += (used_bytes + 1);
 }
 
 

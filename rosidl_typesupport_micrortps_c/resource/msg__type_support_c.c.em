@@ -215,7 +215,7 @@ static bool __cdr_serialize(const void * untyped_ros_message, mcBuffer * cdr)
     // Unkwnow primitive type
     Ok = false;
 @[  else]@
-    ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_serialize(&ros_message->@(field.name), cdr);
+    Ok &= ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_serialize(&ros_message->@(field.name), cdr);
 @[  end if]@
   }
 @[end for]@
@@ -360,7 +360,7 @@ static bool __cdr_deserialize(mcBuffer * cdr, void * untyped_ros_message)
     // Unkwnow primitive type
     Ok = false;
 @[  else]@
-    ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_serialize(&ros_message->@(field.name), cdr);
+    Ok &=  ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_deserialize(cdr, &ros_message->@(field.name));
 @[  end if]@
   }
 @[end for]@
