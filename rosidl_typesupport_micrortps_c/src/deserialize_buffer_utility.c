@@ -22,11 +22,26 @@ static uint8_t* buffer_ = NULL;
 static uint8_t* write_pointer_ = NULL;
 
 
+static uint8_t* AlignPointer(uint8_t* intput_pointer)
+{
+	size_t word_size = sizeof(int);
+	uint8_t* aling_pointer = (uint8_t*)(((size_t)intput_pointer / word_size) * word_size);
+
+	if (intput_pointer > aling_pointer)
+	{
+			aling_pointer += word_size;
+	}
+
+	return aling_pointer; 
+}
+
+
+
 void ResetBuffer(void* buffer, size_t buffer_size)
 {
 	buffer_size_ = buffer_size;
 	buffer_ = buffer;
-	write_pointer_ = buffer;
+	write_pointer_ = AlignPointer(buffer);
 }
 
 
@@ -51,7 +66,8 @@ void* GetWritePointer(size_t* bytes_available)
 
 void DecreaseAvailableBuffer(size_t used_bytes)
 {
-	write_pointer_ += (used_bytes + 1);
+	write_pointer_ += (used_bytes);
+	write_pointer_ = AlignPointer(write_pointer_);
 }
 
 
