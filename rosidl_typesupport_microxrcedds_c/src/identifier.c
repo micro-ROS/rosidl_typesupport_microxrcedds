@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <rosidl_typesupport_micrortps_c/identifier.h>
+#include <rosidl_typesupport_microxrcedds_c/identifier.h>
 
-#include <rosidl_typesupport_micrortps_c/visibility_control.h>
+#include <rosidl_typesupport_microxrcedds_c/visibility_control.h>
 
 
 const char *
-  rosidl_typesupport_micrortps_c__identifier = ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_VALUE; //"rosidl_typesupport_micrortps_c";
+  rosidl_typesupport_microxrcedds_c__identifier = ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE; //"rosidl_typesupport_microxrcedds_c";
 

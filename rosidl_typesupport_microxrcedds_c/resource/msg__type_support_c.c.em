@@ -1,7 +1,7 @@
-// generated from rosidl_typesupport_micrortps_c/resource/msg__type_support_c.c.em
+// generated from rosidl_typesupport_microxrcedds_c/resource/msg__type_support_c.c.em
 // generated code does not contain a copyright notice
 @##########################################################################
-@# EmPy template for generating <msg>__type_support_c.cpp files for micrortps
+@# EmPy template for generating <msg>__type_support_c.cpp files for microxrcedds
 @#
 @# Context:
 @#  - spec (rosidl_parser.MessageSpecification)
@@ -18,18 +18,18 @@
 @#  - get_header_filename_from_msg_name (function)
 @##########################################################################
 @
-#include "@(spec.base_type.pkg_name)/@(subfolder)/@(get_header_filename_from_msg_name(spec.base_type.type))__rosidl_typesupport_micrortps_c.h"
+#include "@(spec.base_type.pkg_name)/@(subfolder)/@(get_header_filename_from_msg_name(spec.base_type.type))__rosidl_typesupport_microxrcedds_c.h"
 
 #include <stdint.h>
 #include <stdio.h>
 
-// Provides the rosidl_typesupport_micrortps_c__identifier symbol declaration.
-#include "rosidl_typesupport_micrortps_c/identifier.h"
+// Provides the rosidl_typesupport_microxrcedds_c__identifier symbol declaration.
+#include "rosidl_typesupport_microxrcedds_c/identifier.h"
 // Provides the definition of the message_type_support_callbacks_t struct.
-#include "rosidl_typesupport_micrortps_c/message_type_support.h"
-#include "rosidl_typesupport_micrortps_c/deserialize_buffer_utility.h"
+#include "rosidl_typesupport_microxrcedds_c/message_type_support.h"
+#include "rosidl_typesupport_microxrcedds_c/deserialize_buffer_utility.h"
 
-#include "@(pkg)/msg/rosidl_typesupport_micrortps_c__visibility_control.h"
+#include "@(pkg)/msg/rosidl_typesupport_microxrcedds_c__visibility_control.h"
 @{header_file_name = get_header_filename_from_msg_name(type)}@
 #include "@(pkg)/@(subfolder)/@(header_file_name)__struct.h"
 #include "@(pkg)/@(subfolder)/@(header_file_name)__functions.h"
@@ -47,7 +47,7 @@
 # pragma GCC diagnostic pop
 #endif
 
-#define MICRORTPS_PADDING sizeof(uint32_t)
+#define MICROXRCEDDS_PADDING sizeof(uint32_t)
 
 
 @# // Include the message header for each non-primitive field.
@@ -91,20 +91,20 @@ for field in spec.fields:
 @[end if]@
 @[for key in sorted(forward_declares.keys())]@
 @[  if key[0] != pkg]@
-ROSIDL_TYPESUPPORT_MICRORTPS_C_IMPORT_@(pkg)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_IMPORT_@(pkg)
 @[  end if]@
 size_t get_serialized_size_@(key[0])__msg__@(key[1])(const void * untyped_ros_message, size_t current_alignment);
 
 @[  if key[0] != pkg]@
-ROSIDL_TYPESUPPORT_MICRORTPS_C_IMPORT_@(pkg)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_IMPORT_@(pkg)
 @[  end if]@
 size_t max_serialized_size_@(key[0])__msg__@(key[1])(bool full_bounded, size_t current_alignment);
 
 @[  if key[0] != pkg]@
-ROSIDL_TYPESUPPORT_MICRORTPS_C_IMPORT_@(pkg)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_IMPORT_@(pkg)
 @[  end if]@
 const rosidl_message_type_support_t *
-  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(key[0]), msg, @(key[1]))();
+  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(key[0]), msg, @(key[1]))();
 @[end for]@
 
 @# // Make callback functions specific to this message type.
@@ -215,7 +215,7 @@ static bool __cdr_serialize(const void * untyped_ros_message, ucdrBuffer * cdr)
     // Unkwnow primitive type
     ok = false;
 @[  else]@
-    ok &= ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_serialize(&ros_message->@(field.name), cdr);
+    ok &= ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_serialize(&ros_message->@(field.name), cdr);
 @[  end if]@
   }
 @[end for]@
@@ -361,7 +361,7 @@ static bool __cdr_deserialize(ucdrBuffer * cdr, void * untyped_ros_message, uint
     // Unkwnow primitive type
     ok = false;
 @[  else]@
-    ok &=  ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_deserialize(cdr, &ros_message->@(field.name), raw_mem_ptr, raw_mem_size);
+    ok &=  ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_deserialize(cdr, &ros_message->@(field.name), raw_mem_ptr, raw_mem_size);
 @[  end if]@
   }
 @[end for]@
@@ -372,7 +372,7 @@ static bool __cdr_deserialize(ucdrBuffer * cdr, void * untyped_ros_message, uint
   return ok;
 }
 
-ROSIDL_TYPESUPPORT_MICRORTPS_C_PUBLIC_@(spec.base_type.pkg_name)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(spec.base_type.pkg_name)
 size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(const void * untyped_ros_message, size_t current_alignment)
 {
 @[if not spec.fields]@
@@ -419,7 +419,7 @@ size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @[  else]@
 @[    if field.type.type == 'string']@
 @#  current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + ros_message->@(field.name).size + 1;
-    current_alignment += MICRORTPS_PADDING + ucdr_alignment(current_alignment, MICRORTPS_PADDING) + ros_message->@(field.name).size + 1;
+    current_alignment += MICROXRCEDDS_PADDING + ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + ros_message->@(field.name).size + 1;
 @[    elif field.type.is_primitive_type()]@
 @#  {
 @#    size_t item_size = sizeof(ros_message->@(field.name));
@@ -445,7 +445,7 @@ static uint32_t __get_serialized_size(const void * untyped_ros_message)
   return (uint32_t)(get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(untyped_ros_message, 0));
 }
 
-ROSIDL_TYPESUPPORT_MICRORTPS_C_PUBLIC_@(spec.base_type.pkg_name)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(spec.base_type.pkg_name)
 size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(bool full_bounded, size_t current_alignment)
 {
 @{full_bounded_Used = False}@
@@ -477,10 +477,10 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
     {
 @[    if field.type.string_upper_bound]@
 @#      current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + @(field.type.string_upper_bound) + 1;
-      current_alignment += MICRORTPS_PADDING + ucdr_alignment(current_alignment, MICRORTPS_PADDING) + @(field.type.string_upper_bound) + 1;
+      current_alignment += MICROXRCEDDS_PADDING + ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + @(field.type.string_upper_bound) + 1;
 @[    else]@
 @#      current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + 1;
-      current_alignment += MICRORTPS_PADDING + ucdr_alignment(current_alignment, MICRORTPS_PADDING) + 1;
+      current_alignment += MICROXRCEDDS_PADDING + ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + 1;
 @[    end if]@
     }
 @[  elif field.type.is_primitive_type()]@
@@ -536,13 +536,13 @@ static message_type_support_callbacks_t __callbacks = {
 };
 
 static rosidl_message_type_support_t __type_support = {
-  ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_VALUE, //rosidl_typesupport_micrortps_c__identifier,
+  ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE, //rosidl_typesupport_microxrcedds_c__identifier,
   &__callbacks,
   get_message_typesupport_handle_function,
 };
 
 const rosidl_message_type_support_t *
-ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(pkg), @(subfolder), @(msg))() 
+ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(pkg), @(subfolder), @(msg))() 
 {
   return &__type_support;
 }

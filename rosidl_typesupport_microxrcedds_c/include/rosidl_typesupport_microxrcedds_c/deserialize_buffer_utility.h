@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROSIDL_TYPESUPPORT_MICRORTPS_C__BUFFER_UTILITY_H_
-#define ROSIDL_TYPESUPPORT_MICRORTPS_C__BUFFER_UTILITY_H_
+#ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__BUFFER_UTILITY_H_
+#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__BUFFER_UTILITY_H_
 
 
 #include <stddef.h>
@@ -21,4 +21,4 @@
 
 void rosidl_typesupport_microxrcedds_c__align_pointer(uint8_t** intput_pointer, size_t *mem_size);
 
-#endif  // ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_H_
+#endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_H_

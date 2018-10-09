@@ -1,9 +1,9 @@
 // generated from
-// rosidl_typesupport_micrortps_c/resource/srv__rosidl_typesupport_micrortps_c.h.em
+// rosidl_typesupport_microxrcedds_c/resource/srv__rosidl_typesupport_microxrcedds_c.h.em
 // generated code does not contain a copyright notice
 @#######################################################################
 @# EmPy template for generating
-@# <srv>__rosidl_typesupport_micrortps_c.h files
+@# <srv>__rosidl_typesupport_microxrcedds_c.h files
 @#
 @# Context:
 @#  - spec (rosidl_parser.MessageSpecification)
@@ -14,7 +14,7 @@
 @{
 header_guard_parts = [
     spec.pkg_name, 'srv',
-    get_header_filename_from_msg_name(spec.srv_name) + '__rosidl_typesupport_micrortps_c_h']
+    get_header_filename_from_msg_name(spec.srv_name) + '__rosidl_typesupport_microxrcedds_c_h']
 header_guard_variable = '__'.join([x.upper() for x in header_guard_parts]) + '_'
 }@
 #ifndef @(header_guard_variable)
@@ -23,16 +23,16 @@ header_guard_variable = '__'.join([x.upper() for x in header_guard_parts]) + '_'
 #include "rosidl_generator_c/service_type_support_struct.h"
 #include "rosidl_typesupport_interface/macros.h"
 
-#include "@(spec.pkg_name)/msg/rosidl_typesupport_micrortps_c__visibility_control.h"
+#include "@(spec.pkg_name)/msg/rosidl_typesupport_microxrcedds_c__visibility_control.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-ROSIDL_TYPESUPPORT_MICRORTPS_C_PUBLIC_@(spec.pkg_name)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(spec.pkg_name)
 const rosidl_service_type_support_t *
-  ROSIDL_TYPESUPPORT_INTERFACE__SERVICE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(spec.pkg_name), @(spec.srv_name))();
+  ROSIDL_TYPESUPPORT_INTERFACE__SERVICE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(spec.pkg_name), @(spec.srv_name))();
 
 #ifdef __cplusplus
 }

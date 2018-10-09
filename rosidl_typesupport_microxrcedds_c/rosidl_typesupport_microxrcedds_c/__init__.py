@@ -23,18 +23,18 @@ from rosidl_parser import parse_service_file
 from rosidl_parser import validate_field_types
 
 
-def generate_typesupport_micrortps_c(args):
+def generate_typesupport_microxrcedds_c(args):
     template_dir = args['template_dir']
     mapping_msgs = {
-        os.path.join(template_dir, 'msg__rosidl_typesupport_micrortps_c.h.em'):
-        '%s__rosidl_typesupport_micrortps_c.h',
+        os.path.join(template_dir, 'msg__rosidl_typesupport_microxrcedds_c.h.em'):
+        '%s__rosidl_typesupport_microxrcedds_c.h',
         os.path.join(template_dir, 'msg__type_support_c.c.em'):
         '%s__type_support_c.c',
     }
 
     mapping_srvs = {
-        os.path.join(template_dir, 'srv__rosidl_typesupport_micrortps_c.h.em'):
-        '%s__rosidl_typesupport_micrortps_c.h',
+        os.path.join(template_dir, 'srv__rosidl_typesupport_microxrcedds_c.h.em'):
+        '%s__rosidl_typesupport_microxrcedds_c.h',
         os.path.join(template_dir, 'srv__type_support_c.c.em'):
         '%s__type_support_c.c',
     }
@@ -52,7 +52,7 @@ def generate_typesupport_micrortps_c(args):
     functions = {
         'get_header_filename_from_msg_name': convert_camel_case_to_lower_case_underscore,
     }
-    # generate_dds_micrortps_c() and therefore the make target depend on the additional files
+    # generate_dds_microxrcedds_c() and therefore the make target depend on the additional files
     # therefore they must be listed here even if the generated type support files are independent
     latest_target_timestamp = get_newest_modification_time(
         args['target_dependencies'] + args.get('additional_files', []))
@@ -66,7 +66,7 @@ def generate_typesupport_micrortps_c(args):
             for template_file, generated_filename in mapping_msgs.items():
                 generated_file = os.path.join(args['output_dir'], subfolder)
                 if generated_filename.endswith('.c'):
-                    generated_file = os.path.join(generated_file, 'dds_micrortps')
+                    generated_file = os.path.join(generated_file, 'dds_microxrcedds')
                 generated_file = os.path.join(
                     generated_file, generated_filename %
                     convert_camel_case_to_lower_case_underscore(spec.base_type.type))
@@ -89,7 +89,7 @@ def generate_typesupport_micrortps_c(args):
             for template_file, generated_filename in mapping_srvs.items():
                 generated_file = os.path.join(args['output_dir'], 'srv')
                 if generated_filename.endswith('.c'):
-                    generated_file = os.path.join(generated_file, 'dds_micrortps')
+                    generated_file = os.path.join(generated_file, 'dds_microxrcedds')
                 generated_file = os.path.join(
                     generated_file, generated_filename %
                     convert_camel_case_to_lower_case_underscore(spec.srv_name))

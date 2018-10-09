@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(rosidl_typesupport_micrortps_c)
+project(rosidl_typesupport_microxrcedds_c)
 
-set(micrortps_STATIC_DISABLE $ENV{micrortps_STATIC_DISABLE}
-  CACHE BOOL "If micrortps Static should be disabled.")
+set(microxrcedds_STATIC_DISABLE $ENV{microxrcedds_STATIC_DISABLE}
+  CACHE BOOL "If microxrcedds Static should be disabled.")
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -44,7 +44,7 @@ add_library(${PROJECT_NAME} src/identifier.c src/deserialize_buffer_utility.c)
 
 if(WIN32)
   target_compile_definitions(${PROJECT_NAME}
-    PRIVATE "ROSIDL_TYPESUPPORT_MICRORTPS_C_BUILDING_DLL")
+    PRIVATE "ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_BUILDING_DLL")
 endif()
 target_include_directories(${PROJECT_NAME} 
   PUBLIC 
@@ -60,12 +60,12 @@ if(BUILD_TESTING)
 endif()
 
 ament_package(
-  CONFIG_EXTRAS "rosidl_typesupport_micrortps_c-extras.cmake.in"
+  CONFIG_EXTRAS "rosidl_typesupport_microxrcedds_c-extras.cmake.in"
 )
 
 install(
-  PROGRAMS bin/rosidl_typesupport_micrortps_c
-  DESTINATION lib/rosidl_typesupport_micrortps_c
+  PROGRAMS bin/rosidl_typesupport_microxrcedds_c
+  DESTINATION lib/rosidl_typesupport_microxrcedds_c
 )
 
 install(

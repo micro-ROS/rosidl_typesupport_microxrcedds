@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_H_
-#define ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_H_
+#ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_H_
+#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_H_
 
-#define ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_VALUE "rosidl_typesupport_micrortps_c"
+#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE "rosidl_typesupport_microxrcedds_c"
 
-#include "rosidl_typesupport_micrortps_c/visibility_control.h"
+#include "rosidl_typesupport_microxrcedds_c/visibility_control.h"
 
-ROSIDL_TYPESUPPORT_MICRORTPS_C_PUBLIC
-const char * rosidl_typesupport_micrortps_c__identifier;
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC
+const char * rosidl_typesupport_microxrcedds_c__identifier;
 
 
-#endif  // ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_H_
+#endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_H_
