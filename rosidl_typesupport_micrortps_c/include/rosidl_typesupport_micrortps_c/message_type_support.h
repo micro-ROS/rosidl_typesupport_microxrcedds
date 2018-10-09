@@ -17,7 +17,7 @@
 
 #include "rosidl_generator_c/message_type_support_struct.h"
 
-#include <microcdr/microcdr.h>
+#include <ucdr/microcdr.h>
 
 typedef struct message_type_support_callbacks_t
 {
@@ -25,10 +25,10 @@ typedef struct message_type_support_callbacks_t
   const char * message_name_;
 
   // Function for message serialization
-  bool (* cdr_serialize)(const void * untyped_ros_message, mcBuffer * cdr);
+  bool (* cdr_serialize)(const void * untyped_ros_message, ucdrBuffer * cdr);
 
   // Function for message deserialization
-  bool (* cdr_deserialize)(mcBuffer * cdr, void * untyped_ros_message, uint8_t* raw_mem_ptr, size_t raw_mem_size);
+  bool (* cdr_deserialize)(ucdrBuffer * cdr, void * untyped_ros_message, uint8_t* raw_mem_ptr, size_t raw_mem_size);
 
   // Function to get size of data
   uint32_t (* get_serialized_size)(const void *);

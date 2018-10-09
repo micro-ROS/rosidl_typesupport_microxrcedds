@@ -21,14 +21,14 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-find_package(micrortps_client_cmake_module QUIET)
+find_package(microxrcedds_cmake_module QUIET)
 find_package(microcdr REQUIRED CONFIG)
-find_package(micrortps_client REQUIRED CONFIG)
-find_package(MicroRTPS_Client REQUIRED MODULE)
+find_package(microxrcedds_client REQUIRED CONFIG)
+find_package(MicroXRCEDDS REQUIRED MODULE)
 
 find_package(ament_cmake_python REQUIRED)
 
-ament_export_dependencies(micrortps_client)
+ament_export_dependencies(microxrcedds_client)
 ament_export_dependencies(rmw)
 ament_export_dependencies(rosidl_cmake)
 ament_export_dependencies(rosidl_generator_c)

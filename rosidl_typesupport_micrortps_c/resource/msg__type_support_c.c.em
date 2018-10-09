@@ -109,7 +109,7 @@ const rosidl_message_type_support_t *
 
 @# // Make callback functions specific to this message type.
 @#
-static bool __cdr_serialize(const void * untyped_ros_message, mcBuffer * cdr)
+static bool __cdr_serialize(const void * untyped_ros_message, ucdrBuffer * cdr)
 {
   bool ok = true;
 
@@ -184,33 +184,33 @@ static bool __cdr_serialize(const void * untyped_ros_message, mcBuffer * cdr)
 @#    }
 @#    cdr << str->data;
 @[  elif field.type.type == 'bool']@
-    ok &= mc_serialize_bool(cdr, ros_message->@(field.name));
+    ok &= ucdr_serialize_bool(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'byte']@
-    ok &= mc_serialize_uint8_t(cdr, ros_message->@(field.name));
+    ok &= ucdr_serialize_uint8_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'char']@
-    ok &= mc_serialize_char(cdr, (char)ros_message->@(field.name));
+    ok &= ucdr_serialize_char(cdr, (char)ros_message->@(field.name));
 @[  elif field.type.type == 'float32']@
-    ok &= mc_serialize_float(cdr, ros_message->@(field.name));  
+    ok &= ucdr_serialize_float(cdr, ros_message->@(field.name));  
 @[  elif field.type.type == 'float64']@
-    ok &= mc_serialize_double(cdr, ros_message->@(field.name));
+    ok &= ucdr_serialize_double(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'int8']@
-    ok &= mc_serialize_char(cdr, (char)ros_message->@(field.name));
+    ok &= ucdr_serialize_char(cdr, (char)ros_message->@(field.name));
 @[  elif field.type.type == 'uint8']@
-    ok &= mc_serialize_uint8_t(cdr, ros_message->@(field.name));
+    ok &= ucdr_serialize_uint8_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'int16']@
-    ok &= mc_serialize_int16_t(cdr, ros_message->@(field.name));
+    ok &= ucdr_serialize_int16_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'uint16']@
-    ok &= mc_serialize_uint16_t(cdr, ros_message->@(field.name));
+    ok &= ucdr_serialize_uint16_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'int32']@
-    ok &= mc_serialize_int32_t(cdr, ros_message->@(field.name));
+    ok &= ucdr_serialize_int32_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'uint32']@
-    ok &= mc_serialize_uint32_t(cdr, ros_message->@(field.name));
+    ok &= ucdr_serialize_uint32_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'int64']@
-    ok &= mc_serialize_int64_t(cdr, ros_message->@(field.name));
+    ok &= ucdr_serialize_int64_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'uint64']@
-    ok &= mc_serialize_uint64_t(cdr, ros_message->@(field.name));
+    ok &= ucdr_serialize_uint64_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'string']@
-    ok &= mc_serialize_sequence_char(cdr, ros_message->@(field.name).data, (uint32_t)ros_message->@(field.name).size);
+    ok &= ucdr_serialize_sequence_char(cdr, ros_message->@(field.name).data, (uint32_t)ros_message->@(field.name).size);
 @[  elif field.type.is_primitive_type()]@
     // Unkwnow primitive type
     ok = false;
@@ -222,7 +222,7 @@ static bool __cdr_serialize(const void * untyped_ros_message, mcBuffer * cdr)
   return ok;
 }
 
-static bool __cdr_deserialize(mcBuffer * cdr, void * untyped_ros_message, uint8_t* raw_mem_ptr, size_t raw_mem_size)
+static bool __cdr_deserialize(ucdrBuffer * cdr, void * untyped_ros_message, uint8_t* raw_mem_ptr, size_t raw_mem_size)
 {
   bool ok = true;
   
@@ -314,38 +314,48 @@ static bool __cdr_deserialize(mcBuffer * cdr, void * untyped_ros_message, uint8_
 @#      return false;
 @#    }
 @[  elif field.type.type == 'bool']@
-    ok &= mc_deserialize_bool(cdr, &ros_message->@(field.name));
+    ok &= ucdr_deserialize_bool(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'byte']@
-    ok &= mc_deserialize_uint8_t(cdr, &ros_message->@(field.name));
+    ok &= ucdr_deserialize_uint8_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'char']@
-    ok &= mc_deserialize_char(cdr, (char*)&ros_message->@(field.name));
+    ok &= ucdr_deserialize_char(cdr, (char*)&ros_message->@(field.name));
 @[  elif field.type.type == 'float32']@
-    ok &= mc_deserialize_float(cdr, &ros_message->@(field.name));  
+    ok &= ucdr_deserialize_float(cdr, &ros_message->@(field.name));  
 @[  elif field.type.type == 'float64']@
-    ok &= mc_deserialize_double(cdr, &ros_message->@(field.name));
+    ok &= ucdr_deserialize_double(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'int8']@
-    ok &= mc_deserialize_char(cdr, (char*)&ros_message->@(field.name));
+    ok &= ucdr_deserialize_char(cdr, (char*)&ros_message->@(field.name));
 @[  elif field.type.type == 'uint8']@
-    ok &= mc_deserialize_uint8_t(cdr, &ros_message->@(field.name));
+    ok &= ucdr_deserialize_uint8_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'int16']@
-    ok &= mc_deserialize_int16_t(cdr, &ros_message->@(field.name));
+    ok &= ucdr_deserialize_int16_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'uint16']@
-    ok &= mc_deserialize_uint16_t(cdr, &ros_message->@(field.name));
+    ok &= ucdr_deserialize_uint16_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'int32']@
-    ok &= mc_deserialize_int32_t(cdr, &ros_message->@(field.name));
+    ok &= ucdr_deserialize_int32_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'uint32']@
-    ok &= mc_deserialize_uint32_t(cdr, &ros_message->@(field.name));
+    ok &= ucdr_deserialize_uint32_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'int64']@
-    ok &= mc_deserialize_int64_t(cdr, &ros_message->@(field.name));
+    ok &= ucdr_deserialize_int64_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'uint64']@
-    ok &= mc_deserialize_uint64_t(cdr, &ros_message->@(field.name));
+    ok &= ucdr_deserialize_uint64_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'string']@
+<<<<<<< HEAD
 @{      raw_mem_used = True}
     if (raw_mem_ptr != NULL)
     { 
         uint32_t Aux_uint32;
         rosidl_typesupport_microxrcedds_c__align_pointer(&raw_mem_ptr, &raw_mem_size);
         ok &=  mc_deserialize_sequence_char(cdr, (char*)raw_mem_ptr, raw_mem_size, &Aux_uint32);
+=======
+    uint32_t Aux_uint32;
+    size_t available_buffer_bytes;
+    void* buffer_write_pointer = GetWritePointer(&available_buffer_bytes);
+    if (buffer_write_pointer != NULL)
+    {
+        ok &=  ucdr_deserialize_sequence_char(cdr, buffer_write_pointer, available_buffer_bytes, &Aux_uint32);
+        // Set max deserialized
+>>>>>>> d60f551... Refs #3497 - Adapt API namespace (micrortps_ -> uxrce_)
         Aux_uint32 += 1;
         raw_mem_size -= Aux_uint32;
         ros_message->@(field.name).data = (char*)raw_mem_ptr;
@@ -397,18 +407,18 @@ size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @#    size_t array_size = ros_message->@(field.name).size;
 @#    auto array_ptr = ros_message->@(field.name).data;
 @#    //current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding);
-@#    current_alignment += padding + mc_alignment(current_alignment, padding);
+@#    current_alignment += padding + ucdr_alignment(current_alignment, padding);
 @#@[    end if]@
 @#@[    if field.type.type == 'string']@
 @#    for (size_t index = 0; index < array_size; ++index) {
 @#      //current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + array_ptr[index].size + 1;
-@#      current_alignment += padding + mc_alignment(current_alignment, padding) + array_ptr[index].size + 1;
+@#      current_alignment += padding + ucdr_alignment(current_alignment, padding) + array_ptr[index].size + 1;
 @#    }
 @#@[    elif field.type.is_primitive_type()]@
 @#    (void)array_ptr;
 @#    size_t item_size = sizeof(array_ptr[0]);
 @#    //current_alignment += array_size * item_size + eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
-@#    current_alignment += array_size * item_size + mc_alignment(current_alignment, item_size);
+@#    current_alignment += array_size * item_size + ucdr_alignment(current_alignment, item_size);
 @#@[    else]
 @#    for (size_t index = 0; index < array_size; ++index) {
 @#      current_alignment += get_serialized_size_@(field.type.pkg_name)__msg__@(field.type.type)(&array_ptr[index], current_alignment);
@@ -418,12 +428,12 @@ size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @[  else]@
 @[    if field.type.type == 'string']@
 @#  current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + ros_message->@(field.name).size + 1;
-    current_alignment += MICRORTPS_PADDING + mc_alignment(current_alignment, MICRORTPS_PADDING) + ros_message->@(field.name).size + 1;
+    current_alignment += MICRORTPS_PADDING + ucdr_alignment(current_alignment, MICRORTPS_PADDING) + ros_message->@(field.name).size + 1;
 @[    elif field.type.is_primitive_type()]@
 @#  {
 @#    size_t item_size = sizeof(ros_message->@(field.name));
 @#    current_alignment += item_size + eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
-    current_alignment += sizeof(ros_message->@(field.name)) + mc_alignment(current_alignment, sizeof(ros_message->@(field.name)));
+    current_alignment += sizeof(ros_message->@(field.name)) + ucdr_alignment(current_alignment, sizeof(ros_message->@(field.name)));
 @#  }
 @[    else]
     current_alignment += get_serialized_size_@(field.type.pkg_name)__msg__@(field.type.type)(&(ros_message->@(field.name)), current_alignment);
@@ -467,7 +477,7 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @#@[    if not field.type.array_size or field.type.is_upper_bound]@
 @#    full_bounded = false;
 @#    //current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding);
-@#    current_alignment += padding + mc_alignment(current_alignment, padding);
+@#    current_alignment += padding + ucdr_alignment(current_alignment, padding);
 @#@[    end if]@
 @[  end if]@
 @[  if field.type.type == 'string']@
@@ -476,10 +486,10 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
     {
 @[    if field.type.string_upper_bound]@
 @#      current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + @(field.type.string_upper_bound) + 1;
-      current_alignment += MICRORTPS_PADDING + mc_alignment(current_alignment, MICRORTPS_PADDING) + @(field.type.string_upper_bound) + 1;
+      current_alignment += MICRORTPS_PADDING + ucdr_alignment(current_alignment, MICRORTPS_PADDING) + @(field.type.string_upper_bound) + 1;
 @[    else]@
 @#      current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + 1;
-      current_alignment += MICRORTPS_PADDING + mc_alignment(current_alignment, MICRORTPS_PADDING) + 1;
+      current_alignment += MICRORTPS_PADDING + ucdr_alignment(current_alignment, MICRORTPS_PADDING) + 1;
 @[    end if]@
     }
 @[  elif field.type.is_primitive_type()]@
@@ -487,13 +497,13 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
     current_alignment += array_size * sizeof(uint8_t);
 @[    elif field.type.type == 'int16' or field.type.type == 'uint16']@
 @#    current_alignment += array_size * sizeof(uint16_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint16_t));
-    current_alignment += array_size * sizeof(uint16_t) + mc_alignment(current_alignment, sizeof(uint16_t));
+    current_alignment += array_size * sizeof(uint16_t) + ucdr_alignment(current_alignment, sizeof(uint16_t));
 @[    elif field.type.type == 'int32' or field.type.type == 'uint32' or field.type.type == 'float32']@
 @#    current_alignment += array_size * sizeof(uint32_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
-    current_alignment += array_size * sizeof(uint32_t) + mc_alignment(current_alignment, sizeof(uint32_t));
+    current_alignment += array_size * sizeof(uint32_t) + ucdr_alignment(current_alignment, sizeof(uint32_t));
 @[    elif field.type.type == 'int64' or field.type.type == 'uint64' or field.type.type == 'float64']@
 @#    current_alignment += array_size * sizeof(uint64_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint64_t));
-    current_alignment += array_size * sizeof(uint64_t) + mc_alignment(current_alignment, sizeof(uint64_t));
+    current_alignment += array_size * sizeof(uint64_t) + ucdr_alignment(current_alignment, sizeof(uint64_t));
 @[    end if]@
 @[  else]@
 @{    full_bounded_Used = True}@
