@@ -17,57 +17,27 @@
 #include <string.h>
 
 
-static size_t buffer_size_ = 0;
-static uint8_t* buffer_ = NULL;
-static uint8_t* write_pointer_ = NULL;
 
-
-static uint8_t* AlignPointer(uint8_t* intput_pointer)
+void rosidl_typesupport_microxrcedds_c__align_pointer(uint8_t** pointer_to_align, size_t *mem_size)
 {
 	size_t word_size = sizeof(int);
-	uint8_t* aling_pointer = (uint8_t*)(((size_t)intput_pointer / word_size) * word_size);
+	uint8_t* aling_pointer = (uint8_t*)((((size_t)(*pointer_to_align)) / word_size) * word_size);
 
-	if (intput_pointer > aling_pointer)
+	if (*pointer_to_align > aling_pointer)
 	{
 			aling_pointer += word_size;
 	}
 
-	return aling_pointer; 
-}
 
-
-
-void ResetBuffer(void* buffer, size_t buffer_size)
-{
-	buffer_size_ = buffer_size;
-	buffer_ = buffer;
-	write_pointer_ = AlignPointer(buffer);
-}
-
-
-void* GetWritePointer(size_t* bytes_available)
-{
-	// Check if there is a buffer
-	if (buffer_ == NULL)
+	if ((size_t)(aling_pointer - *pointer_to_align) >= *mem_size)
 	{
-		return NULL;
+		*mem_size = 0;
+	}
+	else
+	{
+		*mem_size -= (size_t)(aling_pointer - *pointer_to_align);
 	}
 
-	
-	if (bytes_available != NULL)
-	{
-		*bytes_available = (buffer_ + buffer_size_) - write_pointer_;
-	}
 
-	
-	return write_pointer_;
+	*pointer_to_align = aling_pointer;
 }
-
-
-void DecreaseAvailableBuffer(size_t used_bytes)
-{
-	write_pointer_ += (used_bytes);
-	write_pointer_ = AlignPointer(write_pointer_);
-}
-
-

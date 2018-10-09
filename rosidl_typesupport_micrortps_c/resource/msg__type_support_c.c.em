@@ -222,7 +222,7 @@ static bool __cdr_serialize(const void * untyped_ros_message, mcBuffer * cdr)
   return ok;
 }
 
-static bool __cdr_deserialize(mcBuffer * cdr, void * untyped_ros_message)
+static bool __cdr_deserialize(mcBuffer * cdr, void * untyped_ros_message, uint8_t* raw_mem_ptr, size_t raw_mem_size)
 {
   bool ok = true;
   
@@ -231,7 +231,7 @@ static bool __cdr_deserialize(mcBuffer * cdr, void * untyped_ros_message)
     fprintf(stderr, "ros message handle is null\n");
     return false;
   }
-
+@{raw_mem_used = False}@
 @[if not spec.fields]@
   // No fields is a no-op.
   (void)cdr;
@@ -340,18 +340,17 @@ static bool __cdr_deserialize(mcBuffer * cdr, void * untyped_ros_message)
 @[  elif field.type.type == 'uint64']@
     ok &= mc_deserialize_uint64_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'string']@
-    uint32_t Aux_uint32;
-    size_t available_buffer_bytes;
-    void* buffer_write_pointer = GetWritePointer(&available_buffer_bytes);
-    if (buffer_write_pointer != NULL)
-    {
-        ok &=  mc_deserialize_sequence_char(cdr, buffer_write_pointer, available_buffer_bytes, &Aux_uint32);
-        // Set max deserialized
+@{      raw_mem_used = True}
+    if (raw_mem_ptr != NULL)
+    { 
+        uint32_t Aux_uint32;
+        rosidl_typesupport_microxrcedds_c__align_pointer(&raw_mem_ptr, &raw_mem_size);
+        ok &=  mc_deserialize_sequence_char(cdr, (char*)raw_mem_ptr, raw_mem_size, &Aux_uint32);
         Aux_uint32 += 1;
-        ros_message->@(field.name).data = buffer_write_pointer;
+        raw_mem_size -= Aux_uint32;
+        ros_message->@(field.name).data = (char*)raw_mem_ptr;
         ros_message->@(field.name).size = (size_t)Aux_uint32;
         ros_message->@(field.name).capacity = (size_t)Aux_uint32;
-        DecreaseAvailableBuffer(Aux_uint32);
     }
     else
     {
@@ -361,10 +360,14 @@ static bool __cdr_deserialize(mcBuffer * cdr, void * untyped_ros_message)
     // Unkwnow primitive type
     ok = false;
 @[  else]@
-    ok &=  ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_deserialize(cdr, &ros_message->@(field.name));
+    ok &=  ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_micrortps_c, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_deserialize(cdr, &ros_message->@(field.name), raw_mem_ptr, raw_mem_size);
 @[  end if]@
   }
 @[end for]@
+@[if raw_mem_used == False]@
+  (void) raw_mem_ptr;
+  (void) raw_mem_size;
+@[end if]@
   return ok;
 }
 

@@ -19,28 +19,6 @@
 #include <stddef.h>
 
 
-/**
- * @brief Reset temporat 
- * 
- * @param buffer 
- * @param buffer_size 
- */
-void ResetBuffer(void* buffer, size_t buffer_size);
-
-
-/**
- * @brief Bytes left in the desserialized buffer
- * 
- */
-void* GetWritePointer(size_t* bytes_available);
-
-
-/**
- * @brief 
- * 
- * @param used_bytes 
- */
-void DecreaseAvailableBuffer(size_t used_bytes);
-
+void rosidl_typesupport_microxrcedds_c__align_pointer(uint8_t** intput_pointer, size_t *mem_size);
 
 #endif  // ROSIDL_TYPESUPPORT_MICRORTPS_C__IDENTIFIER_H_
