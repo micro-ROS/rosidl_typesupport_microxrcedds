@@ -1,0 +1,34 @@
+# generated from
+# rosidl_typesupport_microxrcedds_cpp/rosidl_typesupport_microxrcedds_cpp-extras.cmake.in
+
+#find_package(microxrcedds_client_cmake_module QUIET)
+find_package(microcdr REQUIRED CONFIG)
+find_package(microxrcedds_client REQUIRED CONFIG)
+#find_package(microxrcedds_client REQUIRED MODULE)
+
+if(NOT microxrcedds_client_FOUND)
+  message(STATUS
+    "Could not find eProsima Micro XRCE-DDS: skipping rosidl_typesupport_microxrcedds_cpp"
+  )
+else()
+  find_package(ament_cmake_core QUIET REQUIRED)
+  ament_register_extension(
+    "rosidl_generate_interfaces"
+    "rosidl_typesupport_microxrcedds_cpp"
+    "rosidl_typesupport_microxrcedds_cpp_generate_interfaces.cmake")
+
+  set(rosidl_typesupport_microxrcedds_cpp_BIN
+    "${rosidl_typesupport_microxrcedds_cpp_DIR}/../../../lib/rosidl_typesupport_microxrcedds_cpp/rosidl_typesupport_microxrcedds_cpp")
+  normalize_path(rosidl_typesupport_microxrcedds_cpp_BIN
+    "${rosidl_typesupport_microxrcedds_cpp_BIN}")
+
+  set(rosidl_typesupport_microxrcedds_cpp_GENERATOR_FILES
+    "${rosidl_typesupport_microxrcedds_cpp_DIR}/../../../@PYTHON_INSTALL_DIR@/rosidl_typesupport_microxrcedds_cpp/__init__.py")
+  normalize_path(rosidl_typesupport_microxrcedds_cpp_GENERATOR_FILES
+    "${rosidl_typesupport_microxrcedds_cpp_GENERATOR_FILES}")
+
+  set(rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR
+    "${rosidl_typesupport_microxrcedds_cpp_DIR}/../resource")
+  normalize_path(rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR
+    "${rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR}")
+endif()
