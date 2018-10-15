@@ -340,22 +340,13 @@ static bool __cdr_deserialize(ucdrBuffer * cdr, void * untyped_ros_message, uint
 @[  elif field.type.type == 'uint64']@
     ok &= ucdr_deserialize_uint64_t(cdr, &ros_message->@(field.name));
 @[  elif field.type.type == 'string']@
-<<<<<<< HEAD
 @{      raw_mem_used = True}
     if (raw_mem_ptr != NULL)
     { 
         uint32_t Aux_uint32;
         rosidl_typesupport_microxrcedds_c__align_pointer(&raw_mem_ptr, &raw_mem_size);
-        ok &=  mc_deserialize_sequence_char(cdr, (char*)raw_mem_ptr, raw_mem_size, &Aux_uint32);
-=======
-    uint32_t Aux_uint32;
-    size_t available_buffer_bytes;
-    void* buffer_write_pointer = GetWritePointer(&available_buffer_bytes);
-    if (buffer_write_pointer != NULL)
-    {
-        ok &=  ucdr_deserialize_sequence_char(cdr, buffer_write_pointer, available_buffer_bytes, &Aux_uint32);
-        // Set max deserialized
->>>>>>> d60f551... Refs #3497 - Adapt API namespace (micrortps_ -> uxrce_)
+        ok &=  ucdr_deserialize_sequence_char(cdr, (char*)raw_mem_ptr, raw_mem_size, &Aux_uint32);
+        raw_mem_ptr[Aux_uint32] = 0x00;
         Aux_uint32 += 1;
         raw_mem_size -= Aux_uint32;
         ros_message->@(field.name).data = (char*)raw_mem_ptr;
