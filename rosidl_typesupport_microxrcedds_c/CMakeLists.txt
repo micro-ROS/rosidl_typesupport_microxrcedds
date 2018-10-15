@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(rosidl_typesupport_microxrcedds_c)
 
 set(microxrcedds_STATIC_DISABLE $ENV{microxrcedds_STATIC_DISABLE}
-  CACHE BOOL "If microxrcedds Static should be disabled.")
+  CACHE BOOL "If Micro XRCE-DDS Static should be disabled.")
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)

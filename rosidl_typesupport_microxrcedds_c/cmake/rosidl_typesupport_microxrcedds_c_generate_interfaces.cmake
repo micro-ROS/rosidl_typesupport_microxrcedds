@@ -134,7 +134,7 @@ set(_target_suffix "__rosidl_typesupport_microxrcedds_c")
 # link_directories(${microxrcedds_LIBRARY_DIRS})
 
 
-# generate microxrcedds typesupport shared library 
+# generate Micro XRCE-DDS typesupport shared library 
 add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     ${_generated_msg_files} ${_generated_srv_files})
 

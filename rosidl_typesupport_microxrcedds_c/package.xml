@@ -3,7 +3,7 @@
 <package format="3">
   <name>rosidl_typesupport_microxrcedds_c</name>
   <version>0.0.1</version>
-  <description>Generate the C interfaces for eProsima MICROXRCEDDS.</description>
+  <description>Generate the C interfaces for eProsima Micro XRCE-DDS.</description>
   <maintainer email="borjaouterelo@eprosima.com">Borja Outerelo</maintainer>
   <license>Apache License 2.0</license>
 
