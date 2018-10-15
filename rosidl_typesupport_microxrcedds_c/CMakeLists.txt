@@ -21,9 +21,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-find_package(microxrcedds_cmake_module QUIET)
-find_package(microcdr REQUIRED CONFIG)
-find_package(microxrcedds_client REQUIRED CONFIG)
+find_package(microxrcedds_cmake_module REQUIRED)
 find_package(MicroXRCEDDS REQUIRED MODULE)
 
 find_package(ament_cmake_python REQUIRED)
