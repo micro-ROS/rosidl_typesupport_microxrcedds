@@ -1,7 +1,10 @@
+<a href="http://www.eprosima.com"><img src="http://www.eprosima.com/images/logos/eprosima/logo.png" align="top" hspace="8" vspace="2" width="650" height="200" ></a>
+
+
 # Overview
 
 All packages contained in this repo are a part of the Micro-ROS poject stack. 
-For more information about Micro-ROS poject click [here]()
+For more information about Micro-ROS project click [here]().
 
 
 # Packages
@@ -16,16 +19,10 @@ This package aims to give support to the rmw layer for ros messages in C lenguag
 
 ### Include:
 
-- Support for serialization / desserialization mechanims code, generated during the build proces, for each specific outcoming / incoming ROS messages.
+- Support for serialization / desserialization mechanims code, generated during the build process, for each specific outcoming / incoming ROS messages.
 - Support for unbounded incoming messages using static memory.
 - Support for building message support using ament extension point mechanims for uninstalled mesages.
 - Support for building message support using introspective mechanims for installed mesages.
-
-
-### Documentation 
-
-You can access the documentation online, which is hosted on [Read the Docs]().
-
 
 
 ## rmw_typesupport_microxrcedds_cpp
