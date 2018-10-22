@@ -20,22 +20,20 @@ if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 
-  
   find_package(rosidl_typesupport_microxrcedds_test_msg REQUIRED)
   find_package(rosidl_default_generators REQUIRED)
   find_package(ament_cmake_gtest REQUIRED)
 
-  
   # Node tests
   set(TEST_NAME "test_typpesupport")
   set(TEST_FILES "src/test_typpesupport.cpp")
   ament_add_gtest(
-    ${TEST_NAME} 
+    ${TEST_NAME}
     ${TEST_FILES}
   )
   if(TARGET ${TEST_NAME})
     ament_target_dependencies(
-      ${TEST_NAME}  
+      ${TEST_NAME}
       rosidl_typesupport_microxrcedds_test_msg
       rosidl_typesupport_microxrcedds_c
       microcdr
