@@ -210,7 +210,7 @@ static bool __cdr_serialize(const void * untyped_ros_message, ucdrBuffer * cdr)
 @[  elif field.type.type == 'uint64']@
     ok &= ucdr_serialize_uint64_t(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'string']@
-    ok &= ucdr_serialize_sequence_char(cdr, ros_message->@(field.name).data, (uint32_t)ros_message->@(field.name).size);
+    ok &= ucdr_serialize_string(cdr, ros_message->@(field.name).data);
 @[  elif field.type.is_primitive_type()]@
     // Unkwnow primitive type
     ok = false;
@@ -346,12 +346,17 @@ static bool __cdr_deserialize(ucdrBuffer * cdr, void * untyped_ros_message, uint
         uint32_t Aux_uint32;
         rosidl_typesupport_microxrcedds_c__align_pointer(&raw_mem_ptr, &raw_mem_size);
         ok &=  ucdr_deserialize_sequence_char(cdr, (char*)raw_mem_ptr, raw_mem_size, &Aux_uint32);
-        raw_mem_ptr[Aux_uint32] = 0x00;
-        Aux_uint32 += 1;
-        raw_mem_size -= Aux_uint32;
-        ros_message->@(field.name).data = (char*)raw_mem_ptr;
-        ros_message->@(field.name).size = (size_t)Aux_uint32;
-        ros_message->@(field.name).capacity = (size_t)Aux_uint32;
+        ok &= raw_mem_size > Aux_uint32;
+        if (ok)
+        {
+          raw_mem_ptr[Aux_uint32] = 0x00;
+          Aux_uint32 += 1;
+          raw_mem_size -= Aux_uint32;
+          ros_message->@(field.name).data = (char*)raw_mem_ptr;
+          ros_message->@(field.name).size = (size_t)Aux_uint32;
+          ros_message->@(field.name).capacity = (size_t)Aux_uint32;
+          raw_mem_ptr += Aux_uint32;
+        }
     }
     else
     {

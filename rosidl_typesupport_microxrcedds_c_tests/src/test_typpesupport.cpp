@@ -18,7 +18,9 @@
 
 #include <rosidl_typesupport_microxrcedds_c/identifier.h>
 #include <rosidl_typesupport_microxrcedds_c/message_type_support.h>
-//#include <rosidl_typesupport_microxrcedds_c_tests/msg/test_msg1.h>
+
+#include <rosidl_typesupport_microxrcedds_test_msg/msg/primitive.h>
+#include <rosidl_typesupport_microxrcedds_test_msg/msg/primitive__rosidl_typesupport_microxrcedds_c.h>
 
 
 class TestTypeSupport : public ::testing::Test
@@ -26,13 +28,7 @@ class TestTypeSupport : public ::testing::Test
 protected:
   static void SetUpTestCase()
   {
-    //GTEST_DECLARE_bool_(break_on_failure);
-
-    #ifdef _WIN32
-
-    #else
-    freopen("/dev/null", "w", stderr);
-    #endif
+    // GTEST_DECLARE_bool_(break_on_failure);
   }
 
 
@@ -43,6 +39,44 @@ protected:
 
   void SetUp()
   {
+    rosidl_message_type_support = 
+    ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(
+      rosidl_typesupport_microxrcedds_c, 
+      rosidl_typesupport_microxrcedds_test_msg, 
+      msg, 
+      Primitive)();
+    
+    message_type_support_callbacks = (const message_type_support_callbacks_t *)rosidl_message_type_support->data;
+  
+    primitive_test.bool_test = 0x01;
+    primitive_test.byte_test = 0x01;
+    primitive_test.char_test = 0x01;
+    primitive_test.float32_test = 100.001;
+    primitive_test.double_test = 100.001;
+    primitive_test.int8_test = 0x01;
+    primitive_test.uint8_test = 0x01;
+    primitive_test.int16_test = 0x0101;
+    primitive_test.uint16_test = 0x0101;
+    primitive_test.int32_test = 0x01010101;
+    primitive_test.uint32_test = 0x01010101;
+    primitive_test.int64_test = 0x0101010101010101;
+    primitive_test.uint64_test = 0x0101010101010101;
+    
+    primitive_test.nested_test.unbounded_string1.data = (char*)"Test msg 0000001";
+    primitive_test.nested_test.unbounded_string1.size = strlen(primitive_test.nested_test.unbounded_string1.data) + 1;
+    primitive_test.nested_test.unbounded_string1.capacity = primitive_test.nested_test.unbounded_string1.size;
+
+    primitive_test.nested_test.unbounded_string2.data = (char*)"Test msg 002";
+    primitive_test.nested_test.unbounded_string2.size = strlen(primitive_test.nested_test.unbounded_string2.data) + 1;
+    primitive_test.nested_test.unbounded_string2.capacity = primitive_test.nested_test.unbounded_string2.size;
+
+    primitive_test.nested_test.unbounded_string3.data = (char*)"Test msg 0000000000000000003";
+    primitive_test.nested_test.unbounded_string3.size = strlen(primitive_test.nested_test.unbounded_string3.data) + 1;
+    primitive_test.nested_test.unbounded_string3.capacity = primitive_test.nested_test.unbounded_string3.size;
+
+    primitive_test.nested_test.unbounded_string4.data = (char*)"Test msg 4";
+    primitive_test.nested_test.unbounded_string4.size = strlen(primitive_test.nested_test.unbounded_string4.data) + 1;
+    primitive_test.nested_test.unbounded_string4.capacity = primitive_test.nested_test.unbounded_string4.size;
   }
 
 
@@ -50,52 +84,74 @@ protected:
   {
   }
 
-  
+  bool  Compare(rosidl_typesupport_microxrcedds_test_msg__msg__Primitive A, rosidl_typesupport_microxrcedds_test_msg__msg__Primitive B)
+  {
+    bool eq = true;
+    
+    eq = A.bool_test == B.bool_test;
+    eq = A.byte_test == B.byte_test;
+    eq = A.char_test == B.char_test;
+    eq = A.float32_test == B.float32_test;
+    eq = A.double_test == B.double_test;
+    eq = A.int8_test == B.int8_test;
+    eq = A.uint8_test == B.uint8_test;
+    eq = A.int16_test == B.int16_test;
+    eq = A.uint16_test == B.uint16_test;
+    eq = A.int32_test == B.int32_test;
+    eq = A.uint32_test == B.uint32_test;
+    eq = A.int64_test == B.int64_test;
+    eq = A.uint64_test == B.uint64_test;
+    
+    eq = A.nested_test.unbounded_string1.size == B.nested_test.unbounded_string1.size;
+    eq = A.nested_test.unbounded_string1.capacity == B.nested_test.unbounded_string1.capacity;
+    eq = strcmp(A.nested_test.unbounded_string1.data, B.nested_test.unbounded_string1.data) == 0;
+
+    eq = A.nested_test.unbounded_string2.size == B.nested_test.unbounded_string2.size;
+    eq = A.nested_test.unbounded_string2.capacity == B.nested_test.unbounded_string2.capacity;
+    eq = strcmp(A.nested_test.unbounded_string2.data, B.nested_test.unbounded_string2.data) == 0;
+
+    eq = A.nested_test.unbounded_string3.size == B.nested_test.unbounded_string3.size;
+    eq = A.nested_test.unbounded_string3.capacity == B.nested_test.unbounded_string3.capacity;
+    eq = strcmp(A.nested_test.unbounded_string3.data, B.nested_test.unbounded_string3.data) == 0;
+
+    eq = A.nested_test.unbounded_string4.size == B.nested_test.unbounded_string4.size;
+    eq = A.nested_test.unbounded_string4.capacity == B.nested_test.unbounded_string4.capacity;
+    eq = strcmp(A.nested_test.unbounded_string4.data, B.nested_test.unbounded_string4.data) == 0;
+
+    return eq;
+  }
+
+  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_test;
+  const rosidl_message_type_support_t * rosidl_message_type_support;
+  const message_type_support_callbacks_t * message_type_support_callbacks;  
 };
+
+/*
+   Testing subscription construction and destruction.
+ */
+TEST_F(TestTypeSupport, typesupport_identifier) {
+    
+    EXPECT_EQ(strcmp(rosidl_message_type_support->typesupport_identifier, ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE), 0);
+}
+
 
 
 /*
    Testing subscription construction and destruction.
  */
-TEST_F(TestTypeSupport, serialize_and_sesserialize) {
+TEST_F(TestTypeSupport, serialize_and_deserialize) {
     
-    // Test 
-    {
-        /*
-        message_type_support_callbacks_t dummy_callbacks;
-        dummy_callbacks.message_name_ = "dummy";
-        dummy_callbacks.package_name_ = "dummy";
-        dummy_callbacks.cdr_serialize = [](const void * untyped_ros_message, ucdrBuffer * cdr){return true;};
-        dummy_callbacks.cdr_deserialize = [](ucdrBuffer * cdr, void * untyped_ros_message, uint8_t* raw_mem_ptr, size_t raw_mem_size){return true;};
-        dummy_callbacks.get_serialized_size = [](const void*){return (uint32_t)0;};
-        dummy_callbacks.max_serialized_size = [](bool full_bounded){return (size_t)0;};
+  ucdrBuffer mb_writer;
+  ucdrBuffer mb_reader;
+  uint8_t mb_buffer[500];
+  ucdr_init_buffer(&mb_writer, mb_buffer, sizeof(mb_buffer));
+  ucdr_init_buffer(&mb_reader, mb_buffer, sizeof(mb_buffer));
 
+  EXPECT_EQ(message_type_support_callbacks->cdr_serialize(&primitive_test, &mb_writer), true);
 
-        rosidl_message_type_support_t dummy_type_support;
-        dummy_type_support.typesupport_identifier = rosidl_typesupport_microxrcedds_c__identifier;
-        dummy_type_support.data = &dummy_callbacks;
-        dummy_type_support.func = [](const rosidl_message_type_support_t * type_support, const char * id){return type_support;};
-
-        rmw_qos_profile_t dummy_qos_policies;
-        dummy_qos_policies.avoid_ros_namespace_conventions = false;
-        dummy_qos_policies.depth = 0;
-        dummy_qos_policies.durability = RMW_QOS_POLICY_DURABILITY_SYSTEM_DEFAULT;
-        //dummy_qos_policies.durability = RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL;
-        //dummy_qos_policies.durability = RMW_QOS_POLICY_DURABILITY_VOLATILE;
-        dummy_qos_policies.history = RMW_QOS_POLICY_HISTORY_SYSTEM_DEFAULT;
-        //dummy_qos_policies.history = RMW_QOS_POLICY_HISTORY_KEEP_LAST;
-        //dummy_qos_policies.history = RMW_QOS_POLICY_HISTORY_KEEP_ALL;
-        dummy_qos_policies.reliability = RMW_QOS_POLICY_RELIABILITY_SYSTEM_DEFAULT;
-        //dummy_qos_policies.reliability = RMW_QOS_POLICY_RELIABILITY_RELIABLE;
-        //dummy_qos_policies.reliability = RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT;
-
-        bool ignore_local_publications = true;
-
-        rmw_subscription_t * sub = rmw_create_subscription(this->node, &dummy_type_support, "topic_name", &dummy_qos_policies, ignore_local_publications);
-        EXPECT_NE((void*)sub, (void*)NULL);
-
-        rmw_ret_t ret = rmw_destroy_subscription(this->node, sub);
-        EXPECT_EQ(ret,RMW_RET_OK);
-        */
-    }
+  uint8_t deserialize_buffer[500];
+  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_test_out;
+  EXPECT_EQ(message_type_support_callbacks->cdr_deserialize(&mb_reader, &primitive_test_out, deserialize_buffer, sizeof(deserialize_buffer)), true);
+  
+  EXPECT_EQ(Compare(primitive_test, primitive_test_out), true);
 }
