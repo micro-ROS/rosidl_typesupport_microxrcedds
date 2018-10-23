@@ -44,15 +44,15 @@ if(WIN32)
   target_compile_definitions(${PROJECT_NAME}
     PRIVATE "ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_BUILDING_DLL")
 endif()
-target_include_directories(${PROJECT_NAME} 
-  PUBLIC 
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
   include
 )
 ament_export_libraries(${PROJECT_NAME})
 
 ament_index_register_resource("rosidl_typesupport_c")
 
-if(BUILD_TESTING)   
+if(BUILD_TESTING)
     find_package(ament_lint_auto REQUIRED)
     ament_lint_auto_find_test_dependencies()
 endif()

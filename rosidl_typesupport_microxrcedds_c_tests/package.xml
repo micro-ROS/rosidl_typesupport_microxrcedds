@@ -17,7 +17,7 @@
   <test_depend>rosidl_typesupport_microxrcedds_c</test_depend>
   <test_depend>rosidl_typesupport_microxrcedds_test_msg</test_depend>
   <test_depend>ament_cmake_gtest</test_depend>
-
+  <test_depend>builtin_interfaces</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

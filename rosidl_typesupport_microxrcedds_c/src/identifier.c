@@ -18,5 +18,6 @@
 
 
 const char *
-  rosidl_typesupport_microxrcedds_c__identifier = ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE; //"rosidl_typesupport_microxrcedds_c";
-
+  rosidl_typesupport_microxrcedds_c__identifier =
+  ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE;
+// "rosidl_typesupport_microxrcedds_c";

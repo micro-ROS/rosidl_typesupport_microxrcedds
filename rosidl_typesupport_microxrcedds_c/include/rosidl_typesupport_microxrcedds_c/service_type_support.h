@@ -29,7 +29,6 @@ typedef struct service_type_support_callbacks_t
 
   const rosidl_message_type_support_t * (*request_members_)();
   const rosidl_message_type_support_t * (*response_members_)();
-  
 } service_type_support_callbacks_t;
 
 #endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__SERVICE_TYPE_SUPPORT_H_

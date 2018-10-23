@@ -21,7 +21,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(rosidl_typesupport_microxrcedds_test_msg REQUIRED)
-  find_package(rosidl_default_generators REQUIRED)
   find_package(ament_cmake_gtest REQUIRED)
 
   # Node tests
