@@ -7,7 +7,6 @@
   <maintainer email="javiermoreno@eprosima.com">Javier Moreno</maintainer>
   <license>Apache License 2.0</license>
 
-
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>microxrcedds_cmake_module</buildtool_depend>
   <buildtool_depend>microcdr</buildtool_depend>

@@ -85,6 +85,7 @@ bool ok = true;
 @[  if field.type.is_array]@
   // Arrays (upper bounded or unbounded) are not supported yet
   (void)cdr;
+  (void)ros_message;
   ok = false;
 @[  elif field.type.type == 'bool']@
     ok &= ucdr_serialize_bool(cdr, ros_message.@(field.name));
@@ -113,14 +114,17 @@ bool ok = true;
 @[  elif field.type.type == 'uint64']@
     ok &= ucdr_serialize_uint64_t(cdr, ros_message.@(field.name));
 @[  elif field.type.type == 'string']@
+    (void)cdr;
+    (void)ros_message;
     //ok &= ucdr_serialize_sequence_char(cdr, ros_message.@(field.name).data, (uint32_t)ros_message.@(field.name).size());
     ok = false; // String types are not supported yet in C++ typesupport
 @[  elif field.type.is_primitive_type()]@
     // Unkwnow primitive type
     ok = false;
 @[  else]@
-    //ok &= ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_cpp, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_serialize(ros_message.@(field.name), cdr);
-    ok = false; // Nested types are not supported yet in C++ typesupport
+    @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::cdr_serialize(
+    ros_message.@(field.name),
+    cdr);
 @[  end if]@
   }
 @[end for]@
@@ -147,6 +151,7 @@ cdr_deserialize(
 @[  if field.type.is_array]@
     // Arrays (upper bounded or unbounded) are not supported yet
     (void)cdr;
+    (void)ros_message;
     ok = false;
 @[  elif field.type.type == 'bool']@
     ok &= ucdr_deserialize_bool(cdr, &ros_message.@(field.name));
@@ -175,6 +180,8 @@ cdr_deserialize(
 @[  elif field.type.type == 'uint64']@
     ok &= ucdr_deserialize_uint64_t(cdr, &ros_message.@(field.name));
 @[  elif field.type.type == 'string']@
+    (void)cdr;
+    (void)ros_message;
     //uint32_t Aux_uint32;
     //size_t available_buffer_bytes;
     //void* buffer_write_pointer = GetWritePointer(&available_buffer_bytes);
@@ -197,8 +204,8 @@ cdr_deserialize(
     // Unkwnow primitive type
     ok = false;
 @[  else]@
-    //ok &=  ((const message_type_support_callbacks_t *)(ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_cpp, @(field.type.pkg_name), msg, @(field.type.type))()->data))->cdr_deserialize(cdr, ros_message.@(field.name));
-    ok = false; // Nested types are not supported yet in C++ typesupport
+    @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::cdr_deserialize(
+    cdr, ros_message.@(field.name));
 @[  end if]@
   }
 @[end for]@
@@ -211,32 +218,68 @@ get_serialized_size(
   const @(spec.base_type.pkg_name)::@(subfolder)::@(spec.base_type.type) & ros_message,
   size_t current_alignment)
 {
-/*
 @[if not spec.fields]@
-  (void)untyped_ros_message;
+  (void)ros_message;
   (void)current_alignment;
 @[else]@
-  @(pkg)__@(subfolder)__@(type) * ros_message = (@(pkg)__@(subfolder)__@(type) *)(untyped_ros_message);
   size_t initial_alignment = current_alignment;
-@[end if]@
 
+  const size_t padding = 4;
+  (void)padding;
+
+@[end if]@
 @[for field in spec.fields]@
-  // field.name @(field.name) (@(field.type.type))
-  {
+  // field.name @(field.name)
 @[  if field.type.is_array]@
-    // Arrays (upper bounded or unbounded) are not supported yet
-    (void) ros_message;
-    return 0;
+  {
+@[    if field.type.array_size and not field.type.is_upper_bound]@
+    size_t array_size = @(field.type.array_size);
+@[    else]@
+    size_t array_size = ros_message.@(field.name).size();
+@[      if field.type.is_upper_bound]@
+    if (array_size > @(field.type.array_size)) {
+      throw std::runtime_error("array size exceeds upper bound");
+    }
+@[      end if]@
+
+    current_alignment += padding +
+      ucdr_alignment(current_alignment, padding);
+@[    end if]@
+@[    if field.type.type == 'string']@
+    for (size_t index = 0; index < array_size; ++index) {
+      current_alignment += padding +
+        ucdr_alignment(current_alignment, padding) +
+        ros_message.@(field.name)[index].size() + 1;
+    }
+@[    elif field.type.is_primitive_type()]@
+    size_t item_size = sizeof(ros_message.@(field.name)[0]);
+    current_alignment += array_size * item_size +
+      ucdr_alignment(current_alignment, item_size);
+@[    else]
+    for (size_t index = 0; index < array_size; ++index) {
+      current_alignment +=
+        @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::get_serialized_size(
+        ros_message.@(field.name)[index], current_alignment);
+    }
+@[    end if]@
+  }
 @[  else]@
 @[    if field.type.type == 'string']@
-    current_alignment += MICROXRCEDDS_PADDING + ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + ros_message->@(field.name).size + 1;
+  current_alignment += padding +
+    ucdr_alignment(current_alignment, padding) +
+    ros_message.@(field.name).size() + 1;
 @[    elif field.type.is_primitive_type()]@
-    current_alignment += sizeof(ros_message->@(field.name)) + ucdr_alignment(current_alignment, sizeof(ros_message->@(field.name)));
+  {
+    size_t item_size = sizeof(ros_message.@(field.name));
+    current_alignment += item_size +
+      ucdr_alignment(current_alignment, item_size);
+  }
 @[    else]
-    current_alignment += get_serialized_size_@(field.type.pkg_name)__msg__@(field.type.type)(&(ros_message->@(field.name)), current_alignment);
+  current_alignment +=
+    @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::get_serialized_size(
+    ros_message.@(field.name), current_alignment);
 @[    end if]@
 @[  end if]@
-  }
 @[end for]@
 
 @[if not spec.fields]@
@@ -244,7 +287,6 @@ get_serialized_size(
 @[else]@
   return current_alignment - initial_alignment;
 @[end if]@
-*/
 }
 
 size_t
@@ -253,65 +295,65 @@ max_serialized_size_@(spec.base_type.type)(
   bool & full_bounded,
   size_t current_alignment)
 {
-/*
-@{full_bounded_Used = False}@
-@[if spec.fields]@
   size_t initial_alignment = current_alignment;
-  size_t array_size = 1;
-@[end if]@
+
+  const size_t padding = 4;
+  (void)padding;
+  (void)full_bounded;
 
 @[for field in spec.fields]@
-  // field.name @(field.name) (@(field.type.type))
+  // field.name @(field.name)
   {
 @[  if field.type.is_array]@
-    // Arrays (upper bounded or unbounded) are not supported yet
-    return 0;
+@[    if field.type.array_size]@
+    size_t array_size = @(field.type.array_size);
+@[    else]@
+    size_t array_size = 0;
+@[    end if]@
+@[    if not field.type.array_size or field.type.is_upper_bound]@
+    full_bounded = false;
+    current_alignment += padding +
+      ucdr_alignment(current_alignment, padding);
+@[    end if]@
+@[  else]@
+    size_t array_size = 1;
 @[  end if]@
+
 @[  if field.type.type == 'string']@
     full_bounded = false;
-    for (size_t index = 0; index < array_size; ++index) 
-    {
+    for (size_t index = 0; index < array_size; ++index) {
+      current_alignment += padding +
 @[    if field.type.string_upper_bound]@
-@#      current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + @(field.type.string_upper_bound) + 1;
-      current_alignment += MICROXRCEDDS_PADDING + ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + @(field.type.string_upper_bound) + 1;
+        ucdr_alignment(current_alignment, padding) +
+        @(field.type.string_upper_bound) + 1;
 @[    else]@
-@#      current_alignment += padding + eprosima::fastcdr::Cdr::alignment(current_alignment, padding) + 1;
-      current_alignment += MICROXRCEDDS_PADDING + ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + 1;
+        ucdr_alignment(current_alignment, padding) + 1;
 @[    end if]@
     }
 @[  elif field.type.is_primitive_type()]@
-@[    if field.type.type == 'bool' or field.type.type == 'byte' or field.type.type == 'char' or field.type.type == 'uint8' or field.type.type == 'int8' ]@
+@[    if field.type.type == 'bool' or field.type.type == 'byte' or field.type.type == 'char' or field.type.type == 'uint8' or field.type.type == 'int8' ]
     current_alignment += array_size * sizeof(uint8_t);
-@[    elif field.type.type == 'int16' or field.type.type == 'uint16']@
-@#    current_alignment += array_size * sizeof(uint16_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint16_t));
-    current_alignment += array_size * sizeof(uint16_t) + ucdr_alignment(current_alignment, sizeof(uint16_t));
-@[    elif field.type.type == 'int32' or field.type.type == 'uint32' or field.type.type == 'float32']@
-@#    current_alignment += array_size * sizeof(uint32_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
-    current_alignment += array_size * sizeof(uint32_t) + ucdr_alignment(current_alignment, sizeof(uint32_t));
-@[    elif field.type.type == 'int64' or field.type.type == 'uint64' or field.type.type == 'float64']@
-@#    current_alignment += array_size * sizeof(uint64_t) + eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint64_t));
-    current_alignment += array_size * sizeof(uint64_t) + ucdr_alignment(current_alignment, sizeof(uint64_t));
+@[    elif field.type.type == 'int16' or field.type.type == 'uint16']
+    current_alignment += array_size * sizeof(uint16_t) +
+      ucdr_alignment(current_alignment, sizeof(uint16_t));
+@[    elif field.type.type == 'int32' or field.type.type == 'uint32' or field.type.type == 'float32']
+    current_alignment += array_size * sizeof(uint32_t) +
+      ucdr_alignment(current_alignment, sizeof(uint32_t));
+@[    elif field.type.type == 'int64' or field.type.type == 'uint64' or field.type.type == 'float64']
+    current_alignment += array_size * sizeof(uint64_t) +
+      ucdr_alignment(current_alignment, sizeof(uint64_t));
 @[    end if]@
-@[  else]@
-@{    full_bounded_Used = True}@
-    for (size_t index = 0; index < array_size; ++index) 
-    {
-      current_alignment += max_serialized_size_@(field.type.pkg_name)__msg__@(field.type.type)(full_bounded, current_alignment);
+@[  else]
+    for (size_t index = 0; index < array_size; ++index) {
+      current_alignment +=
+        @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::max_serialized_size_@(field.type.type)(
+        full_bounded, current_alignment);
     }
 @[  end if]@
   }
 @[end for]@
 
-@[if full_bounded_Used == False]@
-  (void) full_bounded;
-@[end if]@
-@[if not spec.fields]@
-  (void) current_alignment;
-  return 0;
-@[else]@
   return current_alignment - initial_alignment;
-@[end if]@
-*/
 }
 
 static bool __cdr_serialize(

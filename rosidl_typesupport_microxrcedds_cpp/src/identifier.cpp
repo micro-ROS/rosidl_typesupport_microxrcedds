@@ -1,4 +1,4 @@
-// Copyright 2015 Open Source Robotics Foundation, Inc.
+// Copyright 2018 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 namespace rosidl_typesupport_microxrcedds_cpp
 {
-
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_EXPORT
 const char * typesupport_identifier = "rosidl_typesupport_microxrcedds_cpp";
-
 }  // namespace rosidl_typesupport_microxrcedds_cpp
