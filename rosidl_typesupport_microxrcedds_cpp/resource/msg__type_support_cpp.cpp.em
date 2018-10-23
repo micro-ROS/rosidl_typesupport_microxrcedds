@@ -114,15 +114,12 @@ bool ok = true;
 @[  elif field.type.type == 'uint64']@
     ok &= ucdr_serialize_uint64_t(cdr, ros_message.@(field.name));
 @[  elif field.type.type == 'string']@
-    (void)cdr;
-    (void)ros_message;
-    //ok &= ucdr_serialize_sequence_char(cdr, ros_message.@(field.name).data, (uint32_t)ros_message.@(field.name).size());
-    ok = false; // String types are not supported yet in C++ typesupport
+    ok &= ucdr_serialize_sequence_char(cdr, ros_message.@(field.name).c_str(), (uint32_t)ros_message.@(field.name).size());
 @[  elif field.type.is_primitive_type()]@
     // Unkwnow primitive type
     ok = false;
 @[  else]@
-    @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::cdr_serialize(
+    ok &= @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::cdr_serialize(
     ros_message.@(field.name),
     cdr);
 @[  end if]@
@@ -182,6 +179,7 @@ cdr_deserialize(
 @[  elif field.type.type == 'string']@
     (void)cdr;
     (void)ros_message;
+    ok &=  ucdr_deserialize_sequence_char(cdr, buffer_write_pointer, available_buffer_bytes, &Aux_uint32);
     //uint32_t Aux_uint32;
     //size_t available_buffer_bytes;
     //void* buffer_write_pointer = GetWritePointer(&available_buffer_bytes);
@@ -204,7 +202,7 @@ cdr_deserialize(
     // Unkwnow primitive type
     ok = false;
 @[  else]@
-    @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::cdr_deserialize(
+    ok &= @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::cdr_deserialize(
     cdr, ros_message.@(field.name));
 @[  end if]@
   }
