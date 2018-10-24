@@ -13,11 +13,14 @@
 @#  - get_header_filename_from_msg_name (function)
 @#######################################################################
 @
-#include "@(spec.base_type.pkg_name)/@(subfolder)/@(get_header_filename_from_msg_name(spec.base_type.type))__rosidl_typesupport_microxrcedds_cpp.hpp"
 
 #include <limits>
 #include <stdexcept>
 #include <string>
+#include <cstring>
+#include <iostream>
+
+#include "@(spec.base_type.pkg_name)/@(subfolder)/@(get_header_filename_from_msg_name(spec.base_type.type))__rosidl_typesupport_microxrcedds_cpp.hpp"
 
 #include "rosidl_typesupport_cpp/message_type_support.hpp"
 
@@ -40,7 +43,7 @@ bool cdr_serialize(
   const @(field.type.pkg_name)::msg::@(field.type.type) &,
   ucdrBuffer *);
 bool cdr_deserialize(
-  ucdrBuffer * ,
+  ucdrBuffer *,
   @(field.type.pkg_name)::msg::@(field.type.type) &);
 size_t get_serialized_size(
   const @(field.type.pkg_name)::msg::@(field.type.type) &,
@@ -94,7 +97,7 @@ bool ok = true;
 @[  elif field.type.type == 'char']@
     ok &= ucdr_serialize_char(cdr, (char)ros_message.@(field.name));
 @[  elif field.type.type == 'float32']@
-    ok &= ucdr_serialize_float(cdr, ros_message.@(field.name));  
+    ok &= ucdr_serialize_float(cdr, ros_message.@(field.name));
 @[  elif field.type.type == 'float64']@
     ok &= ucdr_serialize_double(cdr, ros_message.@(field.name));
 @[  elif field.type.type == 'int8']@
@@ -114,7 +117,7 @@ bool ok = true;
 @[  elif field.type.type == 'uint64']@
     ok &= ucdr_serialize_uint64_t(cdr, ros_message.@(field.name));
 @[  elif field.type.type == 'string']@
-    ok &= ucdr_serialize_sequence_char(cdr, ros_message.@(field.name).c_str(), (uint32_t)ros_message.@(field.name).size());
+    ok &= ucdr_serialize_string(cdr, ros_message.@(field.name).c_str());
 @[  elif field.type.is_primitive_type()]@
     // Unkwnow primitive type
     ok = false;
@@ -125,7 +128,7 @@ bool ok = true;
 @[  end if]@
   }
 @[end for]@
-return ok;
+  return ok;
 }
 
 bool
@@ -155,13 +158,13 @@ cdr_deserialize(
 @[  elif field.type.type == 'byte']@
     ok &= ucdr_deserialize_uint8_t(cdr, &ros_message.@(field.name));
 @[  elif field.type.type == 'char']@
-    ok &= ucdr_deserialize_char(cdr, (char*)&ros_message.@(field.name));
+    ok &= ucdr_deserialize_char(cdr, (char *)&ros_message.@(field.name));
 @[  elif field.type.type == 'float32']@
-    ok &= ucdr_deserialize_float(cdr, &ros_message.@(field.name));  
+    ok &= ucdr_deserialize_float(cdr, &ros_message.@(field.name));
 @[  elif field.type.type == 'float64']@
     ok &= ucdr_deserialize_double(cdr, &ros_message.@(field.name));
 @[  elif field.type.type == 'int8']@
-    ok &= ucdr_deserialize_char(cdr, (char*)&ros_message.@(field.name));
+    ok &= ucdr_deserialize_char(cdr, (char *)&ros_message.@(field.name));
 @[  elif field.type.type == 'uint8']@
     ok &= ucdr_deserialize_uint8_t(cdr, &ros_message.@(field.name));
 @[  elif field.type.type == 'int16']@
@@ -177,33 +180,15 @@ cdr_deserialize(
 @[  elif field.type.type == 'uint64']@
     ok &= ucdr_deserialize_uint64_t(cdr, &ros_message.@(field.name));
 @[  elif field.type.type == 'string']@
-    (void)cdr;
-    (void)ros_message;
-    ok &=  ucdr_deserialize_sequence_char(cdr, buffer_write_pointer, available_buffer_bytes, &Aux_uint32);
-    //uint32_t Aux_uint32;
-    //size_t available_buffer_bytes;
-    //void* buffer_write_pointer = GetWritePointer(&available_buffer_bytes);
-    //if (buffer_write_pointer != NULL)
-    if (false)// String types are not supported yet in C++ typesupport
-    {
-        //ok &=  ucdr_deserialize_sequence_char(cdr, buffer_write_pointer, available_buffer_bytes, &Aux_uint32);
-        // Set max deserialized
-        //Aux_uint32 += 1;
-        //ros_message.@(field.name).data = buffer_write_pointer;
-        //ros_message.@(field.name).size = (size_t)Aux_uint32;
-        //ros_message.@(field.name).capacity = (size_t)Aux_uint32;
-        //DecreaseAvailableBuffer(Aux_uint32);
-    }
-    else
-    {
-        ok = false;
-    }
+    ros_message.@(field.name).resize(ros_message.@(field.name).capacity());
+    ok &= ucdr_deserialize_string(cdr, &ros_message.@(field.name)[0], ros_message.@(field.name).capacity());
+    ros_message.@(field.name).resize(strlen(&ros_message.@(field.name)[0]));
 @[  elif field.type.is_primitive_type()]@
     // Unkwnow primitive type
     ok = false;
 @[  else]@
     ok &= @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::cdr_deserialize(
-    cdr, ros_message.@(field.name));
+      cdr, ros_message.@(field.name));
 @[  end if]@
   }
 @[end for]@

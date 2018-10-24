@@ -1,5 +1,6 @@
 # generated from
-# rosidl_typesupport_microxrcedds_cpp/rosidl_typesupport_microxrcedds_cpp-extras.cmake.in
+# rosidl_typesupport_microxrcedds_cpp/
+#   rosidl_typesupport_microxrcedds_cpp-extras.cmake.in
 
 #find_package(microxrcedds_client_cmake_module QUIET)
 find_package(microcdr REQUIRED CONFIG)
@@ -8,7 +9,8 @@ find_package(microxrcedds_client REQUIRED CONFIG)
 
 if(NOT microxrcedds_client_FOUND)
   message(STATUS
-    "Could not find eProsima Micro XRCE-DDS: skipping rosidl_typesupport_microxrcedds_cpp"
+    "Could not find eProsima Micro XRCE-DDS:
+    skipping rosidl_typesupport_microxrcedds_cpp"
   )
 else()
   find_package(ament_cmake_core QUIET REQUIRED)

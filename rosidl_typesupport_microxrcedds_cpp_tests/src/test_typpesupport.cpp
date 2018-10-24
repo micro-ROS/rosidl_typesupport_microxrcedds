@@ -27,17 +27,6 @@
 class TestTypeSupport : public ::testing::Test
 {
 protected:
-  static void SetUpTestCase()
-  {
-    // GTEST_DECLARE_bool_(break_on_failure);
-  }
-
-
-  static void TearDownTestCase()
-  {
-  }
-
-
   void SetUp()
   {
     rosidl_message_type_support =
@@ -46,7 +35,7 @@ protected:
       rosidl_typesupport_microxrcedds_test_msg,
       msg,
       Primitive)();
-    
+
     message_type_support_callbacks =
       (const message_type_support_callbacks_t *)rosidl_message_type_support->data;
 
@@ -64,45 +53,40 @@ protected:
     primitive_test.int64_test = 0x0101010101010101;
     primitive_test.uint64_test = 0x0101010101010101;
 
-    /*
-    primitive_test.nested_test.unbounded_string1.data = const_cast<char *>("Test msg 0000001");
-    primitive_test.nested_test.unbounded_string1.size = strlen(
-      primitive_test.nested_test.unbounded_string1.data) + 1;
-    primitive_test.nested_test.unbounded_string1.capacity =
-      primitive_test.nested_test.unbounded_string1.size;
-
-    primitive_test.nested_test.unbounded_string2.data = const_cast<char *>("Test msg 002");
-    primitive_test.nested_test.unbounded_string2.size = strlen(
-      primitive_test.nested_test.unbounded_string2.data) + 1;
-    primitive_test.nested_test.unbounded_string2.capacity =
-      primitive_test.nested_test.unbounded_string2.size;
-
-    primitive_test.nested_test.unbounded_string3.data =
-      const_cast<char *>("Test msg 0000000000000000003");
-    primitive_test.nested_test.unbounded_string3.size = strlen(
-      primitive_test.nested_test.unbounded_string3.data) + 1;
-    primitive_test.nested_test.unbounded_string3.capacity =
-      primitive_test.nested_test.unbounded_string3.size;
-
-    primitive_test.nested_test.unbounded_string4.data = const_cast<char *>("Test msg 4");
-    primitive_test.nested_test.unbounded_string4.size = strlen(
-      primitive_test.nested_test.unbounded_string4.data) + 1;
-    primitive_test.nested_test.unbounded_string4.capacity =
-      primitive_test.nested_test.unbounded_string4.size;
-      */
+    primitive_test.nested_test.unbounded_string1 = "ABCDEF";
+    primitive_test.nested_test.unbounded_string2 = "TGHIJKLMNO";
+    primitive_test.nested_test.unbounded_string3 = "PQRSTVWX";
+    primitive_test.nested_test.unbounded_string4 = "TYZ0123456789";
   }
 
-  void TearDown()
-  {
-  }
-  
   bool  Compare(
     rosidl_typesupport_microxrcedds_test_msg::msg::Primitive A,
     rosidl_typesupport_microxrcedds_test_msg::msg::Primitive B)
   {
-    return (A == B);
+    bool eq = true;
+
+    eq = A.bool_test == B.bool_test;
+    eq = A.byte_test == B.byte_test;
+    eq = A.char_test == B.char_test;
+    eq = A.float32_test == B.float32_test;
+    eq = A.double_test == B.double_test;
+    eq = A.int8_test == B.int8_test;
+    eq = A.uint8_test == B.uint8_test;
+    eq = A.int16_test == B.int16_test;
+    eq = A.uint16_test == B.uint16_test;
+    eq = A.int32_test == B.int32_test;
+    eq = A.uint32_test == B.uint32_test;
+    eq = A.int64_test == B.int64_test;
+    eq = A.uint64_test == B.uint64_test;
+
+    eq = A.nested_test.unbounded_string1.compare(B.nested_test.unbounded_string1) == 0;
+    eq = A.nested_test.unbounded_string2.compare(B.nested_test.unbounded_string2) == 0;
+    eq = A.nested_test.unbounded_string3.compare(B.nested_test.unbounded_string3) == 0;
+    eq = A.nested_test.unbounded_string4.compare(B.nested_test.unbounded_string4) == 0;
+
+    return eq;
   }
-  
+
   rosidl_typesupport_microxrcedds_test_msg::msg::Primitive primitive_test;
   const rosidl_message_type_support_t * rosidl_message_type_support;
   const message_type_support_callbacks_t * message_type_support_callbacks;
@@ -112,7 +96,7 @@ protected:
    Testing subscription construction and destruction.
  */
 TEST_F(TestTypeSupport, typesupport_identifier) {
-  EXPECT_EQ(strcmp(rosidl_message_type_support->typesupport_identifier,
+  ASSERT_EQ(strcmp(rosidl_message_type_support->typesupport_identifier,
     rosidl_typesupport_microxrcedds_cpp::typesupport_identifier), 0);
 }
 
@@ -127,13 +111,11 @@ TEST_F(TestTypeSupport, serialize_and_deserialize) {
   ucdr_init_buffer(&mb_writer, mb_buffer, sizeof(mb_buffer));
   ucdr_init_buffer(&mb_reader, mb_buffer, sizeof(mb_buffer));
 
-  EXPECT_EQ(message_type_support_callbacks->cdr_serialize(&primitive_test, &mb_writer), true);
+  ASSERT_EQ(message_type_support_callbacks->cdr_serialize(&primitive_test, &mb_writer), true);
 
-  uint8_t deserialize_buffer[500];
   rosidl_typesupport_microxrcedds_test_msg::msg::Primitive primitive_test_out;
-  //EXPECT_EQ(message_type_support_callbacks->cdr_deserialize(&mb_reader, &primitive_test_out,
-  //  deserialize_buffer, sizeof(deserialize_buffer)), true);
-  EXPECT_EQ(message_type_support_callbacks->cdr_deserialize(&mb_reader, &primitive_test_out), true);  
 
-  EXPECT_EQ(Compare(primitive_test, primitive_test_out), true);
+  ASSERT_EQ(message_type_support_callbacks->cdr_deserialize(&mb_reader, &primitive_test_out), true);
+
+  ASSERT_EQ(Compare(primitive_test, primitive_test_out), true);
 }

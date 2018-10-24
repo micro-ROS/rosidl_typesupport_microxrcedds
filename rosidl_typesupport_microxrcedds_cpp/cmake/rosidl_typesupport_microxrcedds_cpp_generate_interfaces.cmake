@@ -18,7 +18,7 @@ find_package(microxrcedds_client REQUIRED CONFIG)
 #find_package(microxrcedds_client REQUIRED MODULE)
 
 
-# list msg files 
+# list msg files
 set(_ros_idl_files "")
 foreach(_idl_file ${rosidl_generate_interfaces_IDL_FILES})
   get_filename_component(_extension "${_idl_file}" EXT)
@@ -92,7 +92,7 @@ foreach(dep ${target_dependencies})
 endforeach()
 
 
-# generate script argument file 
+# generate script argument file
 set(generator_arguments_file "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_cpp__arguments.json")
 rosidl_write_generator_arguments(
   "${generator_arguments_file}"
@@ -134,14 +134,14 @@ set(_target_suffix "__rosidl_typesupport_microxrcedds_cpp")
 # link_directories(${microxrcedds_LIBRARY_DIRS})
 
 
-# generate microxrcedds typesupport shared library 
+# generate microxrcedds typesupport shared library
 add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     ${_generated_msg_files} ${_generated_srv_files})
 
 
 if(WIN32)
- target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-   PRIVATE "ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_BUILDING_DLL_${PROJECT_NAME}")
+  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+    PRIVATE "ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_BUILDING_DLL_${PROJECT_NAME}")
 endif()
 
 
@@ -200,7 +200,7 @@ target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} micr
 target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c)
 
 
-# add dependencies 
+# add dependencies
 add_dependencies(
   ${rosidl_generate_interfaces_TARGET}
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
