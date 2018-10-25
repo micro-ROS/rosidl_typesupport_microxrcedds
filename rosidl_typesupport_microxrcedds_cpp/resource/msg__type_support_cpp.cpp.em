@@ -27,8 +27,8 @@
 #include "rosidl_typesupport_cpp/message_type_support.hpp"
 
 #include "rosidl_typesupport_microxrcedds_cpp/identifier.hpp"
-#include "rosidl_typesupport_microxrcedds_cpp/message_type_support.h"
 #include "rosidl_typesupport_microxrcedds_cpp/message_type_support_decl.hpp"
+#include "rosidl_typesupport_microxrcedds_shared/message_type_support.h"
 
 // forward declaration of message dependencies and their conversion functions
 @[for field in spec.fields]@
@@ -349,8 +349,12 @@ static bool __cdr_serialize(
 
 static bool __cdr_deserialize(
   ucdrBuffer * cdr,
-  void * untyped_ros_message)
+  void * untyped_ros_message,
+  uint8_t * raw_mem_ptr,
+  size_t raw_mem_size)
 {
+  (void)raw_mem_ptr;
+  (void)raw_mem_size;
   auto typed_message =
     static_cast<@(spec.base_type.pkg_name)::@(subfolder)::@(spec.base_type.type) *>(
     untyped_ros_message);
@@ -366,7 +370,7 @@ static uint32_t __get_serialized_size(
   return static_cast<uint32_t>(get_serialized_size(*typed_message, 0));
 }
 
-static size_t __max_serialized_size(bool & full_bounded)
+static size_t __max_serialized_size(bool full_bounded)
 {
   return max_serialized_size_@(spec.base_type.type)(full_bounded, 0);
 }

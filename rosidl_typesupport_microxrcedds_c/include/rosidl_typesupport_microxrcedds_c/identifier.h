@@ -15,8 +15,6 @@
 #ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_H_
 #define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_H_
 
-#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE "rosidl_typesupport_microxrcedds_c"
-
 #include "rosidl_typesupport_microxrcedds_c/visibility_control.h"
 
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC

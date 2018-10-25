@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <rosidl_typesupport_microxrcedds_shared/identifier.h>
-#include <rosidl_typesupport_microxrcedds_c/identifier.h>
-#include <rosidl_typesupport_microxrcedds_c/visibility_control.h>
+#ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_SHARED__IDENTIFIER_H_
+#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_SHARED__IDENTIFIER_H_
 
+#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE "rosidl_typesupport_microxrcedds_c"
+#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP__IDENTIFIER_VALUE "rosidl_typesupport_microxrcedds_cpp"
 
-const char *
-  rosidl_typesupport_microxrcedds_c__identifier =
-  ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE;
-// "rosidl_typesupport_microxrcedds_c";
+#endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_SHARED__IDENTIFIER_H_

@@ -15,7 +15,7 @@
 #find_package(microxrcedds_client_cmake_module QUIET)
 find_package(microcdr REQUIRED CONFIG)
 find_package(microxrcedds_client REQUIRED CONFIG)
-#find_package(microxrcedds_client REQUIRED MODULE)
+find_package(rosidl_typesupport_microxrcedds_shared REQUIRED CONFIG)
 
 
 # list msg files
@@ -170,6 +170,7 @@ target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c
   ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_cpp
   ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_shared
 )
 foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
   set(_msg_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/msg/dds_microxrcedds")
@@ -189,9 +190,9 @@ endforeach()
 # set ament depencencies
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   "microxrcedds_client"
-  #"rmw"
   "rosidl_typesupport_microxrcedds_cpp"
   "rosidl_typesupport_interface"
+  "rosidl_typesupport_microxrcedds_shared"
   "${PROJECT_NAME}__rosidl_typesupport_microxrcedds_cpp")
 
 

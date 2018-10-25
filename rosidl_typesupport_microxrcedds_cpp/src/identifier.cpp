@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include <rosidl_typesupport_microxrcedds_cpp/visibility_control.h>
+#include <rosidl_typesupport_microxrcedds_cpp/identifier.hpp>
+#include <rosidl_typesupport_microxrcedds_shared/identifier.h>
 
 namespace rosidl_typesupport_microxrcedds_cpp
 {

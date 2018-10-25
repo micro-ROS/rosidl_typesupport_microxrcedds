@@ -24,9 +24,9 @@
 #include <stdio.h>
 
 // Provides the rosidl_typesupport_microxrcedds_c__identifier symbol declaration.
-#include "rosidl_typesupport_microxrcedds_c/identifier.h"
+#include "rosidl_typesupport_microxrcedds_shared/identifier.h"
 // Provides the definition of the message_type_support_callbacks_t struct.
-#include "rosidl_typesupport_microxrcedds_c/message_type_support.h"
+#include "rosidl_typesupport_microxrcedds_shared/message_type_support.h"
 #include "rosidl_typesupport_microxrcedds_c/deserialize_buffer_utility.h"
 
 #include "@(pkg)/msg/rosidl_typesupport_microxrcedds_c__visibility_control.h"
@@ -372,7 +372,7 @@ static message_type_support_callbacks_t __callbacks = {
 };
 
 static rosidl_message_type_support_t __type_support = {
-  ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE,  // rosidl_typesupport_microxrcedds_c__identifier,
+  ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE,
   &__callbacks,
   get_message_typesupport_handle_function,
 };

@@ -35,6 +35,7 @@ if(BUILD_TESTING)
       ${TEST_NAME}
       rosidl_typesupport_microxrcedds_test_msg
       rosidl_typesupport_microxrcedds_c
+      rosidl_typesupport_microxrcedds_shared
       microcdr
     )
 

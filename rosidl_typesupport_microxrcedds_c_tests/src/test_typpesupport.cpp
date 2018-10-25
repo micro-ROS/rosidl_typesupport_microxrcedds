@@ -17,7 +17,8 @@
 
 
 #include <rosidl_typesupport_microxrcedds_c/identifier.h>
-#include <rosidl_typesupport_microxrcedds_c/message_type_support.h>
+#include <rosidl_typesupport_microxrcedds_shared/identifier.h>
+#include <rosidl_typesupport_microxrcedds_shared/message_type_support.h>
 
 #include <rosidl_typesupport_microxrcedds_test_msg/msg/primitive.h>
 #include \

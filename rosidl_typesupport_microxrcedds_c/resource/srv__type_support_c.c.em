@@ -12,9 +12,9 @@
 #include "@(spec.pkg_name)/srv/@(get_header_filename_from_msg_name(spec.srv_name))__rosidl_typesupport_microxrcedds_c.h"
 
 // Provides the rosidl_typesupport_microxrcedds_c__identifier symbol declaration.
-#include "rosidl_typesupport_microxrcedds_c/identifier.h"
+#include "rosidl_typesupport_microxrcedds_shared/identifier.h"
 // Provides the definition of the servicetype_support_callbacks_t struct.
-#include "rosidl_typesupport_microxrcedds_c/service_type_support.h"
+#include "rosidl_typesupport_microxrcedds_shared/service_type_support.h"
 
 
 #include "@(spec.pkg_name)/msg/rosidl_typesupport_microxrcedds_c__visibility_control.h"
@@ -39,7 +39,7 @@ static service_type_support_callbacks_t callbacks = {
 };
 
 static rosidl_service_type_support_t handle = {
-  ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE, //rosidl_typesupport_microxrcedds_c__identifier,
+  ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE,
   &callbacks,
   get_service_typesupport_handle_function,
 };
