@@ -14,6 +14,8 @@
 @#######################################################################
 @
 
+#include <ucdr/microcdr.h>
+
 #include <limits>
 #include <stdexcept>
 #include <string>
@@ -27,8 +29,6 @@
 #include "rosidl_typesupport_microxrcedds_cpp/identifier.hpp"
 #include "rosidl_typesupport_microxrcedds_cpp/message_type_support.h"
 #include "rosidl_typesupport_microxrcedds_cpp/message_type_support_decl.hpp"
-
-#include <ucdr/microcdr.h>
 
 // forward declaration of message dependencies and their conversion functions
 @[for field in spec.fields]@
@@ -74,7 +74,7 @@ cdr_serialize(
   const @(spec.base_type.pkg_name)::@(subfolder)::@(spec.base_type.type) & ros_message,
   ucdrBuffer * cdr)
 {
-bool ok = true;
+  bool ok = true;
 
 @[if not spec.fields]@
   // No fields is a no-op.
@@ -95,13 +95,13 @@ bool ok = true;
 @[  elif field.type.type == 'byte']@
     ok &= ucdr_serialize_uint8_t(cdr, ros_message.@(field.name));
 @[  elif field.type.type == 'char']@
-    ok &= ucdr_serialize_char(cdr, (char)ros_message.@(field.name));
+    ok &= ucdr_serialize_char(cdr, static_cast<char>(ros_message.@(field.name)));
 @[  elif field.type.type == 'float32']@
     ok &= ucdr_serialize_float(cdr, ros_message.@(field.name));
 @[  elif field.type.type == 'float64']@
     ok &= ucdr_serialize_double(cdr, ros_message.@(field.name));
 @[  elif field.type.type == 'int8']@
-    ok &= ucdr_serialize_char(cdr, (char)ros_message.@(field.name));
+    ok &= ucdr_serialize_char(cdr, static_cast<char>(ros_message.@(field.name)));
 @[  elif field.type.type == 'uint8']@
     ok &= ucdr_serialize_uint8_t(cdr, ros_message.@(field.name));
 @[  elif field.type.type == 'int16']@
@@ -123,8 +123,8 @@ bool ok = true;
     ok = false;
 @[  else]@
     ok &= @(field.type.pkg_name)::msg::typesupport_microxrcedds_cpp::cdr_serialize(
-    ros_message.@(field.name),
-    cdr);
+      ros_message.@(field.name),
+      cdr);
 @[  end if]@
   }
 @[end for]@
@@ -138,13 +138,12 @@ cdr_deserialize(
   @(spec.base_type.pkg_name)::@(subfolder)::@(spec.base_type.type) & ros_message)
 {
   bool ok = true;
-  
+
 @[if not spec.fields]@
   // No fields is a no-op.
   (void)cdr;
   (void)ros_message;
 @[end if]@
-
 @[for field in spec.fields]@
   // Field name: @(field.name) (@(field.type.type))
   {
@@ -158,13 +157,13 @@ cdr_deserialize(
 @[  elif field.type.type == 'byte']@
     ok &= ucdr_deserialize_uint8_t(cdr, &ros_message.@(field.name));
 @[  elif field.type.type == 'char']@
-    ok &= ucdr_deserialize_char(cdr, (char *)&ros_message.@(field.name));
+    ok &= ucdr_deserialize_char(cdr, reinterpret_cast<char *>(&ros_message.@(field.name)));
 @[  elif field.type.type == 'float32']@
     ok &= ucdr_deserialize_float(cdr, &ros_message.@(field.name));
 @[  elif field.type.type == 'float64']@
     ok &= ucdr_deserialize_double(cdr, &ros_message.@(field.name));
 @[  elif field.type.type == 'int8']@
-    ok &= ucdr_deserialize_char(cdr, (char *)&ros_message.@(field.name));
+    ok &= ucdr_deserialize_char(cdr, reinterpret_cast<char *>(&ros_message.@(field.name)));
 @[  elif field.type.type == 'uint8']@
     ok &= ucdr_deserialize_uint8_t(cdr, &ros_message.@(field.name));
 @[  elif field.type.type == 'int16']@
@@ -224,7 +223,6 @@ get_serialized_size(
       throw std::runtime_error("array size exceeds upper bound");
     }
 @[      end if]@
-
     current_alignment += padding +
       ucdr_alignment(current_alignment, padding);
 @[    end if]@
@@ -362,12 +360,10 @@ static bool __cdr_deserialize(
 static uint32_t __get_serialized_size(
   const void * untyped_ros_message)
 {
-
   auto typed_message =
     static_cast<const @(spec.base_type.pkg_name)::@(subfolder)::@(spec.base_type.type) *>(
     untyped_ros_message);
   return static_cast<uint32_t>(get_serialized_size(*typed_message, 0));
-  
 }
 
 static size_t __max_serialized_size(bool & full_bounded)
