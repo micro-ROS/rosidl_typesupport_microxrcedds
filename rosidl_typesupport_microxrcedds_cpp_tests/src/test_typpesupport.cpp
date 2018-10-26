@@ -116,7 +116,8 @@ TEST_F(TestTypeSupport, serialize_and_deserialize) {
 
   rosidl_typesupport_microxrcedds_test_msg::msg::Primitive primitive_test_out;
 
-  ASSERT_EQ(message_type_support_callbacks->cdr_deserialize(&mb_reader, &primitive_test_out, NULL, 0), true);
+  ASSERT_EQ(message_type_support_callbacks->cdr_deserialize(&mb_reader, &primitive_test_out, NULL,
+    0), true);
 
   ASSERT_EQ(Compare(primitive_test, primitive_test_out), true);
 }
