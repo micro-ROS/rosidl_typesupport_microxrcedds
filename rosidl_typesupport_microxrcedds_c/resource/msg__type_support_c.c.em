@@ -130,9 +130,9 @@ static bool __cdr_serialize(const void * untyped_ros_message, ucdrBuffer * cdr)
   // Field name: @(field.name) (@(field.type.type))
   {
 @[  if field.type.is_array]@
-  // Arrays (upper bounded or unbounded) are not supported yet
-  (void)cdr;
-  ok = false;
+    // Arrays (upper bounded or unbounded) are not supported yet
+    (void)cdr;
+    ok = false;
 @[  elif field.type.type == 'bool']@
     ok &= ucdr_serialize_bool(cdr, ros_message->@(field.name));
 @[  elif field.type.type == 'byte']@
