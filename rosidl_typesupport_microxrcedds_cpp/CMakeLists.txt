@@ -21,27 +21,23 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-find_package(microxrcedds_cmake_module QUIET)
-find_package(microcdr REQUIRED CONFIG)
-find_package(microxrcedds_client REQUIRED CONFIG)
 find_package(rosidl_typesupport_microxrcedds_shared REQUIRED CONFIG)
+find_package(microxrcedds_cmake_module QUIET)
 find_package(MicroXRCEDDS REQUIRED MODULE)
 
 find_package(ament_cmake_python REQUIRED)
 
-ament_export_dependencies(microxrcedds_client)
-ament_export_dependencies(rmw)
 ament_export_dependencies(rosidl_cmake)
 ament_export_dependencies(rosidl_generator_c)
 ament_export_dependencies(rosidl_generator_cpp)
-ament_export_dependencies(rosidl_generator_dds_idl)
+ament_export_dependencies(microcdr)
 
 ament_export_include_directories(include)
 
 ament_python_install_package(${PROJECT_NAME})
 
-
 add_library(${PROJECT_NAME} src/identifier.cpp)
+ament_export_libraries(${PROJECT_NAME})
 
 ament_target_dependencies(
   ${PROJECT_NAME}

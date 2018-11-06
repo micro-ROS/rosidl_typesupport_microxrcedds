@@ -5,6 +5,9 @@
 find_package(microxrcedds_cmake_module REQUIRED)
 find_package(MicroXRCEDDS REQUIRED MODULE)
 
+# specific order: dependents before dependencies
+list(APPEND rosidl_typesupport_microxrcedds_c_LIBRARIES microcdr)
+
 if(NOT microxrcedds_client_FOUND)
   message(STATUS
     "Could not find eProsima Micro XRCE-DDS:
