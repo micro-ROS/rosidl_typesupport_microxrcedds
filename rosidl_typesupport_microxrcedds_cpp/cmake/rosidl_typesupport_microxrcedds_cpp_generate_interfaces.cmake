@@ -196,7 +196,7 @@ target_link_libraries(
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
   ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c
   microcdr
-  )
+)
 
 
 # add dependencies
