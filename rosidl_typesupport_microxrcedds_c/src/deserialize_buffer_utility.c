@@ -17,7 +17,6 @@
 #include <string.h>
 
 #include <rosidl_typesupport_microxrcedds_c/deserialize_buffer_utility.h>
-#include <rosidl_typesupport_microxrcedds_c/visibility_control.h>
 
 void rosidl_typesupport_microxrcedds_c__align_pointer(
   uint8_t ** pointer_to_align,
