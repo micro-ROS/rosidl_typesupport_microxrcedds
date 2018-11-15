@@ -18,7 +18,9 @@
 
 #include <stddef.h>
 
+#include "rosidl_typesupport_microxrcedds_c/visibility_control.h"
 
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC
 void rosidl_typesupport_microxrcedds_c__align_pointer(uint8_t ** intput_pointer, size_t * mem_size);
 
 #endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__DESERIALIZE_BUFFER_UTILITY_H_
