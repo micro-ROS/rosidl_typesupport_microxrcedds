@@ -28,11 +28,9 @@ find_package(MicroXRCEDDS REQUIRED MODULE)
 find_package(ament_cmake_python REQUIRED)
 
 ament_export_dependencies(rosidl_typesupport_microxrcedds_shared)
-ament_export_dependencies(rmw)
 ament_export_dependencies(rosidl_cmake)
 ament_export_dependencies(rosidl_generator_c)
 ament_export_dependencies(microcdr)
-ament_export_dependencies(rosidl_generator_dds_idl)
 
 ament_export_include_directories(include)
 

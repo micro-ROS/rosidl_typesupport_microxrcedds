@@ -15,7 +15,8 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-
+find_package(rosidl_typesupport_microxrcedds_c QUIET)
+if(rosidl_typesupport_microxrcedds_c_FOUND)
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
@@ -46,7 +47,7 @@ if(BUILD_TESTING)
 
 
 endif()
-
+endif()
 
 
 ament_package()

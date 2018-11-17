@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#find_package(microxrcedds_client_cmake_module QUIET)
-find_package(microcdr REQUIRED CONFIG)
-find_package(microxrcedds_client REQUIRED CONFIG)
+find_package(microxrcedds_cmake_module REQUIRED)
+find_package(MicroXRCEDDS REQUIRED MODULE)
 find_package(rosidl_typesupport_microxrcedds_shared REQUIRED CONFIG)
 
 
@@ -131,8 +130,6 @@ configure_file(
 set(_target_suffix "__rosidl_typesupport_microxrcedds_cpp")
 
 
-# link_directories(${microxrcedds_LIBRARY_DIRS})
-
 
 # generate microxrcedds typesupport shared library
 add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix}
@@ -189,16 +186,17 @@ endforeach()
 
 # set ament depencencies
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  "microxrcedds_client"
   "rosidl_typesupport_microxrcedds_cpp"
   "rosidl_typesupport_interface"
   "rosidl_typesupport_microxrcedds_shared"
   "${PROJECT_NAME}__rosidl_typesupport_microxrcedds_cpp")
 
-
 # link libraries
-target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} microxrcedds_client microcdr)
-target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c)
+target_link_libraries(
+  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c
+  microcdr
+)
 
 
 # add dependencies
@@ -210,14 +208,6 @@ add_dependencies(
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
   ${rosidl_generate_interfaces_TARGET}__cpp
 )
-#add_dependencies(
-#  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  ${rosidl_generate_interfaces_TARGET}__rosidl_typesupport_microxrcedds_cpp
-#)
-#add_dependencies(
-#  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  ${rosidl_generate_interfaces_TARGET}__c
-#)
 
 
 # install

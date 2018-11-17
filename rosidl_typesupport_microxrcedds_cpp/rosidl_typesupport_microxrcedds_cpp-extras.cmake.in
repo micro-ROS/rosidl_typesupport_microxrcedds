@@ -2,10 +2,11 @@
 # rosidl_typesupport_microxrcedds_cpp/
 #   rosidl_typesupport_microxrcedds_cpp-extras.cmake.in
 
-#find_package(microxrcedds_client_cmake_module QUIET)
-find_package(microcdr REQUIRED CONFIG)
-find_package(microxrcedds_client REQUIRED CONFIG)
-#find_package(microxrcedds_client REQUIRED MODULE)
+find_package(microxrcedds_cmake_module REQUIRED)
+find_package(MicroXRCEDDS REQUIRED MODULE)
+
+# specific order: dependents before dependencies
+list(APPEND rosidl_typesupport_microxrcedds_cpp_LIBRARIES microcdr)
 
 if(NOT microxrcedds_client_FOUND)
   message(STATUS

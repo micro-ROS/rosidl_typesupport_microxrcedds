@@ -130,9 +130,6 @@ configure_file(
 set(_target_suffix "__rosidl_typesupport_microxrcedds_c")
 
 
-# link_directories(${microxrcedds_LIBRARY_DIRS})
-
-
 # generate Micro XRCE-DDS typesupport shared library
 add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     ${_generated_msg_files} ${_generated_srv_files})
@@ -187,17 +184,19 @@ endforeach()
 
 # set ament depencencies
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  "microxrcedds_client"
   "rosidl_typesupport_microxrcedds_c"
   "rosidl_typesupport_interface"
   "rosidl_typesupport_microxrcedds_shared"
   "${PROJECT_NAME}__rosidl_typesupport_microxrcedds_c")
 
+  ament_export_libraries(rosidl_typesupport_microxrcedds_c)
 
 # link libraries
-target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} microxrcedds_client microcdr)
-target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c)
+target_link_libraries(
+  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  microcdr
+  ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c
+)
 
 
 # add dependencies
@@ -205,18 +204,6 @@ add_dependencies(
   ${rosidl_generate_interfaces_TARGET}
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
 )
-#add_dependencies(
-#  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  ${rosidl_generate_interfaces_TARGET}__c
-#)
-#add_dependencies(
-#  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  ${rosidl_generate_interfaces_TARGET}__rosidl_typesupport_microxrcedds_c
-#)
-#add_dependencies(
-#  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  ${rosidl_generate_interfaces_TARGET}__c
-#)
 
 
 # install
