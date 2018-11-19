@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__SERVICE_TYPE_SUPPORT_H_
-#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__SERVICE_TYPE_SUPPORT_H_
+#ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_SHARED__SERVICE_TYPE_SUPPORT_H_
+#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_SHARED__SERVICE_TYPE_SUPPORT_H_
 
 #include <stdint.h>
 #include <rmw/types.h>
@@ -31,4 +31,4 @@ typedef struct service_type_support_callbacks_t
   const rosidl_message_type_support_t * (*response_members_)();
 } service_type_support_callbacks_t;
 
-#endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__SERVICE_TYPE_SUPPORT_H_
+#endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_SHARED__SERVICE_TYPE_SUPPORT_H_
