@@ -49,7 +49,6 @@
 
 #define MICROXRCEDDS_PADDING sizeof(uint32_t)
 
-
 @# // Include the message header for each non-primitive field.
 @{
 includes = {}
@@ -307,7 +306,6 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
   size_t initial_alignment = current_alignment;
   size_t array_size = 1;
 @[end if]@
-
 @[for field in spec.fields]@
   // field.name @(field.name) (@(field.type.type))
   {
@@ -342,7 +340,6 @@ size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base
 @[  end if]@
   }
 @[end for]@
-
 @[if full_bounded_Used == False]@
   (void) full_bounded;
 @[end if]@
