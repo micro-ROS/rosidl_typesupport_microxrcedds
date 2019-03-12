@@ -30,31 +30,28 @@ endforeach()
 
 # list mesgs and srvs
 set(_output_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c/${PROJECT_NAME}")
-set(_generated_msg_files "")
-set(_generated_srv_files "")
+set(_generated_files "")
 foreach(_idl_file ${rosidl_generate_interfaces_IDL_FILES})
+  get_filename_component(_parent_folder "${_idl_file}" DIRECTORY)
+  get_filename_component(_parent_folder "${_parent_folder}" NAME)
   get_filename_component(_extension "${_idl_file}" EXT)
   get_filename_component(_msg_name "${_idl_file}" NAME_WE)
   string_camel_case_to_lower_case_underscore("${_msg_name}" _header_name)
   if(_extension STREQUAL ".msg")
-    get_filename_component(_parent_folder "${_idl_file}" DIRECTORY)
-    get_filename_component(_parent_folder "${_parent_folder}" NAME)
-    if(_parent_folder STREQUAL "msg")
-      set(_var2 "_generated_msg_files")
-    elseif(_parent_folder STREQUAL "srv")
-      set(_var2 "_generated_srv_files")
-    else()
+    set(_allowed_parent_folders "msg" "srv" "action")
+    if(NOT _parent_folder IN_LIST _allowed_parent_folders)
       message(FATAL_ERROR "Interface file with unknown parent folder: ${_idl_file}")
     endif()
-
-    list(APPEND ${_var2} "${_output_path}/${_parent_folder}/${_header_name}__rosidl_typesupport_microxrcedds_c.h")
-    list(APPEND ${_var2} "${_output_path}/${_parent_folder}/dds_microxrcedds/${_header_name}__type_support_c.c")
   elseif(_extension STREQUAL ".srv")
-    list(APPEND _generated_srv_files "${_output_path}/srv/${_header_name}__rosidl_typesupport_microxrcedds_c.h")
-    list(APPEND _generated_srv_files "${_output_path}/srv/dds_microxrcedds/${_header_name}__type_support_c.c")
+    set(_allowed_parent_folders "srv" "action")
+    if(NOT _parent_folder IN_LIST _allowed_parent_folders)
+      message(FATAL_ERROR "Interface file with unknown parent folder: ${_idl_file}")
+    endif()
   else()
     message(FATAL_ERROR "Interface file with unknown extension: ${_idl_file}")
   endif()
+  list(APPEND _generated_files "${_output_path}/${_parent_folder}/${_header_name}__rosidl_typesupport_microxrcedds_c.h")
+  list(APPEND _generated_files "${_output_path}/${_parent_folder}/dds_microxrcedds/${_header_name}__type_support_c.c")
 endforeach()
 
 
@@ -86,7 +83,10 @@ set(target_dependencies
   ${_dependency_files})
 foreach(dep ${target_dependencies})
   if(NOT EXISTS "${dep}")
-    message(FATAL_ERROR "Target dependency '${dep}' does not exist")
+    get_property(is_generated SOURCE "${dep}" PROPERTY GENERATED)
+    if(NOT ${_is_generated})
+      message(FATAL_ERROR "Target dependency '${dep}' does not exist")
+    endif()
   endif()
 endforeach()
 
@@ -107,7 +107,7 @@ rosidl_write_generator_arguments(
 
 # execute python script
 add_custom_command(
-  OUTPUT ${_generated_msg_files} ${_generated_srv_files}
+  OUTPUT ${_generated_files}
   COMMAND ${PYTHON_EXECUTABLE} ${rosidl_typesupport_microxrcedds_c_BIN}
   --generator-arguments-file "${generator_arguments_file}"
   DEPENDS ${target_dependencies} ${_dds_idl_files}
@@ -132,7 +132,7 @@ set(_target_suffix "__rosidl_typesupport_microxrcedds_c")
 
 # generate Micro XRCE-DDS typesupport shared library
 add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-    ${_generated_msg_files} ${_generated_srv_files})
+    ${_generated_files})
 
 
 if(WIN32)
@@ -215,8 +215,7 @@ if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
   )
 
   if(
-    NOT _generated_msg_files STREQUAL "" OR
-    NOT _generated_srv_files STREQUAL ""
+    NOT _generated_files STREQUAL ""
   )
     ament_export_include_directories(include)
   endif()
@@ -234,11 +233,11 @@ endif()
 
 # test
 if(BUILD_TESTING AND rosidl_generate_interfaces_ADD_LINTER_TESTS)
-  if(NOT _generated_msg_files STREQUAL "" OR NOT _generated_srv_files STREQUAL "")
+  if(NOT _generated_files STREQUAL "")
     find_package(ament_cmake_cppcheck REQUIRED)
     ament_cppcheck(
       TESTNAME "cppcheck_rosidl_typesupport_microxrcedds_c"
-      ${_generated_msg_files} ${_generated_srv_files})
+      ${_generated_files})
 
     find_package(ament_cmake_cpplint REQUIRED)
     get_filename_component(_cpplint_root "${_output_path}" DIRECTORY)
@@ -247,13 +246,13 @@ if(BUILD_TESTING AND rosidl_generate_interfaces_ADD_LINTER_TESTS)
       # the generated code might contain longer lines for templated types
       MAX_LINE_LENGTH 999
       ROOT "${_cpplint_root}"
-      ${_generated_msg_files} ${_generated_srv_files})
+      ${_generated_files})
 
     find_package(ament_cmake_uncrustify REQUIRED)
     ament_uncrustify(
       TESTNAME "uncrustify_rosidl_typesupport_microxrcedds_c"
       # the generated code might contain longer lines for templated types
       MAX_LINE_LENGTH 999
-      ${_generated_msg_files} ${_generated_srv_files})
+      ${_generated_files})
   endif()
 endif()

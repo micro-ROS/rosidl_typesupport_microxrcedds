@@ -59,6 +59,7 @@ def generate_typesupport_microxrcedds_cpp(args):
 
     for idl_file in args['ros_interface_files']:
         extension = os.path.splitext(idl_file)[1]
+        subfolder = os.path.basename(os.path.dirname(idl_file))
         if extension == '.msg':
             spec = parse_message_file(pkg_name, idl_file)
             validate_field_types(spec, known_msg_types)
@@ -87,14 +88,14 @@ def generate_typesupport_microxrcedds_cpp(args):
             spec = parse_service_file(pkg_name, idl_file)
             validate_field_types(spec, known_msg_types)
             for template_file, generated_filename in mapping_srvs.items():
-                generated_file = os.path.join(args['output_dir'], 'srv')
+                generated_file = os.path.join(args['output_dir'], subfolder)
                 if generated_filename.endswith('.cpp'):
                     generated_file = os.path.join(generated_file, 'dds_microxrcedds')
                 generated_file = os.path.join(
                     generated_file, generated_filename %
                     convert_camel_case_to_lower_case_underscore(spec.srv_name))
 
-                data = {'spec': spec}
+                data = {'spec': spec, 'subfolder': subfolder}
                 data.update(functions)
                 expand_template(
                     template_file, data, generated_file,
