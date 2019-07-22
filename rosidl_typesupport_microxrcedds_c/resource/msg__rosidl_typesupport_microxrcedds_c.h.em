@@ -1,58 +1,48 @@
-// generated from
-// rosidl_typesupport_microxrcedds_c/resource/msg__rosidl_typesupport_microxrcedds_c.h.em
-// generated code does not contain a copyright notice
-@#######################################################################
-@# EmPy template for generating
-@# <msg>__rosidl_typesupport_microxrcedds_c.h files
-@#
-@# Context:
-@#  - spec (rosidl_parser.MessageSpecification)
-@#    Parsed specification of the .msg file
-@#  - subfolder (string)
-@#    The subfolder / subnamespace of the message
-@#    Either 'msg' or 'srv'
-@#  - get_header_filename_from_msg_name (function)
-@#######################################################################
-@
+@# Included from rosidl_typesupport_microxrcedds_c/resource/idl__rosidl_typesupport_microxrcedds_c.h.em
 @{
-header_guard_parts = [
-    spec.base_type.pkg_name, subfolder,
-    get_header_filename_from_msg_name(spec.base_type.type) + '__rosidl_typesupport_microxrcedds_c_h']
-header_guard_variable = '__'.join([x.upper() for x in header_guard_parts]) + '_'
+header_files = [
+    'stddef.h',
+    'stdbool.h',
+    'stdint.h',
+    'rosidl_generator_c/message_type_support_struct.h',
+    'rosidl_typesupport_interface/macros.h',
+    package_name + '/msg/rosidl_typesupport_microxrcedds_c__visibility_control.h',
+]
 }@
-#ifndef @(header_guard_variable)
-#define @(header_guard_variable)
-
-#include <stddef.h>
-#include <stdbool.h>
-#include <stdint.h>
-
-#include "rosidl_generator_c/message_type_support_struct.h"
-#include "rosidl_typesupport_interface/macros.h"
-
-#include "@(spec.base_type.pkg_name)/msg/rosidl_typesupport_microxrcedds_c__visibility_control.h"
+@[for header_file in header_files]@
+@[    if header_file in include_directives]@
+// already included above
+// @
+@[    else]@
+@{include_directives.add(header_file)}@
+@[    end if]@
+@[    if '/' not in header_file]@
+#include <@(header_file)>
+@[    else]@
+#include "@(header_file)"
+@[    end if]@
+@[end for]@
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(spec.base_type.pkg_name)
-size_t get_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(package_name)
+size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))(
   const void * untyped_ros_message,
-  size_t current_alignment);
+  size_t current_aligment);
 
-ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(spec.base_type.pkg_name)
-size_t max_serialized_size_@(spec.base_type.pkg_name)__@(subfolder)__@(spec.base_type.type)(
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(package_name)
+size_t max_serialized_size_@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))(
   bool full_bounded,
-  size_t current_alignment);
+  size_t current_aligment);
 
-ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(spec.base_type.pkg_name)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(package_name)
 const rosidl_message_type_support_t *
-  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(spec.base_type.pkg_name), @(subfolder), @(spec.base_type.type))();
+  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])))();
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  // @(header_guard_variable)
