@@ -14,6 +14,7 @@
 
 from rosidl_cmake import generate_files
 
+
 def generate_typesupport_microxrcedds_c(generator_arguments_file):
     mapping = {
         'idl__rosidl_typesupport_microxrcedds_c.h.em':
