@@ -16,45 +16,6 @@ find_package(microxrcedds_cmake_module REQUIRED)
 find_package(MicroXRCEDDS REQUIRED MODULE)
 find_package(rosidl_typesupport_microxrcedds_shared REQUIRED CONFIG)
 
-
-## list msg files
-#set(_ros_idl_files "")
-#message(FATAL_ERROR ${rosidl_generate_interfaces_IDL_TUPLES})
-#foreach(_idl_file ${rosidl_generate_interfaces_ABS_IDL_FILES})
-#  get_filename_component(_extension "${_idl_file}" EXT)
-#  # Skip .srv files
-#  if(_extension STREQUAL ".msg")
-#    list(APPEND _ros_idl_files "${_idl_file}")
-#  endif()
-#endforeach()
-#
-#
-## list mesgs and srvs
-#set(_output_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c/${PROJECT_NAME}")
-#set(_generated_files "")
-#foreach(_idl_file ${rosidl_generate_interfaces_ABS_IDL_FILES})
-#  get_filename_component(_parent_folder "${_idl_file}" DIRECTORY)
-#  get_filename_component(_parent_folder "${_parent_folder}" NAME)
-#  get_filename_component(_extension "${_idl_file}" EXT)
-#  get_filename_component(_msg_name "${_idl_file}" NAME_WE)
-#  string_camel_case_to_lower_case_underscore("${_msg_name}" _header_name)
-#  if(_extension STREQUAL ".msg")
-#    set(_allowed_parent_folders "msg" "srv" "action")
-#    if(NOT _parent_folder IN_LIST _allowed_parent_folders)
-#      message(FATAL_ERROR "Interface file with unknown parent folder: ${_idl_file}")
-#    endif()
-#  elseif(_extension STREQUAL ".srv")
-#    set(_allowed_parent_folders "srv" "action")
-#    if(NOT _parent_folder IN_LIST _allowed_parent_folders)
-#      message(FATAL_ERROR "Interface file with unknown parent folder: ${_idl_file}")
-#    endif()
-#  else()
-#    message(FATAL_ERROR "Interface file with unknown extension: ${_idl_file}")
-#  endif()
-#  list(APPEND _generated_files "${_output_path}/${_parent_folder}/${_header_name}__rosidl_typesupport_microxrcedds_c.h")
-#  list(APPEND _generated_files "${_output_path}/${_parent_folder}/dds_microxrcedds/${_header_name}__type_support_c.c")
-#endforeach()
-
 set(_output_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c/${PROJECT_NAME}")
 set(_generated_files "")
 foreach(_abs_idl_file ${rosidl_generate_interfaces_ABS_IDL_FILES})
@@ -103,7 +64,7 @@ set(target_dependencies
   "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}/msg__type_support_c.c.em"
   "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}/srv__rosidl_typesupport_microxrcedds_c.h.em"
   "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}/srv__type_support_c.c.em"
-  ${rosidl_generate_interfaces_IDL_FILES}
+  ${rosidl_generate_interfaces_ABS_IDL_FILES}
   ${_dependency_files})
 foreach(dep ${target_dependencies})
   if(NOT EXISTS "${dep}")
@@ -214,13 +175,13 @@ ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   "rosidl_typesupport_microxrcedds_shared"
   "${PROJECT_NAME}__rosidl_typesupport_microxrcedds_c")
 
-  ament_export_libraries(rosidl_typesupport_microxrcedds_c)
+#  ament_export_libraries(rosidl_typesupport_microxrcedds_c)
 
 # link libraries
 target_link_libraries(
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  microcdr
   ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c
+  microcdr
 )
 
 

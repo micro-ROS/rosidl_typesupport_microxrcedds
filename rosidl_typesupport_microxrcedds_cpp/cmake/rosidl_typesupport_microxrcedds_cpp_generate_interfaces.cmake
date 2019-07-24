@@ -17,43 +17,29 @@ find_package(MicroXRCEDDS REQUIRED MODULE)
 find_package(rosidl_typesupport_microxrcedds_shared REQUIRED CONFIG)
 
 
-# list msg files
-set(_ros_idl_files "")
-foreach(_idl_file ${rosidl_generate_interfaces_IDL_FILES})
-  get_filename_component(_extension "${_idl_file}" EXT)
-  # Skip .srv files
-  if(_extension STREQUAL ".msg")
-    list(APPEND _ros_idl_files "${_idl_file}")
-  endif()
-endforeach()
-
-
-# list mesgs and srvs
 set(_output_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_cpp/${PROJECT_NAME}")
 set(_generated_files "")
-foreach(_idl_file ${rosidl_generate_interfaces_IDL_FILES})
-  get_filename_component(_parent_folder "${_idl_file}" DIRECTORY)
+foreach(_abs_idl_file ${rosidl_generate_interfaces_ABS_IDL_FILES})
+  get_filename_component(_parent_folder "${_abs_idl_file}" DIRECTORY)
   get_filename_component(_parent_folder "${_parent_folder}" NAME)
-  get_filename_component(_extension "${_idl_file}" EXT)
-  get_filename_component(_msg_name "${_idl_file}" NAME_WE)
-  string_camel_case_to_lower_case_underscore("${_msg_name}" _header_name)
-  if(_extension STREQUAL ".msg")
-    set(_allowed_parent_folders "msg" "srv" "action")
-    if(NOT _parent_folder IN_LIST _allowed_parent_folders)
-      message(FATAL_ERROR "Interface file with unknown parent folder: ${_idl_file}")
-    endif()
-  elseif(_extension STREQUAL ".srv")
-    set(_allowed_parent_folders "srv" "action")
-    if(NOT _parent_folder IN_LIST _allowed_parent_folders)
-      message(FATAL_ERROR "Interface file with unknown parent folder: ${_idl_file}")
-    endif()
-  else()
-    message(FATAL_ERROR "Interface file with unknown extension: ${_idl_file}")
-  endif()
-  list(APPEND _generated_files "${_output_path}/${_parent_folder}/${_header_name}__rosidl_typesupport_microxrcedds_cpp.hpp")
-  list(APPEND _generated_files "${_output_path}/${_parent_folder}/dds_microxrcedds/${_header_name}__type_support_cpp.cpp")
+  get_filename_component(_idl_name "${_abs_idl_file}" NAME_WE)
+  string_camel_case_to_lower_case_underscore("${_idl_name}" _header_name)
+  list(APPEND _generated_files
+    "${_output_path}/${_parent_folder}/${_header_name}__rosidl_typesupport_microxrcedds_cpp.hpp"
+    "${_output_path}/${_parent_folder}/${_header_name}__type_support_cpp.cpp"
+    )
 endforeach()
 
+set(_dependency_files "")
+set(_dependencies "")
+foreach(_pck_name ${rosidl_generated_interfaces_DEPENDENCY_PACKAGE_NAMES})
+  foreach(_idl_file ${${_pkg_name}_IDL_FILES})
+    set(_abs_idl_file "${${_pkg_name}_DIR}/../${_idl_file}")
+    normalize_path(_abs_idl_file "${_abs_idl_file}")
+    list(APPEND _dependency_files "${_abs_idl_file}")
+    list(APPEND _dependencies "${_pkg_name}:${_abs_idl_file}")
+  endforeach()
+endforeach()
 
 # list dependences
 set(_dependency_files "")
@@ -79,7 +65,7 @@ set(target_dependencies
   "${rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR}/msg__type_support_cpp.cpp.em"
   "${rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR}/srv__rosidl_typesupport_microxrcedds_cpp.hpp.em"
   "${rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR}/srv__type_support_cpp.cpp.em"
-  ${rosidl_generate_interfaces_IDL_FILES}
+  ${rosidl_generate_interfaces_ABS_IDL_FILES}
   ${_dependency_files})
 foreach(dep ${target_dependencies})
   if(NOT EXISTS "${dep}")
@@ -96,7 +82,8 @@ set(generator_arguments_file "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_mic
 rosidl_write_generator_arguments(
   "${generator_arguments_file}"
   PACKAGE_NAME "${PROJECT_NAME}"
-  ROS_INTERFACE_FILES "${rosidl_generate_interfaces_IDL_FILES}"
+  ROS_INTERFACE_FILES "${rosidl_generate_interfaces_ABS_IDL_FILES}"
+  IDL_TUPLES "${rosidl_generate_interfaces_IDL_TUPLES}"
   ROS_INTERFACE_DEPENDENCIES "${_dependencies}"
   OUTPUT_DIR "${_output_path}"
   TEMPLATE_DIR "${rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR}"
@@ -202,9 +189,6 @@ target_link_libraries(
 # add dependencies
 add_dependencies(
   ${rosidl_generate_interfaces_TARGET}
-  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-)
-add_dependencies(
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
   ${rosidl_generate_interfaces_TARGET}__cpp
 )

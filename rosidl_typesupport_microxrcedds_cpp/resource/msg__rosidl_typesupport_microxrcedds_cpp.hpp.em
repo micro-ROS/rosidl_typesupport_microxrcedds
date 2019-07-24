@@ -1,35 +1,28 @@
-// generated from
-// rosidl_typesupport_microxrcedds_cpp/resource/msg__rosidl_typesupport_microxrcedds_cpp.hpp.em
-// generated code does not contain a copyright notice
-
-@#######################################################################
-@# EmPy template for generating
-@# <msg>__rosidl_typesupport_microxrcedds_cpp.hpp files
-@#
-@# Context:
-@#  - spec (rosidl_parser.MessageSpecification)
-@#    Parsed specification of the .msg file
-@#  - subfolder (string)
-@#    The subfolder / subnamespace of the message
-@#    Either 'msg' or 'srv'
-@#  - get_header_filename_from_msg_name (function)
-@#######################################################################
-@
+@# Included from rosidl_typesupport_microxrcedds_cpp/resource/idl__rosidl_typesupport_microxrcedds_cpp.hpp.em
 @{
-header_guard_parts = [
-    spec.base_type.pkg_name, subfolder,
-    get_header_filename_from_msg_name(spec.base_type.type) + '__rosidl_typesupport_microxrcedds_cpp_hpp']
-header_guard_variable = '__'.join([x.upper() for x in header_guard_parts]) + '_'
+from rosidl_cmake import convert_camel_case_to_lower_case_underscore
+
+include_parts = [package_name] + list(interface_path.parents[0].parts) + \
+    [convert_camel_case_to_lower_case_underscore(interface_path.stem)]
+include_base = '/'.join(include_parts)
+
+header_files = [
+    'rosidl_generator_c/message_type_support_struct.h',
+    'rosidl_typesupport_interface/macros.h',
+    package_name + '/msg/rosidl_typesupport_microxrcedds_cpp__visibility_control.h',
+    include_base + '__struct.hpp',
+]
 }@
-#ifndef @(header_guard_variable)
-#define @(header_guard_variable)
+@[for header_file in header_files]@
+@[    if header_file in include_directives]@
+// already included above
+// @
+@[    else]@
+@{include_directives.add(header_file)}@
+@[    end if]@
+#include "@(header_file)"
+@[end for]@
 
-#include "rosidl_generator_c/message_type_support_struct.h"
-#include "rosidl_typesupport_interface/macros.h"
-
-#include "@(spec.base_type.pkg_name)/msg/rosidl_typesupport_microxrcedds_cpp__visibility_control.h"
-
-#include "@(spec.base_type.pkg_name)/@(subfolder)/@(get_header_filename_from_msg_name(spec.base_type.type))__struct.hpp"
 #ifndef _WIN32
 # pragma GCC diagnostic push
 # pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -42,58 +35,67 @@ header_guard_variable = '__'.join([x.upper() for x in header_guard_parts]) + '_'
 # pragma GCC diagnostic pop
 #endif
 
-#include <ucdr/microcdr.h>
+@{
+header_files = [
+    'ucdr/microcdr.h',
+]
+}@
+@[for header_file in header_files]@
+@[    if header_file in include_directives]@
+// already included above
+// @
+@[    else]@
+@{include_directives.add(header_file)}@
+@[    end if]@
+#include "@(header_file)"
+@[end for]@
+@[for ns in message.structure.namespaced_type.namespaces]@
 
-namespace @(spec.base_type.pkg_name)
+namespace @(ns)
 {
-
-namespace @(subfolder)
-{
+@[end for]@
 
 namespace typesupport_microxrcedds_cpp
 {
 
 bool
-ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(spec.base_type.pkg_name)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(package_name)
 cdr_serialize(
-  const @(spec.base_type.pkg_name)::@(subfolder)::@(spec.base_type.type) & ros_message,
+  const @('::'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])) & ros_message,
   ucdrBuffer * cdr);
 
 bool
-ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(spec.base_type.pkg_name)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(package_name)
 cdr_deserialize(
   ucdrBuffer * cdr,
-  @(spec.base_type.pkg_name)::@(subfolder)::@(spec.base_type.type) & ros_message);
+  @('::'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])) & ros_message);
 
 size_t
-ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(spec.base_type.pkg_name)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(package_name)
 get_serialized_size(
-  const @(spec.base_type.pkg_name)::@(subfolder)::@(spec.base_type.type) & ros_message,
+  const @('::'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])) & ros_message,
   size_t current_alignment);
 
 size_t
-ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(spec.base_type.pkg_name)
-max_serialized_size_@(spec.base_type.type)(
-  bool & full_bounded,
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(package_name)
+max_serialized_size_@(message.structure.namespaced_type.name)(
   size_t current_alignment);
 
-}  // namespace typesupport_microxrcedds_cpp
+}  // namespace typesupport_fastrtps_cpp
+@[  for ns in reversed(message.structure.namespaced_type.namespaces)]@
 
-}  // namespace @(subfolder)
-
-}  // namespace @(spec.base_type.pkg_name)
+}  // namespace @(ns)
+@[  end for]@
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(spec.base_type.pkg_name)
+ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(package_name)
 const rosidl_message_type_support_t *
-  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_cpp, @(spec.base_type.pkg_name), @(subfolder), @(spec.base_type.type))();
+  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_cpp, @(', '.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])))();
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif  // @(header_guard_variable)

@@ -373,7 +373,7 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
     size_t array_size = @(member.type.size);
 @[      if isinstance(member.type.value_type, BasicType)]@
     size_t item_size = sizeof(&ros_message->@(member.name));
-    current_alignment += ucdr_alignment(current_alignment, sizeof(ros_message->@(member.name))) + (array_size * item_size);
+    current_alignment += ucdr_alignment(current_alignment, item_size) + (array_size * item_size);
 @[      end if]@
 @[    end if]@
   }
