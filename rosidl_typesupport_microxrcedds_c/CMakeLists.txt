@@ -1,23 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(rosidl_typesupport_microxrcedds_c)
+project(rosidl_typesupport_microxrcedds_c LANGUAGES C)
 
 set(microxrcedds_STATIC_DISABLE $ENV{microxrcedds_STATIC_DISABLE}
   CACHE BOOL "If Micro XRCE-DDS Static should be disabled.")
-
-# Default to C99
-if(NOT CMAKE_C_STANDARD)
-  set(CMAKE_C_STANDARD 99)
-endif()
-
-# Default to C++14
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
 
 find_package(ament_cmake REQUIRED)
 
@@ -38,19 +24,30 @@ ament_python_install_package(${PROJECT_NAME})
 
 add_library(${PROJECT_NAME} src/identifier.c src/deserialize_buffer_utility.c)
 
-ament_target_dependencies(
-  ${PROJECT_NAME}
-  rosidl_typesupport_microxrcedds_shared
-)
+ament_target_dependencies(${PROJECT_NAME}
+    rosidl_typesupport_microxrcedds_shared
+    )
 
-if(WIN32)
-  target_compile_definitions(${PROJECT_NAME}
-    PRIVATE "ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_BUILDING_DLL")
-endif()
+target_compile_definitions(${PROJECT_NAME}
+    PRIVATE
+        $<$<PLATFORM_ID:Windows>:"ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_BUILDING_DLL">
+        $<$<C_COMPILER_ID:GNU>:-Wall>
+        $<$<C_COMPILER_ID:GNU>:-Wextra>
+        $<$<C_COMPILER_ID:GNU>:-Wpedantic>
+    )
+
 target_include_directories(${PROJECT_NAME}
-  PUBLIC
-  include
-)
+    PUBLIC
+        include
+    )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    C_STANDARD
+        99
+    C_STANDARD_REQUIRED
+        YES
+    )
+
 ament_export_libraries(${PROJECT_NAME})
 
 ament_index_register_resource("rosidl_typesupport_c")
@@ -61,27 +58,37 @@ if(BUILD_TESTING)
 endif()
 
 ament_package(
-  CONFIG_EXTRAS "rosidl_typesupport_microxrcedds_c-extras.cmake.in"
-)
+    CONFIG_EXTRAS "rosidl_typesupport_microxrcedds_c-extras.cmake.in"
+    )
 
 install(
-  PROGRAMS bin/rosidl_typesupport_microxrcedds_c
-  DESTINATION lib/rosidl_typesupport_microxrcedds_c
-)
+    PROGRAMS
+        bin/rosidl_typesupport_microxrcedds_c
+    DESTINATION
+        lib/rosidl_typesupport_microxrcedds_c
+    )
 
 install(
-  DIRECTORY cmake resource
-  DESTINATION share/${PROJECT_NAME}
-)
+    DIRECTORY
+        cmake resource
+    DESTINATION
+        share/${PROJECT_NAME}
+    )
 
 install(
-  DIRECTORY include/
-  DESTINATION include
-)
+    DIRECTORY
+        include/
+    DESTINATION
+        include
+    )
 
 install(
-  TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-)
+    TARGETS
+        ${PROJECT_NAME}
+    ARCHIVE DESTINATION
+        lib
+    LIBRARY DESTINATION
+        lib
+    RUNTIME DESTINATION
+        bin
+    )
