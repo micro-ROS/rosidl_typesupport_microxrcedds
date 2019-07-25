@@ -45,6 +45,10 @@ ament_target_dependencies(${PROJECT_NAME}
 target_compile_definitions(${PROJECT_NAME}
     PRIVATE
         $<$<PLATFORM_ID:Windows>:"ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_BUILDING_DLL">
+    )
+
+target_compile_options(${PROJECT_NAME}
+    PRIVATE
         $<$<C_COMPILER_ID:GNU>:-Wall>
         $<$<C_COMPILER_ID:GNU>:-Wextra>
         $<$<C_COMPILER_ID:GNU>:-Wpedantic>

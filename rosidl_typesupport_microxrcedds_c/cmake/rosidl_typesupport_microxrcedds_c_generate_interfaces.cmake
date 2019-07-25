@@ -60,6 +60,8 @@ endforeach()
 set(target_dependencies
   "${rosidl_typesupport_microxrcedds_c_BIN}"
   ${rosidl_typesupport_microxrcedds_c_GENERATOR_FILES}
+  "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}/idl__rosidl_typesupport_microxrcedds_c.h.em"
+  "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}/idl__type_support_c.c.em"
   "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}/msg__rosidl_typesupport_microxrcedds_c.h.em"
   "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}/msg__type_support_c.c.em"
   "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}/srv__rosidl_typesupport_microxrcedds_c.h.em"
@@ -170,12 +172,12 @@ endforeach()
 
 # set ament depencencies
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  "rmw"
+  "rosidl_generator_c"
   "rosidl_typesupport_microxrcedds_c"
   "rosidl_typesupport_interface"
   "rosidl_typesupport_microxrcedds_shared"
   "${PROJECT_NAME}__rosidl_typesupport_microxrcedds_c")
-
-#  ament_export_libraries(rosidl_typesupport_microxrcedds_c)
 
 # link libraries
 target_link_libraries(
