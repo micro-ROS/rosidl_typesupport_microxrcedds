@@ -14,10 +14,7 @@
 
 #include <rosidl_typesupport_microxrcedds_shared/identifier.h>
 #include <rosidl_typesupport_microxrcedds_c/identifier.h>
-#include <rosidl_typesupport_microxrcedds_c/visibility_control.h>
-
 
 const char *
   rosidl_typesupport_microxrcedds_c__identifier =
   ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE;
-// "rosidl_typesupport_microxrcedds_c";

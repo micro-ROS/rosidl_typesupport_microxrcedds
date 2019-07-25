@@ -17,7 +17,7 @@
 
 #include "rosidl_typesupport_microxrcedds_c/visibility_control.h"
 
-ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC
+extern ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC
 const char * rosidl_typesupport_microxrcedds_c__identifier;
 
 

@@ -86,35 +86,35 @@ protected:
   {
     bool eq = true;
 
-    eq = A.bool_test == B.bool_test;
-    eq = A.byte_test == B.byte_test;
-    eq = A.char_test == B.char_test;
-    eq = A.float32_test == B.float32_test;
-    eq = A.double_test == B.double_test;
-    eq = A.int8_test == B.int8_test;
-    eq = A.uint8_test == B.uint8_test;
-    eq = A.int16_test == B.int16_test;
-    eq = A.uint16_test == B.uint16_test;
-    eq = A.int32_test == B.int32_test;
-    eq = A.uint32_test == B.uint32_test;
-    eq = A.int64_test == B.int64_test;
-    eq = A.uint64_test == B.uint64_test;
+    eq &= A.bool_test == B.bool_test;
+    eq &= A.byte_test == B.byte_test;
+    eq &= A.char_test == B.char_test;
+    eq &= A.float32_test == B.float32_test;
+    eq &= A.double_test == B.double_test;
+    eq &= A.int8_test == B.int8_test;
+    eq &= A.uint8_test == B.uint8_test;
+    eq &= A.int16_test == B.int16_test;
+    eq &= A.uint16_test == B.uint16_test;
+    eq &= A.int32_test == B.int32_test;
+    eq &= A.uint32_test == B.uint32_test;
+    eq &= A.int64_test == B.int64_test;
+    eq &= A.uint64_test == B.uint64_test;
 
-    eq = A.nested_test.unbounded_string1.size == B.nested_test.unbounded_string1.size;
-    eq = A.nested_test.unbounded_string1.capacity == B.nested_test.unbounded_string1.capacity;
-    eq = strcmp(A.nested_test.unbounded_string1.data, B.nested_test.unbounded_string1.data) == 0;
+    eq &= A.nested_test.unbounded_string1.size == B.nested_test.unbounded_string1.size;
+    eq &= A.nested_test.unbounded_string1.capacity == B.nested_test.unbounded_string1.capacity;
+    eq &= strcmp(A.nested_test.unbounded_string1.data, B.nested_test.unbounded_string1.data) == 0;
 
-    eq = A.nested_test.unbounded_string2.size == B.nested_test.unbounded_string2.size;
-    eq = A.nested_test.unbounded_string2.capacity == B.nested_test.unbounded_string2.capacity;
-    eq = strcmp(A.nested_test.unbounded_string2.data, B.nested_test.unbounded_string2.data) == 0;
+    eq &= A.nested_test.unbounded_string2.size == B.nested_test.unbounded_string2.size;
+    eq &= A.nested_test.unbounded_string2.capacity == B.nested_test.unbounded_string2.capacity;
+    eq &= strcmp(A.nested_test.unbounded_string2.data, B.nested_test.unbounded_string2.data) == 0;
 
-    eq = A.nested_test.unbounded_string3.size == B.nested_test.unbounded_string3.size;
-    eq = A.nested_test.unbounded_string3.capacity == B.nested_test.unbounded_string3.capacity;
-    eq = strcmp(A.nested_test.unbounded_string3.data, B.nested_test.unbounded_string3.data) == 0;
+    eq &= A.nested_test.unbounded_string3.size == B.nested_test.unbounded_string3.size;
+    eq &= A.nested_test.unbounded_string3.capacity == B.nested_test.unbounded_string3.capacity;
+    eq &= strcmp(A.nested_test.unbounded_string3.data, B.nested_test.unbounded_string3.data) == 0;
 
-    eq = A.nested_test.unbounded_string4.size == B.nested_test.unbounded_string4.size;
-    eq = A.nested_test.unbounded_string4.capacity == B.nested_test.unbounded_string4.capacity;
-    eq = strcmp(A.nested_test.unbounded_string4.data, B.nested_test.unbounded_string4.data) == 0;
+    eq &= A.nested_test.unbounded_string4.size == B.nested_test.unbounded_string4.size;
+    eq &= A.nested_test.unbounded_string4.capacity == B.nested_test.unbounded_string4.capacity;
+    eq &= strcmp(A.nested_test.unbounded_string4.data, B.nested_test.unbounded_string4.data) == 0;
 
     return eq;
   }

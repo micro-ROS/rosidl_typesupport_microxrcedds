@@ -29,13 +29,11 @@ void rosidl_typesupport_microxrcedds_c__align_pointer(
     aling_pointer += word_size;
   }
 
-
   if ((size_t)(aling_pointer - *pointer_to_align) >= *mem_size) {
     *mem_size = 0;
   } else {
     *mem_size -= (size_t)(aling_pointer - *pointer_to_align);
   }
-
 
   *pointer_to_align = aling_pointer;
 }
