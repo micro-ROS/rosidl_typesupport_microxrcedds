@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-find_package(microxrcedds_cmake_module REQUIRED)
-find_package(microcdr REQUIRED CONFIG)
-find_package(microxrcedds_client REQUIRED CONFIG)
-find_package(MicroXRCEDDS REQUIRED MODULE)
+find_package(rosidl_typesupport_microxrcedds_shared REQUIRED CONFIG)
 
 set(_output_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_cpp/${PROJECT_NAME}")
 set(_generated_files "")
@@ -147,48 +144,20 @@ target_compile_options(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     $<$<PLATFORM_ID:Linux>:-Wpedantic>
     $<$<PLATFORM_ID:Windows>:/W4>
   )
-#
-#if(WIN32)
-#  target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#    PRIVATE "ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_BUILDING_DLL_${PROJECT_NAME}")
-#endif()
-#
-#
-## set build properties
-#if(rosidl_generate_interfaces_LIBRARY_NAME)
-#  set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#    PROPERTIES OUTPUT_NAME "${rosidl_generate_interfaces_LIBRARY_NAME}${_target_suffix}")
-#endif()
-#set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  PROPERTIES CXX_STANDARD 14)
-#if(NOT WIN32)
-#  set(_target_compile_flags "-Wall -Wextra -Wpedantic")
-#else()
-#  set(_target_compile_flags
-#    "/W4"
-#  )
-#endif()
-#string(REPLACE ";" " " _target_compile_flags "${_target_compile_flags}")
-#set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  PROPERTIES COMPILE_FLAGS "${_target_compile_flags}")
-
 
 # include .h directories
 target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   PUBLIC
-#    ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c
     ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_cpp
     ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_cpp
-#  ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_shared
+    ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_shared
   )
 
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  "microxrcedds_client"
   "rmw"
   "rosidl_typesupport_microxrcedds_cpp"
   "rosidl_typesupport_interface"
-#  "rosidl_typesupport_microxrcedds_shared"
-#  "${PROJECT_NAME}__rosidl_typesupport_microxrcedds_cpp"
+  "rosidl_typesupport_microxrcedds_shared"
   )
 
 foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
@@ -197,23 +166,8 @@ foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
   )
 endforeach()
 
-#foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
-#  set(_msg_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/msg/dds_microxrcedds")
-#  set(_srv_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/srv/dds_microxrcedds")
-#  normalize_path(_msg_include_dir "${_msg_include_dir}")
-#  normalize_path(_srv_include_dir "${_srv_include_dir}")
-#  target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#    PUBLIC
-#    "${_msg_include_dir}"
-#    "${_srv_include_dir}"
-#  )
-#  ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#    ${_pkg_name})
-#endforeach()
-
 # link libraries
 target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c
   microcdr
   )
 
@@ -221,7 +175,6 @@ target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
 add_dependencies(
   ${rosidl_generate_interfaces_TARGET}
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  ${rosidl_generate_interfaces_TARGET}__cpp
   )
 
 # install

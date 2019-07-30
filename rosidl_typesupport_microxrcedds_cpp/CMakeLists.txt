@@ -1,36 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(rosidl_typesupport_microxrcedds_cpp)
-
-set(microxrcedds_STATIC_DISABLE $ENV{microxrcedds_STATIC_DISABLE}
-  CACHE BOOL "If microxrcedds Static should be disabled.")
-
-# Default to C99
-if(NOT CMAKE_C_STANDARD)
-  set(CMAKE_C_STANDARD 99)
-endif()
-
-# Default to C++14
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
+project(rosidl_typesupport_microxrcedds_cpp LANGUAGES CXX)
 
 find_package(ament_cmake REQUIRED)
-
 find_package(rosidl_typesupport_microxrcedds_shared REQUIRED CONFIG)
-find_package(microxrcedds_cmake_module QUIET)
-find_package(MicroXRCEDDS REQUIRED MODULE)
-
 find_package(ament_cmake_python REQUIRED)
 
+ament_export_dependencies(rosidl_typesupport_microxrcedds_shared)
 ament_export_dependencies(rosidl_cmake)
-ament_export_dependencies(rosidl_generator_c)
 ament_export_dependencies(rosidl_generator_cpp)
-ament_export_dependencies(microcdr)
 
 ament_export_include_directories(include)
 
@@ -39,19 +17,34 @@ ament_python_install_package(${PROJECT_NAME})
 add_library(${PROJECT_NAME} src/identifier.cpp)
 ament_export_libraries(${PROJECT_NAME})
 
-ament_target_dependencies(
-  ${PROJECT_NAME}
+ament_target_dependencies(${PROJECT_NAME}
   rosidl_typesupport_microxrcedds_shared
-)
+  )
 
-if(WIN32)
-  target_compile_definitions(${PROJECT_NAME}
-    PRIVATE "ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_BUILDING_DLL")
-endif()
+target_compile_definitions(${PROJECT_NAME}
+  PRIVATE
+    $<$<PLATFORM_ID:Windows>:"ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_BUILDING_DLL">
+  )
+
+target_compile_options(${PROJECT_NAME}
+  PRIVATE
+    $<$<C_COMPILER_ID:GNU>:-Wall>
+    $<$<C_COMPILER_ID:GNU>:-Wextra>
+    $<$<C_COMPILER_ID:GNU>:-Wpedantic>
+  )
+
 target_include_directories(${PROJECT_NAME}
   PUBLIC
-  include
-)
+    include
+  )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  CXX_STANDARD
+    14
+  CXX_STANDARD_REQUIRED
+    YES
+  )
+
 ament_export_libraries(${PROJECT_NAME})
 
 ament_index_register_resource("rosidl_typesupport_cpp")
@@ -63,26 +56,37 @@ endif()
 
 ament_package(
   CONFIG_EXTRAS "rosidl_typesupport_microxrcedds_cpp-extras.cmake.in"
-)
+  )
 
 install(
-  PROGRAMS bin/rosidl_typesupport_microxrcedds_cpp
-  DESTINATION lib/rosidl_typesupport_microxrcedds_cpp
-)
+  PROGRAMS
+    bin/rosidl_typesupport_microxrcedds_cpp
+  DESTINATION
+    lib/rosidl_typesupport_microxrcedds_cpp
+  )
 
 install(
-  DIRECTORY cmake resource
-  DESTINATION share/${PROJECT_NAME}
-)
+  DIRECTORY
+    cmake
+    resource
+  DESTINATION
+    share/${PROJECT_NAME}
+  )
 
 install(
-  DIRECTORY include/
-  DESTINATION include
-)
+  DIRECTORY
+    include/
+  DESTINATION
+    include
+  )
 
 install(
-  TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-)
+  TARGETS
+    ${PROJECT_NAME}
+  ARCHIVE DESTINATION
+    lib
+  LIBRARY DESTINATION
+    lib
+  RUNTIME DESTINATION
+    bin
+  )
