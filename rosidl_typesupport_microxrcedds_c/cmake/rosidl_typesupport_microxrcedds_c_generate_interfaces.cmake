@@ -68,7 +68,8 @@ set(target_dependencies
   "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}/srv__rosidl_typesupport_microxrcedds_c.h.em"
   "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}/srv__type_support_c.c.em"
   ${rosidl_generate_interfaces_ABS_IDL_FILES}
-  ${_dependency_files})
+  ${_dependency_files}
+  )
 foreach(dep ${target_dependencies})
   if(NOT EXISTS "${dep}")
     message(FATAL_ERROR "Target dependency '${dep}' does not exist")
@@ -78,28 +79,29 @@ endforeach()
 
 # generate script argument file
 set(generator_arguments_file "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c__arguments.json")
-rosidl_write_generator_arguments(
-  "${generator_arguments_file}"
+rosidl_write_generator_arguments("${generator_arguments_file}"
   PACKAGE_NAME "${PROJECT_NAME}"
-#  ROS_INTERFACE_FILES "${rosidl_generate_interfaces_ABS_IDL_FILES}"
   IDL_TUPLES "${rosidl_generate_interfaces_IDL_TUPLES}"
   ROS_INTERFACE_DEPENDENCIES "${_dependencies}"
   OUTPUT_DIR "${_output_path}"
   TEMPLATE_DIR "${rosidl_typesupport_microxrcedds_c_TEMPLATE_DIR}"
   TARGET_DEPENDENCIES ${target_dependencies}
-#  ADDITIONAL_FILES ${_dds_idl_files}
-)
+  )
 
 
 # execute python script
 add_custom_command(
-  OUTPUT ${_generated_files}
-  COMMAND ${PYTHON_EXECUTABLE} ${rosidl_typesupport_microxrcedds_c_BIN}
-  --generator-arguments-file "${generator_arguments_file}"
-  DEPENDS ${target_dependencies} ${_dds_idl_files}
-  COMMENT "Generating C type support for eProsima Micro XRCE-DDS"
+  OUTPUT
+    ${_generated_files}
+  COMMAND
+    ${PYTHON_EXECUTABLE} ${rosidl_typesupport_microxrcedds_c_BIN}
+    --generator-arguments-file "${generator_arguments_file}"
+  DEPENDS
+    ${target_dependencies} ${_dds_idl_files}
+  COMMENT
+    "Generating C type support for eProsima Micro XRCE-DDS"
   VERBATIM
-)
+  )
 
 
 # generate header to switch between export and import for a specific package
@@ -148,26 +150,6 @@ target_compile_options(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     $<$<PLATFORM_ID:Windows>:/W4>
   )
 
-## set build properties
-#if(rosidl_generate_interfaces_LIBRARY_NAME)
-#  set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#    PROPERTIES OUTPUT_NAME "${rosidl_generate_interfaces_LIBRARY_NAME}${_target_suffix}")
-#endif()
-#set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  PROPERTIES CXX_STANDARD 14)
-#if(NOT WIN32)
-#  set(_target_compile_flags "-Wall -Wextra -Wpedantic")
-#else()
-#  set(_target_compile_flags
-#    "/W4"
-#  )
-#endif()
-#string(REPLACE ";" " " _target_compile_flags "${_target_compile_flags}")
-#set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  PROPERTIES COMPILE_FLAGS "${_target_compile_flags}")
-
-
-# include .h directories
 target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c
@@ -189,26 +171,13 @@ foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
     )
 endforeach()
 
-
-# set ament depencencies
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   "microxrcedds_client"
   "rmw"
   "rosidl_typesupport_microxrcedds_c"
   "rosidl_generator_c"
   "rosidl_typesupport_interface"
-#  "rosidl_typesupport_microxrcedds_shared"
-#  "${PROJECT_NAME}__rosidl_typesupport_microxrcedds_c"
   )
-
-#ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-#  "rmw"
-#  "rosidl_generator_c"
-#  "rosidl_typesupport_microxrcedds_c"
-#  "rosidl_typesupport_interface"
-#  "rosidl_typesupport_microxrcedds_shared"
-#  "${PROJECT_NAME}__rosidl_typesupport_microxrcedds_c"
-#  )
 
 target_link_libraries(
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
@@ -223,9 +192,12 @@ add_dependencies(
 
 if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
   install(
-    DIRECTORY "${_output_path}/"
-    DESTINATION "include/${PROJECT_NAME}"
-    PATTERN "*.c" EXCLUDE
+    DIRECTORY
+      "${_output_path}/"
+    DESTINATION
+      "include/${PROJECT_NAME}"
+    PATTERN
+      "*.c" EXCLUDE
     )
 
   if(NOT _generated_files STREQUAL "")
