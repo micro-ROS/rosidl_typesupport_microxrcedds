@@ -38,3 +38,18 @@ TEMPLATE(
 }@
 @[end for]@
 @
+@#######################################################################
+@# Handle service
+@#######################################################################
+@{
+from rosidl_parser.definition import Service
+}@
+@[for service in content.get_elements_of_type(Service)]@
+
+@{
+TEMPLATE(
+    'srv__type_support_c.c.em',
+    package_name=package_name, interface_path=interface_path, service=service,
+    include_directives=include_directives)
+}@
+@[end for]@

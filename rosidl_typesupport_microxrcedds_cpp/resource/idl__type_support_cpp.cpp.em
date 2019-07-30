@@ -34,4 +34,16 @@ for message in content.get_elements_of_type(Message):
         interface_path=interface_path,
         message=message,
         include_directives=include_directives)
+
+#######################################################################
+# Handle service
+#######################################################################
+from rosidl_parser.definition import Service
+for service in content.get_elements_of_type(Service):
+    TEMPLATE(
+        'srv__type_support_cpp.cpp.em',
+        package_name=package_name,
+        interface_path=interface_path,
+        service=service,
+        include_directives=include_directives)
 }@

@@ -58,6 +58,8 @@ endforeach()
 set(target_dependencies
   "${rosidl_typesupport_microxrcedds_cpp_BIN}"
   ${rosidl_typesupport_microxrcedds_cpp_GENERATOR_FILES}
+  "${rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR}/idl__rosidl_typesupport_microxrcedds_cpp.hpp.em"
+  "${rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR}/idl__type_support_cpp.cpp.em"
   "${rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR}/msg__rosidl_typesupport_microxrcedds_cpp.hpp.em"
   "${rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR}/msg__type_support_cpp.cpp.em"
   "${rosidl_typesupport_microxrcedds_cpp_TEMPLATE_DIR}/srv__rosidl_typesupport_microxrcedds_cpp.hpp.em"
@@ -163,18 +165,19 @@ ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
 foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
   ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     ${_pkg_name}
-  )
+    )
 endforeach()
 
-# link libraries
 target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   microcdr
   )
 
-# add dependencies
-add_dependencies(
-  ${rosidl_generate_interfaces_TARGET}
+add_dependencies(${rosidl_generate_interfaces_TARGET}
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  )
+
+add_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  ${rosidl_generate_interfaces_TARGET}__cpp
   )
 
 # install
