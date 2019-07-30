@@ -48,6 +48,48 @@ for service in content.get_elements_of_type(Service):
         interface_path=interface_path,
         service=service,
         include_directives=include_directives)
+
+#######################################################################
+# Handle action
+#######################################################################
+from rosidl_parser.definition import Action
+for action in content.get_elements_of_type(Action):
+    TEMPLATE(
+        'msg__rosidl_typesupport_microxrcedds_cpp.hpp.em',
+        package_name=package_name,
+        interface_path=interface_path,
+        message=action.goal,
+        include_directives=include_directives)
+    TEMPLATE(
+        'msg__rosidl_typesupport_microxrcedds_cpp.hpp.em',
+        package_name=package_name,
+        interface_path=interface_path,
+        message=action.result,
+        include_directives=include_directives)
+    TEMPLATE(
+        'msg__rosidl_typesupport_microxrcedds_cpp.hpp.em',
+        package_name=package_name,
+        interface_path=interface_path,
+        message=action.feedback,
+        include_directives=include_directives)
+    TEMPLATE(
+        'srv__rosidl_typesupport_microxrcedds_cpp.hpp.em',
+        package_name=package_name,
+        interface_path=interface_path,
+        service=action.send_goal_service,
+        include_directives=include_directives)
+    TEMPLATE(
+        'srv__rosidl_typesupport_microxrcedds_cpp.hpp.em',
+        package_name=package_name,
+        interface_path=interface_path,
+        service=action.get_result_service,
+        include_directives=include_directives)
+    TEMPLATE(
+        'msg__rosidl_typesupport_microxrcedds_cpp.hpp.em',
+        package_name=package_name,
+        interface_path=interface_path,
+        message=action.feedback_message,
+        include_directives=include_directives)
 }@
 
 #endif  // @(header_guard_variable)
