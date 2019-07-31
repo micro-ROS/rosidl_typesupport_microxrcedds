@@ -99,41 +99,77 @@ cdr_serialize(
 @[  if isinstance(member.type, AbstractNestedType)]@
   {
 @[    if isinstance(member.type, Array)]@
-@[      if not isinstance(member.type.value_type, (NamespacedType, AbstractWString))]@
-//    cdr << ros_message.@(member.name);
-// TODO
-@[      else]@
-    for (size_t i = 0; i < @(member.type.size); i++) {
-@[        if isinstance(member.type.value_type, NamespacedType)]@
-      @('::'.join(member.type.value_type.namespaces))::typesupport_microxrcedds_cpp::cdr_serialize(
-        ros_message.@(member.name)[i],
-        cdr);
-@[        else]@
-      // WString not supported.
-@[        end if]@
-    }
-@[      end if]@
-@[    else]@
-@[      if isinstance(member.type, BoundedSequence) or isinstance(member.type.value_type, (NamespacedType, AbstractWString))]@
+@[      if isinstance(member.type.value_type, BasicType)]@
     size_t size = ros_message.@(member.name).size();
-//    cdr << static_cast<uint32_t>(size);
-@[        if isinstance(member.type.value_type, AbstractWString)]@
-    // WString not supported.
+@[        if member.type.value_type.typename == 'boolean']@
+    rv = ucdr_serialize_array_bool(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'octet']@
+    rv = ucdr_serialize_array_uint8_t(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'char']@
+    rv = ucdr_serialize_array_char(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'int8']@
+    rv = ucdr_serialize_array_int8_t(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'uint8']@
+    rv = ucdr_serialize_array_uint8_t(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'int16']@
+    rv = ucdr_serialize_array_int16_t(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'uint16']@
+    rv = ucdr_serialize_array_uint16_t(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'int32']@
+    rv = ucdr_serialize_array_int32_t(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'uint32']@
+    rv = ucdr_serialize_array_uint32_t(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'int64']@
+    rv = ucdr_serialize_array_int64_t(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'uint64']@
+    rv = ucdr_serialize_array_uint64_t(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'float']@
+    rv = ucdr_serialize_array_float(cdr, ros_message.@(member.name).data(), size);
+@[        elif member.type.value_type.typename == 'double']@
+    rv = ucdr_serialize_array_double(cdr, ros_message.@(member.name).data(), size);
 @[        end if]@
-    for (size_t i = 0; i < size; i++) {
-@[        if isinstance(member.type.value_type, BasicType) and member.type.value_type.typename == 'boolean']@
-//      cdr << (ros_message.@(member.name)[i] ? true : false);
-@[        elif isinstance(member.type.value_type, BasicType) and member.type.value_type.typename == 'wchar']@
-//      cdr << static_cast<wchar_t>(ros_message.@(member.name)[i]);
-@[        elif not isinstance(member.type.value_type, NamespacedType)]@
-      //cdr << ros_message.@(member.name)[i];
-      // Array of NamesapcedType not supported.
-@[        else]@
-      @('::'.join(member.type.value_type.namespaces))::typesupport_microxrcedds_cpp::cdr_serialize(
-        ros_message.@(member.name)[i],
-        cdr);
+@[      else]@
+    // Micro CDR only support arrays of basic types.
+@[      end if]@
+@[    elif isinstance(member.type, AbstractSequence)]@
+@[      if isinstance(member.type.value_type, BasicType)]@
+    size_t size = ros_message.@(member.name).size();
+@[        if member.type.value_type.typename == 'boolean']@
+@[          if isinstance(member.type, BoundedSequence)]@
+    bool temp[@(member.type.maximum_size)] = {0};
+    std::copy(ros_message.@(member.name).begin(), ros_message.@(member.name).end(), std::begin(temp));
+    rv = ucdr_serialize_sequence_bool(cdr, temp, size);
+@[          else]@
+    bool* temp = new bool[size];
+    std::copy(ros_message.@(member.name).begin(), ros_message.@(member.name).end(), temp);
+    rv = ucdr_serialize_sequence_bool(cdr, temp, size);
+    delete[] temp;
+@[          end if]@
+@[        elif member.type.value_type.typename == 'octet']@
+    rv = ucdr_serialize_sequence_uint8_t(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'char']@
+    rv = ucdr_serialize_sequence_char(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'int8']@
+    rv = ucdr_serialize_sequence_int8_t(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'uint8']@
+    rv = ucdr_serialize_sequence_uint8_t(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'int16']@
+    rv = ucdr_serialize_sequence_int16_t(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'uint16']@
+    rv = ucdr_serialize_sequence_uint16_t(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'int32']@
+    rv = ucdr_serialize_sequence_int32_t(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'uint32']@
+    rv = ucdr_serialize_sequence_uint32_t(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'int64']@
+    rv = ucdr_serialize_sequence_int64_t(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'uint64']@
+    rv = ucdr_serialize_sequence_uint64_t(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'float']@
+    rv = ucdr_serialize_sequence_float(cdr, &ros_message.@(member.name)[0], size);
+@[        elif member.type.value_type.typename == 'double']@
+    rv = ucdr_serialize_sequence_double(cdr, &ros_message.@(member.name)[0], size);
 @[        end if]@
-    }
 @[      end if]@
 @[    end if]@
   }
@@ -165,17 +201,19 @@ cdr_serialize(
 @[    elif member.type.typename == 'double']@
   rv = ucdr_serialize_double(cdr, ros_message.@(member.name));
 @[    end if]@
+@[  elif isinstance(member.type, AbstractString)]@
+  rv = ucdr_serialize_string(cdr, ros_message.@(member.name).c_str());
 @[  elif isinstance(member.type, AbstractWString)]@
-  // WString not supported.
-@[  elif not isinstance(member.type, NamespacedType)]@
-//  cdr << ros_message.@(member.name);
-// HERE
-@[  else]@
-  @('::'.join(member.type.namespaces))::typesupport_microxrcedds_cpp::cdr_serialize(
+  // Micro CDR does not support WString type.
+@[  elif isinstance(member.type, NamespacedType)]@
+  rv = @('::'.join(member.type.namespaces))::typesupport_microxrcedds_cpp::cdr_serialize(
     ros_message.@(member.name),
     cdr);
+@[  else]@
+  // Micro CDR does not support this type.
 @[  end if]@
 @[end for]@
+
   return rv;
 }
 
