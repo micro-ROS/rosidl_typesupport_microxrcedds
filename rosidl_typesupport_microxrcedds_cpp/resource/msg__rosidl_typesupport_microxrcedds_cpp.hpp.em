@@ -81,7 +81,7 @@ ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(package_name)
 max_serialized_size_@(message.structure.namespaced_type.name)(
   size_t current_alignment);
 
-}  // namespace typesupport_fastrtps_cpp
+}  // namespace typesupport_microxrcedds_cpp
 @[  for ns in reversed(message.structure.namespaced_type.namespaces)]@
 
 }  // namespace @(ns)
