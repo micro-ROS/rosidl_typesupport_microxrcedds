@@ -285,24 +285,40 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
 {
   const _@(message.structure.namespaced_type.name)__ros_msg_type * ros_message = (const _@(message.structure.namespaced_type.name)__ros_msg_type *)(untyped_ros_message);
   (void)ros_message;
-  size_t initial_alignment = current_alignment;
+
+  const size_t initial_alignment = current_alignment;
 
 @[for member in message.structure.members]@
-  // field.name @(member.name)
+  // Member: @(member.name)
 @[  if isinstance(member.type, AbstractNestedType)]@
   {
 @[    if isinstance(member.type, Array)]@
-    size_t array_size = @(member.type.size);
 @[      if isinstance(member.type.value_type, BasicType)]@
-    size_t item_size = sizeof(&ros_message->@(member.name));
+    const size_t array_size = @(member.type.size);
+    const size_t item_size = sizeof(ros_message->@(member.name)[0]);
     current_alignment += ucdr_alignment(current_alignment, item_size) + (array_size * item_size);
+@[      end if]@
+@[    elif isinstance(member.type, AbstractSequence)]@
+@[      if isinstance(member.type.value_type, BasicType)]@
+    size_t sequence_size = ros_message->@(member.name).size;
+    size_t item_size = sizeof(ros_message->@(member.name).data[0]);
+    current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
+    current_alignment += ucdr_alignment(current_alignment, item_size) + (sequence_size * item_size);
 @[      end if]@
 @[    end if]@
   }
-@[  elif isinstance(member.type, AbstractString)]@
-  current_alignment += MICROXRCEDDS_PADDING + ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + ros_message->@(member.name).size + 1;
 @[  elif isinstance(member.type, BasicType)]@
-  current_alignment += sizeof(ros_message->@(member.name)) + ucdr_alignment(current_alignment, sizeof(ros_message->@(member.name)));
+  {
+    const size_t item_size = sizeof(ros_message->@(member.name));
+    current_alignment += ucdr_alignment(current_alignment, item_size) + item_size;
+  }
+@[  elif isinstance(member.type, AbstractString)]@
+  current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
+  current_alignment += ros_message->@(member.name).size + 1;
+@[  elif isinstance(member.type, NamespacedType)]@
+  current_alignment += ((const message_type_support_callbacks_t *)(
+    ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.namespaced_name()))
+    )()->data))->get_serialized_size(&ros_message->@(member.name));
 @[  end if]@
 @[end for]@
 
