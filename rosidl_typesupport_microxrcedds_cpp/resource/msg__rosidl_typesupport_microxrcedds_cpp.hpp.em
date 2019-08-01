@@ -79,6 +79,7 @@ get_serialized_size(
 size_t
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(package_name)
 max_serialized_size_@(message.structure.namespaced_type.name)(
+  bool * full_bounded,
   size_t current_alignment);
 
 }  // namespace typesupport_microxrcedds_cpp

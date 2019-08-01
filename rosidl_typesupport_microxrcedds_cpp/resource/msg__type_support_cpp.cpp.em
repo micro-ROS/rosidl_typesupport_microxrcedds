@@ -4,6 +4,7 @@ from rosidl_parser.definition import AbstractGenericString
 from rosidl_parser.definition import AbstractNestedType
 from rosidl_parser.definition import AbstractSequence
 from rosidl_parser.definition import AbstractString
+from rosidl_parser.definition import BoundedString
 from rosidl_parser.definition import AbstractWString
 from rosidl_parser.definition import Array
 from rosidl_parser.definition import BasicType
@@ -68,6 +69,7 @@ size_t get_serialized_size(
 
 size_t
 max_serialized_size_@(type_.name)(
+  bool * full_bounded,
   size_t current_alignment);
 }  // namespace typesupport_microxrcedds_cpp
 @[    for ns in reversed(type_.namespaces)]@
@@ -142,7 +144,7 @@ cdr_serialize(
     std::copy(ros_message.@(member.name).begin(), ros_message.@(member.name).end(), std::begin(temp));
     rv = ucdr_serialize_sequence_bool(cdr, temp, size);
 @[          else]@
-    bool* temp = new bool[size];
+    bool * temp = new bool[size];
     std::copy(ros_message.@(member.name).begin(), ros_message.@(member.name).end(), temp);
     rv = ucdr_serialize_sequence_bool(cdr, temp, size);
     delete[] temp;
@@ -235,7 +237,7 @@ cdr_deserialize(
   {
 @[    if isinstance(member.type, Array)]@
 @[      if isinstance(member.type.value_type, BasicType)]@
-    size_t size = ros_message.@(member.name).size();
+    const size_t size = ros_message.@(member.name).size();
 @[        if member.type.value_type.typename == 'boolean']@
     rv = ucdr_deserialize_array_bool(cdr, ros_message.@(member.name).data(), size);
 @[        elif member.type.value_type.typename == 'octet']@
@@ -269,7 +271,7 @@ cdr_deserialize(
 @[    elif isinstance(member.type, AbstractSequence)]@
 @[      if isinstance(member.type.value_type, BasicType)]@
     uint32_t size;
-    size_t capacity = ros_message.@(member.name).capacity();
+    const size_t capacity = ros_message.@(member.name).capacity();
     ros_message.@(member.name).resize(capacity);
 @[        if member.type.value_type.typename == 'boolean']@
 @[          if isinstance(member.type, BoundedSequence)]@
@@ -279,7 +281,7 @@ cdr_deserialize(
       std::copy(std::begin(temp), std::begin(temp) + size, ros_message.@(member.name).begin());
     }
 @[          else]@
-    bool* temp = new bool[capacity];
+    bool * temp = new bool[capacity];
     rv = ucdr_deserialize_sequence_bool(cdr, temp, capacity, &size);
     if (rv) {
       std::copy(temp, temp + size, ros_message.@(member.name).begin());
@@ -373,16 +375,125 @@ get_serialized_size(
 {
   (void) current_alignment;
   (void) ros_message;
-  return 0;
+
+  const size_t initial_alignment = current_alignment;
+
+@[for member in message.structure.members]@
+  // Member: @(member.name)
+@[  if isinstance(member.type, AbstractNestedType)]@
+  {
+@[    if isinstance(member.type, Array)]@
+@[      if isinstance(member.type.value_type, BasicType)]@
+    const size_t array_size = @(member.type.size);
+    const size_t item_size = sizeof(ros_message.@(member.name)[0]);
+    current_alignment += ucdr_alignment(current_alignment, item_size) + (array_size * item_size);
+@[      end if]@
+@[    elif isinstance(member.type, AbstractSequence)]@
+@[      if isinstance(member.type.value_type, BasicType)]@
+    size_t sequence_size = ros_message.@(member.name).size();
+    size_t item_size = sizeof(ros_message.@(member.name)[0]);
+    current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
+    current_alignment += ucdr_alignment(current_alignment, item_size) + (sequence_size * item_size);
+@[      end if]@
+@[    end if]@
+  }
+@[  elif isinstance(member.type, BasicType)]@
+  {
+    const size_t item_size = sizeof(ros_message.@(member.name));
+    current_alignment += ucdr_alignment(current_alignment, item_size) + item_size;
+  }
+@[  elif isinstance(member.type, AbstractString)]@
+  current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
+  current_alignment += ros_message.@(member.name).size() + 1;
+@[  elif isinstance(member.type, NamespacedType)]@
+  current_alignment += @('::'.join(member.type.namespaces))::typesupport_microxrcedds_cpp::get_serialized_size(
+    ros_message.@(member.name),
+    current_alignment);
+@[  end if]@
+@[end for]@
+
+  return current_alignment - initial_alignment;
 }
 
 size_t
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_PUBLIC_@(package_name)
 max_serialized_size_@(message.structure.namespaced_type.name)(
+  bool * full_bounded,
   size_t current_alignment)
 {
   (void) current_alignment;
-  return 0;
+  *full_bounded = true;
+
+  const size_t initial_alignment = current_alignment;
+
+@[for member in message.structure.members]@
+  // Member: @(member.name)
+@[  if isinstance(member.type, AbstractNestedType)]@
+  {
+@[    if isinstance(member.type, Array)]@
+@[      if isinstance(member.type.value_type, BasicType)]@
+    const size_t array_size = @(member.type.size);
+@[        if member.type.value_type.typename in ('boolean', 'octet', 'char', 'uint8', 'int8')]@
+    current_alignment += array_size * sizeof(uint8_t);
+@[        elif member.type.value_type.typename in ('int16', 'uint16')]@
+    current_alignment += ucdr_alignment(current_alignment, sizeof(uint16_t)) + (array_size * sizeof(uint16_t));
+@[        elif member.type.value_type.typename in ('int32', 'uint32', 'float')]@
+    current_alignment += ucdr_alignment(current_alignment, sizeof(uint32_t)) + (array_size * sizeof(uint32_t));
+@[        elif member.type.value_type.typename in ('int64', 'uint64', 'double')]@
+    current_alignment += ucdr_alignment(current_alignment, sizeof(uint64_t)) + (array_size * sizeof(uint64_t));
+@[        elif member.type.value_type.typename in ('long double')]@
+    current_alignment += ucdr_alignment(current_alignment, sizeof(long double)) + (array_size * sizeof(long double));
+@[        end if]@
+@[      else]@
+    *full_bounded = false;
+@[      end if]@
+@[    elif isinstance(member.type, BoundedSequence)]@
+@[      if isinstance(member.type.value_type, BasicType)]@
+    const size_t max_sequence_size = @(member.type.maximum_size);
+    current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
+@[        if member.type.value_type.typename in ('boolean', 'octet', 'char', 'uint8', 'int8')]@
+    current_alignment += max_sequence_size * sizeof(uint8_t);
+@[        elif member.type.value_type.typename in ('int16', 'uint16')]@
+    current_alignment += ucdr_alignment(current_alignment, sizeof(uint16_t)) + (max_sequence_size * sizeof(uint16_t));
+@[        elif member.type.value_type.typename in ('int32', 'uint32', 'float')]@
+    current_alignment += ucdr_alignment(current_alignment, sizeof(uint32_t)) + (max_sequence_size * sizeof(uint32_t));
+@[        elif member.type.value_type.typename in ('int64', 'uint64', 'double')]@
+    current_alignment += ucdr_alignment(current_alignment, sizeof(uint64_t)) + (max_sequence_size * sizeof(uint64_t));
+@[        elif member.type.value_type.typename in ('long double')]@
+    current_alignment += ucdr_alignment(current_alignment, sizeof(long double)) + (max_sequence_size * sizeof(long double));
+@[        end if]@
+@[      else]@
+    *full_bounded = false;
+@[      end if]@
+@[    elif isinstance(member.type, UnboundedSequence)]@
+    *full_bounded = false;
+@[    end if]@
+  }
+@[  elif isinstance(member.type, BasicType)]@
+@[    if member.type.typename in ('boolean', 'octet', 'char', 'uint8', 'int8')]@
+  current_alignment += sizeof(uint8_t);
+@[    elif member.type.typename in ('int16', 'uint16')]@
+  current_alignment += ucdr_alignment(current_alignment, sizeof(uint16_t)) + sizeof(uint16_t);
+@[    elif member.type.typename in ('int32', 'uint32', 'float')]@
+  current_alignment += ucdr_alignment(current_alignment, sizeof(uint32_t)) + sizeof(uint32_t);
+@[    elif member.type.typename in ('int64', 'uint64', 'double')]@
+  current_alignment += ucdr_alignment(current_alignment, sizeof(uint64_t)) + sizeof(uint64_t);
+@[    elif member.type.typename in ('long double')]@
+  current_alignment += ucdr_alignment(current_alignment, sizeof(long double)) + sizeof(long double);
+@[    end if]@
+@[  elif isinstance(member.type, BoundedString)]@
+  current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING);
+  current_alignment += @(member.type.maximum_size) + 1;
+@[  elif isinstance(member.type, NamespacedType)]@
+  current_alignment += @('::'.join(member.type.namespaces))::typesupport_microxrcedds_cpp::max_serialized_size_@(member.type.name)(
+    full_bounded,
+    current_alignment);
+@[  else]@
+  *full_bounded = false;
+@[  end if]@
+@[end for]@
+
+  return current_alignment - initial_alignment;
 }
 
 static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
@@ -421,7 +532,8 @@ static uint32_t _@(message.structure.namespaced_type.name)__get_serialized_size(
 
 static size_t _@(message.structure.namespaced_type.name)__max_serialized_size()
 {
-  return max_serialized_size_@(message.structure.namespaced_type.name)(0);
+  bool full_bounded;
+  return max_serialized_size_@(message.structure.namespaced_type.name)(&full_bounded, 0);
 }
 
 static message_type_support_callbacks_t _@(message.structure.namespaced_type.name)__callbacks = {

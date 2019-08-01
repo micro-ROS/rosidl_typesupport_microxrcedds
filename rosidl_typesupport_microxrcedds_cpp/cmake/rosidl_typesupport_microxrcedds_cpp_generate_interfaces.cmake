@@ -229,7 +229,7 @@ if(BUILD_TESTING AND rosidl_generate_interfaces_ADD_LINTER_TESTS)
         999
       ROOT
         "${_cpplint_root}"
-      ${_generated_files}
+      ${_output_path}
       )
 
     find_package(ament_cmake_uncrustify REQUIRED)
@@ -237,8 +237,8 @@ if(BUILD_TESTING AND rosidl_generate_interfaces_ADD_LINTER_TESTS)
       TESTNAME
         "uncrustify_rosidl_typesupport_microxrcedds_cpp"
       MAX_LINE_LENGTH
-        999
-      ${_generated_files}
+        0
+      ${_output_path}
       )
   endif()
 endif()
