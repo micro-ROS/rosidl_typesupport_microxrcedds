@@ -123,4 +123,4 @@ TEMPLATE(
 }@
 @[end for]@
 
-#endif // @(header_guard_variable)
+#endif  // @(header_guard_variable)

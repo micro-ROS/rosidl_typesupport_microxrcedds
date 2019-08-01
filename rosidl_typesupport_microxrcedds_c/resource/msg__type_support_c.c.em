@@ -165,7 +165,7 @@ size_t max_serialized_size_@('__'.join(key))(
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_IMPORT_@(package_name)
 @[  end if]@
 const rosidl_message_type_support_t *
-  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(key)))();
+ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(key)))();
 @[end for]@
 
 @# // Make callback functions specific to this message type.
@@ -182,8 +182,8 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
   bool rv = false;
 
   if (!untyped_ros_message) {
-      fprintf(stderr, "ros message handle is null\n");
-      return false;
+    fprintf(stderr, "ros message handle is null\n");
+    return false;
   }
 
   const _@(message.structure.namespaced_type.name)__ros_msg_type * ros_message = (const _@(message.structure.namespaced_type.name)__ros_msg_type *)(untyped_ros_message);
@@ -215,8 +215,8 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
   // Micro CDR does not support WString type.
 @[  elif isinstance(member.type, NamespacedType)]@
   rv = ((const message_type_support_callbacks_t *)(
-    ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.namespaced_name()))
-    )()->data))->cdr_serialize(&ros_message->@(member.name), cdr);
+      ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.namespaced_name()))
+      )()->data))->cdr_serialize(&ros_message->@(member.name), cdr);
 @[  else]@
   // Micro CDR does not support this type.
 @[  end if]@
@@ -274,8 +274,8 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
   // Micro CDR does not support WString type.
 @[  elif isinstance(member.type, NamespacedType)]@
   rv = ((const message_type_support_callbacks_t *)(
-    ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.namespaced_name()))
-    )()->data))->cdr_deserialize(cdr, &ros_message->@(member.name), raw_mem_ptr, raw_mem_size);
+      ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.namespaced_name()))
+      )()->data))->cdr_deserialize(cdr, &ros_message->@(member.name), raw_mem_ptr, raw_mem_size);
 @[  else]@
   // Micro CDR does not support this type.
 @[  end if]@
@@ -288,6 +288,11 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
   const void * untyped_ros_message,
   size_t current_alignment)
 {
+  if (!untyped_ros_message) {
+    fprintf(stderr, "ros message handle is null\n");
+    return 0;
+  }
+
   const _@(message.structure.namespaced_type.name)__ros_msg_type * ros_message = (const _@(message.structure.namespaced_type.name)__ros_msg_type *)(untyped_ros_message);
   (void)ros_message;
 
@@ -390,8 +395,6 @@ static size_t _@(message.structure.namespaced_type.name)__max_serialized_size()
   bool full_bounded;
   return max_serialized_size_@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))(&full_bounded, 0);
 }
-
-
 @
 @# // Collect the callback functions and provide a function to get the type support struct.
 
