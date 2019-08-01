@@ -5,6 +5,7 @@ from rosidl_parser.definition import AbstractGenericString
 from rosidl_parser.definition import AbstractNestedType
 from rosidl_parser.definition import AbstractSequence
 from rosidl_parser.definition import AbstractString
+from rosidl_parser.definition import BoundedString
 from rosidl_parser.definition import AbstractWString
 from rosidl_parser.definition import ACTION_FEEDBACK_SUFFIX
 from rosidl_parser.definition import ACTION_GOAL_SUFFIX
@@ -12,6 +13,7 @@ from rosidl_parser.definition import ACTION_RESULT_SUFFIX
 from rosidl_parser.definition import Array
 from rosidl_parser.definition import BasicType
 from rosidl_parser.definition import BoundedSequence
+from rosidl_parser.definition import UnboundedSequence
 from rosidl_parser.definition import NamespacedType
 
 include_parts = [package_name] + list(interface_path.parents[0].parts) + \
@@ -156,6 +158,7 @@ size_t get_serialized_size_@('__'.join(key))(
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_IMPORT_@(package_name)
 @[  end if]@
 size_t max_serialized_size_@('__'.join(key))(
+  bool * full_bounded,
   size_t current_alignment);
 
 @[  if key[0] != package_name]@
@@ -184,6 +187,7 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
   }
 
   const _@(message.structure.namespaced_type.name)__ros_msg_type * ros_message = (const _@(message.structure.namespaced_type.name)__ros_msg_type *)(untyped_ros_message);
+  (void)ros_message;
 
 @[for member in message.structure.members]@
   // Member: @(member.name)
@@ -238,6 +242,7 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
     return false;
   }
   _@(message.structure.namespaced_type.name)__ros_msg_type * ros_message = (_@(message.structure.namespaced_type.name)__ros_msg_type *)(untyped_ros_message);
+  (void)ros_message;
 
 @[for member in message.structure.members]@
   // Field name: @(member.name)
@@ -316,9 +321,8 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
   current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
   current_alignment += ros_message->@(member.name).size + 1;
 @[  elif isinstance(member.type, NamespacedType)]@
-  current_alignment += ((const message_type_support_callbacks_t *)(
-    ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.namespaced_name()))
-    )()->data))->get_serialized_size(&ros_message->@(member.name));
+  current_alignment +=
+    get_serialized_size_@('__'.join(member.type.namespaced_name()))(&ros_message->@(member.name), current_alignment);
 @[  end if]@
 @[end for]@
 
@@ -334,57 +338,57 @@ static uint32_t _@(message.structure.namespaced_type.name)__get_serialized_size(
 
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(package_name)
 size_t max_serialized_size_@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))(
+  bool * full_bounded,
   size_t current_alignment)
 {
-  size_t initial_alignment = current_alignment;
+  (void) current_alignment;
+  *full_bounded = true;
+
+  const size_t initial_alignment = current_alignment;
 
 @[for member in message.structure.members]@
-  // member: @(member.name)
-  {
+  // Member: @(member.name)
 @[  if isinstance(member.type, AbstractNestedType)]@
+  {
 @[    if isinstance(member.type, Array)]@
-    size_t array_size = @(member.type.size);
-@[    else]@
-    size_t array_size = 0;
+@[      if isinstance(member.type.value_type, BasicType)]@
+    const size_t array_size = @(member.type.size);
+    current_alignment += ucdr_alignment(current_alignment, sizeof(@(get_suffix(member.type.value_type.typename)))) + (array_size * sizeof(@(get_suffix(member.type.value_type.typename))));
+@[      else]@
+    *full_bounded = false;
+@[      end if]@
+@[    elif isinstance(member.type, BoundedSequence)]@
+@[      if isinstance(member.type.value_type, BasicType)]@
+    const size_t max_sequence_size = @(member.type.maximum_size);
+    current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
+    current_alignment += ucdr_alignment(current_alignment, sizeof(@(get_suffix(member.type.value_type.typename)))) + (max_sequence_size * sizeof(@(get_suffix(member.type.value_type.typename))));
+@[      else]@
+    *full_bounded = false;
+@[      end if]@
+@[    elif isinstance(member.type, UnboundedSequence)]@
+    *full_bounded = false;
 @[    end if]@
-@[  else]@
-    size_t array_size = 1;
-@[  end if]@
-@{
-type_ = member.type
-if isinstance(type_, AbstractNestedType):
-    type_ = type_.value_type
-}@
-@[  if isinstance(type_, AbstractGenericString)]@
-    for (size_t index = 0; index < array_size; ++index) {
-      current_alignment += MICROXRCEDDS_PADDING + ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + 1;
-    }
-@[  elif isinstance(type_, BasicType)]@
-@[    if type_.typename in ('boolean', 'octet', 'char', 'uint8', 'int8')]@
-    current_alignment += array_size * sizeof(uint8_t);
-@[    elif type_.typename in ('wchar', 'int16', 'uint16')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(uint16_t)) + array_size * sizeof(uint16_t);
-@[    elif type_.typename in ('int32', 'uint32', 'float')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(uint32_t)) + array_size * sizeof(uint32_t);
-@[    elif type_.typename in ('int64', 'uint64', 'double')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(uint64_t)) + array_size * sizeof(uint64_t);
-@[    elif type_.typename in ('long double')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(long double)) + array_size * sizeof(long double);
-@[    end if]@
-@[    else]@
-    for (size_t index = 0; index < array_size; ++index) {
-        current_alignment +=
-          max_serialized_size_@('__'.join(type_.namespaced_name()))(current_alignment);
-    }
-@[  end if]@
   }
+@[  elif isinstance(member.type, BasicType)]@
+  current_alignment += ucdr_alignment(current_alignment, sizeof(@(get_suffix(member.type.typename)))) + sizeof(@(get_suffix(member.type.typename)));
+@[  elif isinstance(member.type, BoundedString)]@
+  current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING);
+  current_alignment += @(member.type.maximum_size) + 1;
+@[  elif isinstance(member.type, NamespacedType)]@
+  current_alignment +=
+    max_serialized_size_@('__'.join(member.type.namespaced_name()))(full_bounded, current_alignment);
+@[  else]@
+  *full_bounded = false;
+@[  end if]@
 @[end for]@
+
   return current_alignment - initial_alignment;
 }
 
 static size_t _@(message.structure.namespaced_type.name)__max_serialized_size()
 {
-  return max_serialized_size_@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))(0);
+  bool full_bounded;
+  return max_serialized_size_@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))(&full_bounded, 0);
 }
 
 
