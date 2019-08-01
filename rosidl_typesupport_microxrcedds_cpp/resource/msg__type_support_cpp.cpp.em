@@ -24,6 +24,29 @@ header_files = [
     'rosidl_typesupport_microxrcedds_cpp/message_type_support_decl.hpp',
     'ucdr/microcdr.h',
 ]
+
+def get_suffix(typename):
+  if typename == 'boolean':
+    return 'bool'
+  elif typename == 'int8':
+    return 'int8_t'
+  elif typename in ('uint8', 'octet'):
+    return 'uint8_t'
+  elif typename == 'uint16':
+    return 'uint16_t'
+  elif typename == 'int16':
+    return 'int16_t'
+  elif typename == 'uint32':
+    return 'uint32_t'
+  elif typename == 'int32':
+    return 'int32_t'
+  elif typename == 'uint64':
+    return 'uint64_t'
+  elif typename == 'int64':
+    return 'int64_t'
+  else:
+    return typename
+
 }@
 @[for header_file in header_files]@
 @[    if header_file in include_directives]@
@@ -105,33 +128,7 @@ cdr_serialize(
 @[    if isinstance(member.type, Array)]@
 @[      if isinstance(member.type.value_type, BasicType)]@
     size_t size = ros_message.@(member.name).size();
-@[        if member.type.value_type.typename == 'boolean']@
-    rv = ucdr_serialize_array_bool(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'octet']@
-    rv = ucdr_serialize_array_uint8_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'char']@
-    rv = ucdr_serialize_array_char(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'int8']@
-    rv = ucdr_serialize_array_int8_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'uint8']@
-    rv = ucdr_serialize_array_uint8_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'int16']@
-    rv = ucdr_serialize_array_int16_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'uint16']@
-    rv = ucdr_serialize_array_uint16_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'int32']@
-    rv = ucdr_serialize_array_int32_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'uint32']@
-    rv = ucdr_serialize_array_uint32_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'int64']@
-    rv = ucdr_serialize_array_int64_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'uint64']@
-    rv = ucdr_serialize_array_uint64_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'float']@
-    rv = ucdr_serialize_array_float(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'double']@
-    rv = ucdr_serialize_array_double(cdr, ros_message.@(member.name).data(), size);
-@[        end if]@
+    rv = ucdr_serialize_array_@(get_suffix(member.type.value_type.typename))(cdr, ros_message.@(member.name).data(), size);
 @[      else]@
     // Micro CDR only support arrays of basic types.
 @[      end if]@
@@ -149,62 +146,14 @@ cdr_serialize(
     rv = ucdr_serialize_sequence_bool(cdr, temp, size);
     delete[] temp;
 @[          end if]@
-@[        elif member.type.value_type.typename == 'octet']@
-    rv = ucdr_serialize_sequence_uint8_t(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'char']@
-    rv = ucdr_serialize_sequence_char(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'int8']@
-    rv = ucdr_serialize_sequence_int8_t(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'uint8']@
-    rv = ucdr_serialize_sequence_uint8_t(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'int16']@
-    rv = ucdr_serialize_sequence_int16_t(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'uint16']@
-    rv = ucdr_serialize_sequence_uint16_t(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'int32']@
-    rv = ucdr_serialize_sequence_int32_t(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'uint32']@
-    rv = ucdr_serialize_sequence_uint32_t(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'int64']@
-    rv = ucdr_serialize_sequence_int64_t(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'uint64']@
-    rv = ucdr_serialize_sequence_uint64_t(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'float']@
-    rv = ucdr_serialize_sequence_float(cdr, &ros_message.@(member.name)[0], size);
-@[        elif member.type.value_type.typename == 'double']@
-    rv = ucdr_serialize_sequence_double(cdr, &ros_message.@(member.name)[0], size);
+@[        else]@
+    rv = ucdr_serialize_sequence_@(get_suffix(member.type.value_type.typename))(cdr, &ros_message.@(member.name)[0], size);
 @[        end if]@
 @[      end if]@
 @[    end if]@
   }
 @[  elif isinstance(member.type, BasicType)]@
-@[    if member.type.typename == 'boolean']@
-  rv = ucdr_serialize_bool(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'octet']@
-  rv = ucdr_serialize_uint8_t(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'char']@
-  rv = ucdr_serialize_char(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'int8']@
-  rv = ucdr_serialize_int8_t(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'uint8']@
-  rv = ucdr_serialize_uint8_t(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'int16']@
-  rv = ucdr_serialize_int16_t(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'uint16']@
-  rv = ucdr_serialize_uint16_t(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'int32']@
-  rv = ucdr_serialize_int32_t(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'uint32']@
-  rv = ucdr_serialize_uint32_t(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'int64']@
-  rv = ucdr_serialize_int64_t(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'uint64']@
-  rv = ucdr_serialize_uint64_t(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'float']@
-  rv = ucdr_serialize_float(cdr, ros_message.@(member.name));
-@[    elif member.type.typename == 'double']@
-  rv = ucdr_serialize_double(cdr, ros_message.@(member.name));
-@[    end if]@
+  rv = ucdr_serialize_@(get_suffix(member.type.typename))(cdr, ros_message.@(member.name));
 @[  elif isinstance(member.type, AbstractString)]@
   rv = ucdr_serialize_string(cdr, ros_message.@(member.name).c_str());
 @[  elif isinstance(member.type, AbstractWString)]@
@@ -238,33 +187,7 @@ cdr_deserialize(
 @[    if isinstance(member.type, Array)]@
 @[      if isinstance(member.type.value_type, BasicType)]@
     const size_t size = ros_message.@(member.name).size();
-@[        if member.type.value_type.typename == 'boolean']@
-    rv = ucdr_deserialize_array_bool(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'octet']@
-    rv = ucdr_deserialize_array_uint8_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'char']@
-    rv = ucdr_deserialize_array_char(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'int8']@
-    rv = ucdr_deserialize_array_int8_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'uint8']@
-    rv = ucdr_deserialize_array_uint8_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'int16']@
-    rv = ucdr_deserialize_array_int16_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'uint16']@
-    rv = ucdr_deserialize_array_uint16_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'int32']@
-    rv = ucdr_deserialize_array_int32_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'uint32']@
-    rv = ucdr_deserialize_array_uint32_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'int64']@
-    rv = ucdr_deserialize_array_int64_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'uint64']@
-    rv = ucdr_deserialize_array_uint64_t(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'float']@
-    rv = ucdr_deserialize_array_float(cdr, ros_message.@(member.name).data(), size);
-@[        elif member.type.value_type.typename == 'double']@
-    rv = ucdr_deserialize_array_double(cdr, ros_message.@(member.name).data(), size);
-@[        end if]@
+    rv = ucdr_deserialize_array_@(get_suffix(member.type.value_type.typename))(cdr, ros_message.@(member.name).data(), size);
 @[      else]@
     // Micro CDR only support arrays of basic types.
 @[      end if]@
@@ -288,30 +211,8 @@ cdr_deserialize(
     }
     delete[] temp;
 @[          end if]@
-@[        elif member.type.value_type.typename == 'octet']@
-    rv = ucdr_deserialize_sequence_uint8_t(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'char']@
-    rv = ucdr_deserialize_sequence_char(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'int8']@
-    rv = ucdr_deserialize_sequence_int8_t(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'uint8']@
-    rv = ucdr_deserialize_sequence_uint8_t(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'int16']@
-    rv = ucdr_deserialize_sequence_int16_t(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'uint16']@
-    rv = ucdr_deserialize_sequence_uint16_t(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'int32']@
-    rv = ucdr_deserialize_sequence_int32_t(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'uint32']@
-    rv = ucdr_deserialize_sequence_uint32_t(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'int64']@
-    rv = ucdr_deserialize_sequence_int64_t(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'uint64']@
-    rv = ucdr_deserialize_sequence_uint64_t(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'float']@
-    rv = ucdr_deserialize_sequence_float(cdr, &ros_message.@(member.name)[0], capacity, &size);
-@[        elif member.type.value_type.typename == 'double']@
-    rv = ucdr_deserialize_sequence_double(cdr, &ros_message.@(member.name)[0], capacity, &size);
+@[        else]@
+    rv = ucdr_deserialize_sequence_@(get_suffix(member.type.value_type.typename))(cdr, &ros_message.@(member.name)[0], capacity, &size);
 @[        end if]@
     if (rv) {
       ros_message.@(member.name).resize(size);
@@ -320,33 +221,7 @@ cdr_deserialize(
 @[    end if]@
   }
 @[  elif isinstance(member.type, BasicType)]@
-@[    if member.type.typename == 'boolean']@
-  rv = ucdr_deserialize_bool(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'octet']@
-  rv = ucdr_deserialize_uint8_t(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'char']@
-  rv = ucdr_deserialize_char(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'int8']@
-  rv = ucdr_deserialize_int8_t(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'uint8']@
-  rv = ucdr_deserialize_uint8_t(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'int16']@
-  rv = ucdr_deserialize_int16_t(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'uint16']@
-  rv = ucdr_deserialize_uint16_t(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'int32']@
-  rv = ucdr_deserialize_int32_t(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'uint32']@
-  rv = ucdr_deserialize_uint32_t(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'int64']@
-  rv = ucdr_deserialize_int64_t(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'uint64']@
-  rv = ucdr_deserialize_uint64_t(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'float']@
-  rv = ucdr_deserialize_float(cdr, &ros_message.@(member.name));
-@[    elif member.type.typename == 'double']@
-  rv = ucdr_deserialize_double(cdr, &ros_message.@(member.name));
-@[    end if]@
+  rv = ucdr_deserialize_@(get_suffix(member.type.typename))(cdr, &ros_message.@(member.name));
 @[  elif isinstance(member.type, AbstractString)]@
   ros_message.@(member.name).resize(ros_message.@(member.name).capacity());
   rv = ucdr_deserialize_string(cdr, &ros_message.@(member.name)[0], ros_message.@(member.name).capacity());
@@ -433,17 +308,7 @@ max_serialized_size_@(message.structure.namespaced_type.name)(
 @[    if isinstance(member.type, Array)]@
 @[      if isinstance(member.type.value_type, BasicType)]@
     const size_t array_size = @(member.type.size);
-@[        if member.type.value_type.typename in ('boolean', 'octet', 'char', 'uint8', 'int8')]@
-    current_alignment += array_size * sizeof(uint8_t);
-@[        elif member.type.value_type.typename in ('int16', 'uint16')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(uint16_t)) + (array_size * sizeof(uint16_t));
-@[        elif member.type.value_type.typename in ('int32', 'uint32', 'float')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(uint32_t)) + (array_size * sizeof(uint32_t));
-@[        elif member.type.value_type.typename in ('int64', 'uint64', 'double')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(uint64_t)) + (array_size * sizeof(uint64_t));
-@[        elif member.type.value_type.typename in ('long double')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(long double)) + (array_size * sizeof(long double));
-@[        end if]@
+    current_alignment += ucdr_alignment(current_alignment, sizeof(@(get_suffix(member.type.value_type.typename)))) + (array_size * sizeof(@(get_suffix(member.type.value_type.typename))));
 @[      else]@
     *full_bounded = false;
 @[      end if]@
@@ -451,17 +316,7 @@ max_serialized_size_@(message.structure.namespaced_type.name)(
 @[      if isinstance(member.type.value_type, BasicType)]@
     const size_t max_sequence_size = @(member.type.maximum_size);
     current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
-@[        if member.type.value_type.typename in ('boolean', 'octet', 'char', 'uint8', 'int8')]@
-    current_alignment += max_sequence_size * sizeof(uint8_t);
-@[        elif member.type.value_type.typename in ('int16', 'uint16')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(uint16_t)) + (max_sequence_size * sizeof(uint16_t));
-@[        elif member.type.value_type.typename in ('int32', 'uint32', 'float')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(uint32_t)) + (max_sequence_size * sizeof(uint32_t));
-@[        elif member.type.value_type.typename in ('int64', 'uint64', 'double')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(uint64_t)) + (max_sequence_size * sizeof(uint64_t));
-@[        elif member.type.value_type.typename in ('long double')]@
-    current_alignment += ucdr_alignment(current_alignment, sizeof(long double)) + (max_sequence_size * sizeof(long double));
-@[        end if]@
+    current_alignment += ucdr_alignment(current_alignment, sizeof(@(get_suffix(member.type.value_type.typename)))) + (max_sequence_size * sizeof(@(get_suffix(member.type.value_type.typename))));
 @[      else]@
     *full_bounded = false;
 @[      end if]@
@@ -470,17 +325,7 @@ max_serialized_size_@(message.structure.namespaced_type.name)(
 @[    end if]@
   }
 @[  elif isinstance(member.type, BasicType)]@
-@[    if member.type.typename in ('boolean', 'octet', 'char', 'uint8', 'int8')]@
-  current_alignment += sizeof(uint8_t);
-@[    elif member.type.typename in ('int16', 'uint16')]@
-  current_alignment += ucdr_alignment(current_alignment, sizeof(uint16_t)) + sizeof(uint16_t);
-@[    elif member.type.typename in ('int32', 'uint32', 'float')]@
-  current_alignment += ucdr_alignment(current_alignment, sizeof(uint32_t)) + sizeof(uint32_t);
-@[    elif member.type.typename in ('int64', 'uint64', 'double')]@
-  current_alignment += ucdr_alignment(current_alignment, sizeof(uint64_t)) + sizeof(uint64_t);
-@[    elif member.type.typename in ('long double')]@
-  current_alignment += ucdr_alignment(current_alignment, sizeof(long double)) + sizeof(long double);
-@[    end if]@
+  current_alignment += ucdr_alignment(current_alignment, sizeof(@(get_suffix(member.type.typename)))) + sizeof(@(get_suffix(member.type.typename)));
 @[  elif isinstance(member.type, BoundedString)]@
   current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING);
   current_alignment += @(member.type.maximum_size) + 1;
