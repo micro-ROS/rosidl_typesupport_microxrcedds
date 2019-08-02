@@ -14,12 +14,12 @@
 
 ###############################################################################
 #
-# CMake module for finding eProsima MICROXRCEDDS.
+# CMake module for finding eProsima Micro XRCE-DDS.
 #
 # Output variables:
 #
-# - MicroXRCEDDS_FOUND: flag indicating if the package was found
-# - MicroXRCEDDS_INCLUDE_DIR: Paths to the header files
+# - MicroXRCEDDS_FOUND: flag indicating if the package was found,
+# - MicroXRCEDDS_INCLUDE_DIR: paths to the header files.
 #
 # Example usage:
 #
@@ -36,64 +36,57 @@ set(MicroXRCEDDS_FOUND FALSE)
 find_package(microcdr REQUIRED CONFIG)
 find_package(microxrcedds_client REQUIRED CONFIG)
 
-find_path(MicroXRCEDDSClient_INCLUDE_DIR NAMES uxr)
+set(MicroXRCEDDSClient_INCLUDE_DIR ${microxrcedds_client_INCLUDE_DIR})
+set(MicroCDR_INCLUDE_DIR ${microcdr_INCLUDE_DIR})
 
 string(REGEX MATCH "^[0-9]+\\.[0-9]+" microcdr_MAJOR_MINOR_VERSION "${microcdr_VERSION}")
 string(REGEX MATCH "^[0-9]+\\.[0-9]+" microxrcedds_client_MAJOR_MINOR_VERSION "${microxrcedds_client_VERSION}")
 
 find_library(MicroCDR_LIBRARY_RELEASE
-  NAMES microcdr-${microcdr_MAJOR_MINOR_VERSION})
+  NAMES
+    microcdr-${microcdr_MAJOR_MINOR_VERSION}
+    microcdr
+  )
 
 find_library(MicroCDR_LIBRARY_DEBUG
-  NAMES microcdrd-${microcdr_MAJOR_MINOR_VERSION})
+  NAMES
+    microcdrd-${microcdr_MAJOR_MINOR_VERSION}
+    microcdrd
+  )
 
-if(MicroCDR_LIBRARY_RELEASE AND MicroCDR_LIBRARY_DEBUG)
-  set(MicroCDR_LIBRARIES
-    optimized ${MicroCDR_LIBRARY_RELEASE}
-    debug ${MicroCDR_LIBRARY_DEBUG}
-  )
-elseif(MicroCDR_LIBRARY_RELEASE)
-  set(MicroCDR_LIBRARIES
-    ${MicroCDR_LIBRARY_RELEASE}
-  )
-elseif(MicroCDR_LIBRARY_DEBUG)
-  set(MicroCDR_LIBRARIES
-    ${MicroCDR_LIBRARY_DEBUG}
-  )
-else()
-  set(MicroCDR_LIBRARIES "")
+if(MicroCDR_LIBRARY_RELEASE)
+  set(MicroCDR_LIBRARIES optimized ${MicroCDR_LIBRARY_RELEASE})
+endif()
+
+if(MicroCDR_LIBRARY_DEBUG)
+  set(MicroCDR_LIBRARIES ${MicroCDR_LIBRARIES} debug ${MicroCDR_LIBRARY_DEBUG})
 endif()
 
 find_library(MicroXRCEDDSClient_LIBRARY_RELEASE
-  NAMES microxrcedds_client-${microxrcedds_client_MAJOR_MINOR_VERSION} microxrcedds_client)
+  NAMES
+    microxrcedds_client-${microxrcedds_client_MAJOR_MINOR_VERSION}
+    microxrcedds_client
+  )
 
 find_library(MicroXRCEDDSClient_LIBRARY_DEBUG
-  NAMES microxrcedds_clientd-${microxrcedds_client_MAJOR_MINOR_VERSION} microxrcedds_clientd)
+  NAMES
+    microxrcedds_clientd-${microxrcedds_client_MAJOR_MINOR_VERSION}
+    microxrcedds_clientd
+  )
 
-if(MicroXRCEDDSClient_LIBRARY_RELEASE AND MicroXRCEDDSClient_LIBRARY_DEBUG)
-  set(MicroXRCEDDSClient_LIBRARIES
-    optimized ${MicroXRCEDDSClient_LIBRARY_RELEASE}
-    debug ${MicroXRCEDDSClient_LIBRARY_DEBUG}
-    ${MicroCDR_LIBRARIES}
-  )
-elseif(MicroXRCEDDSClient_LIBRARY_RELEASE)
-  set(MicroXRCEDDSClient_LIBRARIES
-    ${MicroXRCEDDSClient_LIBRARY_RELEASE}
-    ${MicroCDR_LIBRARIES}
-  )
-elseif(MicroXRCEDDSClient_LIBRARY_DEBUG)
-  set(MicroXRCEDDSClient_LIBRARIES
-    ${MicroXRCEDDSClient_LIBRARY_DEBUG}
-    ${MicroCDR_LIBRARIES}
-  )
-else()
-  set(MicroXRCEDDSClient_LIBRARIES "")
+if(MicroXRCEDDSClient_LIBRARY_RELEASE)
+  set(MicroXRCEDDSClient_LIBRARIES optimized ${MicroXRCEDDSClient_LIBRARY_RELEASE})
+endif()
+
+if(MicroXRCEDDSClient_LIBRARY_DEBUG)
+  set(MicroXRCEDDSClient_LIBRARIES ${MicroXRCEDDSClient_LIBRARIES} debug ${MicroXRCEDDSClient_LIBRARY_DEBUG})
 endif()
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(MicroXRCEDDSClient
-        FOUND_VAR MicroXRCEDDSClient_FOUND
+find_package_handle_standard_args(MicroXRCEDDS
   REQUIRED_VARS
-        MicroXRCEDDSClient_INCLUDE_DIR
-        MicroXRCEDDSClient_LIBRARIES
-)
+    MicroXRCEDDSClient_INCLUDE_DIR
+    MicroXRCEDDSClient_LIBRARIES
+    MicroCDR_INCLUDE_DIR
+    MicroCDR_LIBRARIES
+  )

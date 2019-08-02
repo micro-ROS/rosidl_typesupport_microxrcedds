@@ -154,7 +154,6 @@ target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c
     ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c
-    ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_shared
   )
 foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
   set(_msg_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/msg/dds_microxrcedds")

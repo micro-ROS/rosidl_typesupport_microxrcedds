@@ -17,10 +17,10 @@ cmake_minimum_required(VERSION 3.5)
 project(rosidl_typesupport_microxrcedds_c LANGUAGES C)
 
 find_package(ament_cmake REQUIRED)
-find_package(rosidl_typesupport_microxrcedds_shared REQUIRED CONFIG)
+find_package(microcdr REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 
-ament_export_dependencies(rosidl_typesupport_microxrcedds_shared)
+ament_export_dependencies(microcdr)
 ament_export_dependencies(rosidl_cmake)
 ament_export_dependencies(rosidl_generator_c)
 
@@ -76,7 +76,7 @@ ament_package(
 
 install(
   PROGRAMS
-   bin/rosidl_typesupport_microxrcedds_c
+    bin/rosidl_typesupport_microxrcedds_c
   DESTINATION
     lib/rosidl_typesupport_microxrcedds_c
   )

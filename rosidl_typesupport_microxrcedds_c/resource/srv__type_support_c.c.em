@@ -26,8 +26,8 @@ include_base = '/'.join(include_parts)
 
 header_files = [
     # Provides the definition of the service_type_support_callbacks_t struct.
-    'rosidl_typesupport_microxrcedds_shared/service_type_support.h',
-    'rosidl_typesupport_microxrcedds_shared/identifier.h',
+    'rosidl_typesupport_microxrcedds_c/service_type_support.h',
+    'rosidl_typesupport_microxrcedds_c/identifier.h',
     package_name + '/msg/rosidl_typesupport_microxrcedds_c__visibility_control.h',
     include_base + '.h',
 ]

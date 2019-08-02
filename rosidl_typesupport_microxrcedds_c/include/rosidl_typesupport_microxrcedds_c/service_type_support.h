@@ -12,15 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_H_
-#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_H_
+#ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__SERVICE_TYPE_SUPPORT_H_
+#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__SERVICE_TYPE_SUPPORT_H_
 
-#include "rosidl_typesupport_microxrcedds_c/visibility_control.h"
+#include <stdint.h>
+#include <rmw/types.h>
 
-#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE "rosidl_typesupport_microxrcedds_c"
+#include "rosidl_generator_c/service_type_support_struct.h"
 
-extern ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC
-const char * rosidl_typesupport_microxrcedds_c__identifier;
+#include "./message_type_support.h"
 
+typedef struct service_type_support_callbacks_t
+{
+  const char * package_name_;
+  const char * service_name_;
 
-#endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_H_
+  const rosidl_message_type_support_t * (* request_members_)();
+  const rosidl_message_type_support_t * (* response_members_)();
+
+} service_type_support_callbacks_t;
+
+#endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__SERVICE_TYPE_SUPPORT_H_
