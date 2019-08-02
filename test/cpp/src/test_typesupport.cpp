@@ -1,4 +1,4 @@
-// Copyright 2018 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2019 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,32 +59,28 @@ protected:
     primitive_test.nested_test.unbounded_string4 = "TYZ0123456789";
   }
 
-  bool  Compare(
-    rosidl_typesupport_microxrcedds_test_msg::msg::Primitive A,
-    rosidl_typesupport_microxrcedds_test_msg::msg::Primitive B)
+  void Compare(
+    rosidl_typesupport_microxrcedds_test_msg::msg::Primitive & A,
+    rosidl_typesupport_microxrcedds_test_msg::msg::Primitive & B)
   {
-    bool eq = true;
+    EXPECT_EQ(A.bool_test, B.bool_test);
+    EXPECT_EQ(A.byte_test, B.byte_test);
+    EXPECT_EQ(A.char_test, B.char_test);
+    EXPECT_EQ(A.float32_test, B.float32_test);
+    EXPECT_EQ(A.double_test, B.double_test);
+    EXPECT_EQ(A.int8_test, B.int8_test);
+    EXPECT_EQ(A.uint8_test, B.uint8_test);
+    EXPECT_EQ(A.int16_test, B.int16_test);
+    EXPECT_EQ(A.uint16_test, B.uint16_test);
+    EXPECT_EQ(A.int32_test, B.int32_test);
+    EXPECT_EQ(A.uint32_test, B.uint32_test);
+    EXPECT_EQ(A.int64_test, B.int64_test);
+    EXPECT_EQ(A.uint64_test, B.uint64_test);
 
-    eq = A.bool_test == B.bool_test;
-    eq = A.byte_test == B.byte_test;
-    eq = A.char_test == B.char_test;
-    eq = A.float32_test == B.float32_test;
-    eq = A.double_test == B.double_test;
-    eq = A.int8_test == B.int8_test;
-    eq = A.uint8_test == B.uint8_test;
-    eq = A.int16_test == B.int16_test;
-    eq = A.uint16_test == B.uint16_test;
-    eq = A.int32_test == B.int32_test;
-    eq = A.uint32_test == B.uint32_test;
-    eq = A.int64_test == B.int64_test;
-    eq = A.uint64_test == B.uint64_test;
-
-    eq = A.nested_test.unbounded_string1.compare(B.nested_test.unbounded_string1) == 0;
-    eq = A.nested_test.unbounded_string2.compare(B.nested_test.unbounded_string2) == 0;
-    eq = A.nested_test.unbounded_string3.compare(B.nested_test.unbounded_string3) == 0;
-    eq = A.nested_test.unbounded_string4.compare(B.nested_test.unbounded_string4) == 0;
-
-    return eq;
+    EXPECT_EQ(A.nested_test.unbounded_string1.compare(B.nested_test.unbounded_string1), 0);
+    EXPECT_EQ(A.nested_test.unbounded_string2.compare(B.nested_test.unbounded_string2), 0);
+    EXPECT_EQ(A.nested_test.unbounded_string3.compare(B.nested_test.unbounded_string3), 0);
+    EXPECT_EQ(A.nested_test.unbounded_string4.compare(B.nested_test.unbounded_string4), 0);
   }
 
   rosidl_typesupport_microxrcedds_test_msg::msg::Primitive primitive_test;
@@ -107,7 +103,7 @@ TEST_F(TestTypeSupport, typesupport_identifier) {
 TEST_F(TestTypeSupport, serialize_and_deserialize) {
   ucdrBuffer mb_writer;
   ucdrBuffer mb_reader;
-  uint8_t mb_buffer[500];
+  uint8_t mb_buffer[5000];
   ucdr_init_buffer(&mb_writer, mb_buffer, sizeof(mb_buffer));
   ucdr_init_buffer(&mb_reader, mb_buffer, sizeof(mb_buffer));
 
@@ -117,5 +113,5 @@ TEST_F(TestTypeSupport, serialize_and_deserialize) {
 
   ASSERT_EQ(message_type_support_callbacks->cdr_deserialize(&mb_reader, &primitive_test_out), true);
 
-  ASSERT_EQ(Compare(primitive_test, primitive_test_out), true);
+  Compare(primitive_test, primitive_test_out);
 }
