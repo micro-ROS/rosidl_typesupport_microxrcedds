@@ -28,7 +28,7 @@ TEMPLATE(
 header_files = [
     'rmw/error_handling.h',
     'rosidl_typesupport_microxrcedds_cpp/identifier.hpp',
-    'rosidl_typesupport_microxrcedds_cpp/service_type_support.h',
+    'rosidl_typesupport_microxrcedds_c/service_type_support.h',
     'rosidl_typesupport_microxrcedds_cpp/service_type_support_decl.hpp',
 ]
 }@
@@ -53,8 +53,8 @@ namespace typesupport_microxrcedds_cpp
 static service_type_support_callbacks_t _@(service.namespaced_type.name)__callbacks = {
   "@('::'.join([package_name] + list(interface_path.parents[0].parts)))",
   "@(service.namespaced_type.name)",
-  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_cpp, @(', '.join([package_name] + list(interface_path.parents[0].parts))), @(service.namespaced_type.name)_Request)(),
-  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_cpp, @(', '.join([package_name] + list(interface_path.parents[0].parts))), @(service.namespaced_type.name)_Response)(),
+  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_cpp, @(', '.join([package_name] + list(interface_path.parents[0].parts))), @(service.namespaced_type.name)_Request),
+  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_cpp, @(', '.join([package_name] + list(interface_path.parents[0].parts))), @(service.namespaced_type.name)_Response),
 };
 
 static rosidl_service_type_support_t _@(service.namespaced_type.name)__handle = {

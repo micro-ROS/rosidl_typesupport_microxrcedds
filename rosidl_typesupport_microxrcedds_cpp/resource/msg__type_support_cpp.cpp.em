@@ -20,7 +20,7 @@ header_files = [
     'cstring',
     'rosidl_typesupport_cpp/message_type_support.hpp',
     'rosidl_typesupport_microxrcedds_cpp/identifier.hpp',
-    'rosidl_typesupport_microxrcedds_cpp/message_type_support.h',
+    'rosidl_typesupport_microxrcedds_c/message_type_support.h',
     'rosidl_typesupport_microxrcedds_cpp/message_type_support_decl.hpp',
     'ucdr/microcdr.h',
 ]
@@ -353,13 +353,8 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
 
 static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
   ucdrBuffer * cdr,
-  void * untyped_ros_message,
-  uint8_t * raw_mem_ptr,
-  size_t raw_mem_size)
+  void * untyped_ros_message)
 {
-  (void) raw_mem_ptr;
-  (void) raw_mem_size;
-
   auto typed_message =
     static_cast<@('::'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])) *>(
     untyped_ros_message);
