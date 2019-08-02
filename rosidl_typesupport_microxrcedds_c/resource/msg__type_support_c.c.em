@@ -227,13 +227,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
 
 static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
   ucdrBuffer * cdr,
-  void * untyped_ros_message,
-  uint8_t * raw_mem_ptr,
-  size_t raw_mem_size)
+  void * untyped_ros_message)
 {
   (void) cdr;
-  (void) raw_mem_ptr;
-  (void) raw_mem_size;
 
   bool rv = false;
 
@@ -275,7 +271,7 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
 @[  elif isinstance(member.type, NamespacedType)]@
   rv = ((const message_type_support_callbacks_t *)(
       ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.namespaced_name()))
-      )()->data))->cdr_deserialize(cdr, &ros_message->@(member.name), raw_mem_ptr, raw_mem_size);
+      )()->data))->cdr_deserialize(cdr, &ros_message->@(member.name));
 @[  else]@
   // Micro CDR does not support this type.
 @[  end if]@

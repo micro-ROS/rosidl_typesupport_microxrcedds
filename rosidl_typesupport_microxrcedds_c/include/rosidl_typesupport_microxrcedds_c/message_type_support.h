@@ -32,9 +32,7 @@ typedef struct message_type_support_callbacks_t
   // Function for message deserialization
   bool (* cdr_deserialize)(
     ucdrBuffer * cdr,
-    void * untyped_ros_message,
-    uint8_t * raw_mem_ptr,
-    size_t raw_mem_size);
+    void * untyped_ros_message);
 
   // Function to get size of data
   uint32_t (* get_serialized_size)(
