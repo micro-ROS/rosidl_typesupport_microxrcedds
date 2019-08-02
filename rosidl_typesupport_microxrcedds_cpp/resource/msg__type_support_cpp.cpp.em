@@ -20,7 +20,7 @@ header_files = [
     'cstring',
     'rosidl_typesupport_cpp/message_type_support.hpp',
     'rosidl_typesupport_microxrcedds_cpp/identifier.hpp',
-    'rosidl_typesupport_microxrcedds_shared/message_type_support.h',
+    'rosidl_typesupport_microxrcedds_cpp/message_type_support.h',
     'rosidl_typesupport_microxrcedds_cpp/message_type_support_decl.hpp',
     'ucdr/microcdr.h',
 ]

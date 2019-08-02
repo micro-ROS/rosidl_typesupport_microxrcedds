@@ -14,10 +14,11 @@
 
 #include <rosidl_typesupport_microxrcedds_cpp/visibility_control.h>
 #include <rosidl_typesupport_microxrcedds_cpp/identifier.hpp>
-#include <rosidl_typesupport_microxrcedds_shared/identifier.h>
 
 namespace rosidl_typesupport_microxrcedds_cpp
 {
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_EXPORT
-const char * typesupport_identifier = "rosidl_typesupport_microxrcedds_cpp";
+const char *
+  typesupport_identifier =
+  ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP__IDENTIFIER_VALUE;
 }  // namespace rosidl_typesupport_microxrcedds_cpp

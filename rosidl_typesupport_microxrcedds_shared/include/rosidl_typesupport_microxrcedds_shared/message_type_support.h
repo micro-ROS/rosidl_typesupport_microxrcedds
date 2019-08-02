@@ -15,34 +15,34 @@
 #ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_SHARED__MESSAGE_TYPE_SUPPORT_H_
 #define ROSIDL_TYPESUPPORT_MICROXRCEDDS_SHARED__MESSAGE_TYPE_SUPPORT_H_
 
-#include "rosidl_generator_c/message_type_support_struct.h"
-
-#include <ucdr/microcdr.h>
-
-typedef struct message_type_support_callbacks_t
-{
-  const char * package_name_;
-  const char * message_name_;
-
-  // Function for message serialization
-  bool (* cdr_serialize)(
-    const void * untyped_ros_message,
-    ucdrBuffer * cdr);
-
-  // Function for message deserialization
-  bool (* cdr_deserialize)(
-    ucdrBuffer * cdr,
-    void * untyped_ros_message,
-    uint8_t * raw_mem_ptr,
-    size_t raw_mem_size);
-
-  // Function to get size of data
-  uint32_t (* get_serialized_size)(
-    const void *);
-
-  // Function for type support initialization
-  size_t (* max_serialized_size)();
-
-} message_type_support_callbacks_t;
+//#include "rosidl_generator_c/message_type_support_struct.h"
+//
+//#include <ucdr/microcdr.h>
+//
+//typedef struct message_type_support_callbacks_t
+//{
+//  const char * package_name_;
+//  const char * message_name_;
+//
+//  // Function for message serialization
+//  bool (* cdr_serialize)(
+//    const void * untyped_ros_message,
+//    ucdrBuffer * cdr);
+//
+//  // Function for message deserialization
+//  bool (* cdr_deserialize)(
+//    ucdrBuffer * cdr,
+//    void * untyped_ros_message,
+//    uint8_t * raw_mem_ptr,
+//    size_t raw_mem_size);
+//
+//  // Function to get size of data
+//  uint32_t (* get_serialized_size)(
+//    const void *);
+//
+//  // Function for type support initialization
+//  size_t (* max_serialized_size)();
+//
+//} message_type_support_callbacks_t;
 
 #endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_SHARED__MESSAGE_TYPE_SUPPORT_H_

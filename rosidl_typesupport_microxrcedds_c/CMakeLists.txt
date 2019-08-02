@@ -33,9 +33,9 @@ add_library(${PROJECT_NAME}
   src/deserialize_buffer_utility.c
   )
 
-ament_target_dependencies(${PROJECT_NAME}
-  rosidl_typesupport_microxrcedds_shared
-  )
+#ament_target_dependencies(${PROJECT_NAME}
+#  rosidl_typesupport_microxrcedds_shared
+#  )
 
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE

@@ -4,16 +4,16 @@
   <name>rosidl_typesupport_microxrcedds_cpp</name>
   <version>0.0.1</version>
   <description>Generate the C++ interfaces for eProsima Micro XRCE-DDS.</description>
-  <maintainer email="javiermoreno@eprosima.com">Javier Moreno</maintainer>
+  <maintainer email="borjaouterelo@eprosima.com">Borja Outerelo</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <buildtool_depend>rosidl_typesupport_microxrcedds_shared</buildtool_depend>
+  <buildtool_depend>microcdr</buildtool_depend>
   <buildtool_depend>rosidl_cmake</buildtool_depend>
   <buildtool_depend>rosidl_generator_cpp</buildtool_depend>
 
   <buildtool_export_depend>ament_cmake</buildtool_export_depend>
-  <buildtool_export_depend>rosidl_typesupport_microxrcedds_shared</buildtool_export_depend>
+  <buildtool_export_depend>microcdr</buildtool_export_depend>
   <buildtool_export_depend>rosidl_cmake</buildtool_export_depend>
   <buildtool_export_depend>rosidl_generator_cpp</buildtool_export_depend>
 

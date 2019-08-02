@@ -152,7 +152,6 @@ target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_cpp
     ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_shared
   )
 
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}

@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 3.5)
 project(rosidl_typesupport_microxrcedds_cpp LANGUAGES CXX)
 
 find_package(ament_cmake REQUIRED)
-find_package(rosidl_typesupport_microxrcedds_shared REQUIRED CONFIG)
+find_package(microcdr REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 
-ament_export_dependencies(rosidl_typesupport_microxrcedds_shared)
+ament_export_dependencies(microcdr)
 ament_export_dependencies(rosidl_cmake)
 ament_export_dependencies(rosidl_generator_cpp)
 
@@ -14,11 +14,8 @@ ament_export_include_directories(include)
 
 ament_python_install_package(${PROJECT_NAME})
 
-add_library(${PROJECT_NAME} src/identifier.cpp)
-ament_export_libraries(${PROJECT_NAME})
-
-ament_target_dependencies(${PROJECT_NAME}
-  rosidl_typesupport_microxrcedds_shared
+add_library(${PROJECT_NAME}
+  src/identifier.cpp
   )
 
 target_compile_definitions(${PROJECT_NAME}
