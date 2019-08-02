@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-find_package(rosidl_typesupport_microxrcedds_shared REQUIRED CONFIG)
+find_package(microcdr REQUIRED)
 
 set(_output_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_cpp/${PROJECT_NAME}")
 set(_generated_files "")
@@ -158,7 +158,6 @@ ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   "rmw"
   "rosidl_typesupport_microxrcedds_cpp"
   "rosidl_typesupport_interface"
-  "rosidl_typesupport_microxrcedds_shared"
   )
 
 foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
