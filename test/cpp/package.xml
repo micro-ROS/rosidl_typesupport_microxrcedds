@@ -4,7 +4,7 @@
   <name>rosidl_typesupport_microxrcedds_cpp_tests</name>
   <version>0.1.0</version>
   <description>Test for rosidl_typesupport_microxrcedds_cpp.</description>
-  <maintainer email="javiermoreno@eproxima.com">Javier Moreno</maintainer>
+  <maintainer email="borjaouterelo@eproxima.com">Borja Outerelo</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
@@ -15,7 +15,6 @@
   <test_depend>ament_lint_common</test_depend>
 
   <test_depend>rosidl_typesupport_microxrcedds_cpp</test_depend>
-  <test_depend>rosidl_typesupport_microxrcedds_shared</test_depend>
   <test_depend>rosidl_typesupport_microxrcedds_test_msg</test_depend>
   <test_depend>ament_cmake_gtest</test_depend>
   <test_depend>builtin_interfaces</test_depend>

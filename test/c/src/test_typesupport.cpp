@@ -1,4 +1,4 @@
-// Copyright 2018 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2019 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,7 @@
 
 
 #include <rosidl_typesupport_microxrcedds_c/identifier.h>
-#include <rosidl_typesupport_microxrcedds_shared/identifier.h>
-#include <rosidl_typesupport_microxrcedds_shared/message_type_support.h>
+#include <rosidl_typesupport_microxrcedds_c/message_type_support.h>
 
 #include <rosidl_typesupport_microxrcedds_test_msg/msg/primitive.h>
 #include \
@@ -147,8 +146,7 @@ TEST_F(TestTypeSupport, serialize_and_deserialize) {
 
   uint8_t deserialize_buffer[500];
   rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_test_out;
-  ASSERT_EQ(message_type_support_callbacks->cdr_deserialize(&mb_reader, &primitive_test_out,
-    deserialize_buffer, sizeof(deserialize_buffer)), true);
+  ASSERT_EQ(message_type_support_callbacks->cdr_deserialize(&mb_reader, &primitive_test_out), true);
 
   ASSERT_EQ(Compare(primitive_test, primitive_test_out), true);
 }
