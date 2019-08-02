@@ -23,6 +23,7 @@ include_base = '/'.join(include_parts)
 header_files = [
     'stdint.h',
     'stdio.h',
+    'string.h',
     # Provides the rosidl_typesupport_microxrcedds_c__identifier symbol declaration.
     'rosidl_typesupport_microxrcedds_c/identifier.h',
     # Provides the definition of the message_type_support_callbacks_t struct.
@@ -186,7 +187,7 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
     return false;
   }
 
-  const _@(message.structure.namespaced_type.name)__ros_msg_type * ros_message = (const _@(message.structure.namespaced_type.name)__ros_msg_type *)(untyped_ros_message);
+  _@(message.structure.namespaced_type.name)__ros_msg_type * ros_message = (_@(message.structure.namespaced_type.name)__ros_msg_type *)(untyped_ros_message);
   (void)ros_message;
 
 @[for member in message.structure.members]@
@@ -211,6 +212,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
   rv = ucdr_serialize_@(get_suffix(member.type.typename))(cdr, ros_message->@(member.name));
 @[  elif isinstance(member.type, AbstractString)]@
   rv = ucdr_serialize_string(cdr, ros_message->@(member.name).data);
+  if (rv) {
+    ros_message->@(member.name).size = strlen(ros_message->@(member.name).data);
+  }
 @[  elif isinstance(member.type, AbstractWString)]@
   // Micro CDR does not support WString type.
 @[  elif isinstance(member.type, NamespacedType)]@
@@ -265,6 +269,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
   {
     size_t capacity = ros_message->@(member.name).capacity;
     rv = ucdr_deserialize_string(cdr, ros_message->@(member.name).data, capacity);
+    if (rv) {
+      ros_message->@(member.name).size = strlen(ros_message->@(member.name).data);
+    }
   }
 @[  elif isinstance(member.type, AbstractWString)]@
   // Micro CDR does not support WString type.

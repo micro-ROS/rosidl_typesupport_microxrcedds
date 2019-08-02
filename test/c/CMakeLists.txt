@@ -26,9 +26,10 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
 
   set(TEST_NAME test_typpesupport)
+
   ament_add_gtest(${TEST_NAME}
-      src/test_typesupport.cpp
-      )
+    src/test_typesupport.cpp
+    )
 
   ament_target_dependencies(${TEST_NAME}
     rosidl_typesupport_microxrcedds_test_msg
