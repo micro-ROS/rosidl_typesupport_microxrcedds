@@ -12,18 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP__IDENTIFIER_HPP_
-#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP__IDENTIFIER_HPP_
+#ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP__IDENTIFIER_H_
+#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP__IDENTIFIER_H_
 
-#include <rosidl_typesupport_microxrcedds_cpp/visibility_control.h>
-#include <rosidl_typesupport_microxrcedds_cpp/identifier.h>
+#define ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP__IDENTIFIER_VALUE "rosidl_typesupport_microxrcedds_cpp"
 
-namespace rosidl_typesupport_microxrcedds_cpp
-{
-
-ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP_IMPORT
-extern const char * typesupport_identifier;
-
-}  // namespace rosidl_typesupport_microxrcedds_cpp
-
-#endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP__IDENTIFIER_HPP_
+#endif  // ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP__IDENTIFIER_H_
