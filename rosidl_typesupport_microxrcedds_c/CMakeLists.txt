@@ -20,7 +20,6 @@ find_package(ament_cmake REQUIRED)
 find_package(microcdr REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 
-ament_export_dependencies(microcdr)
 ament_export_dependencies(rosidl_cmake)
 ament_export_dependencies(rosidl_generator_c)
 
@@ -32,10 +31,6 @@ add_library(${PROJECT_NAME}
   src/identifier.c
   src/deserialize_buffer_utility.c
   )
-
-#ament_target_dependencies(${PROJECT_NAME}
-#  rosidl_typesupport_microxrcedds_shared
-#  )
 
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE
