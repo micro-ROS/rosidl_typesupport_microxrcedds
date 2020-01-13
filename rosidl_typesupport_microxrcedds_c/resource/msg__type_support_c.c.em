@@ -209,10 +209,15 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
     const size_t size = ros_message->@(member.name).size;
     rv = ucdr_serialize_uint32_t(cdr, size);
 
-    for(size_t i = 0; i < size; i++){
-      rv = ((const message_type_support_callbacks_t *)(
-        ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))
-        )()->data))->cdr_serialize(&ros_message->@(member.name).data[i], cdr);
+    if(rv == true){
+      for(size_t i = 0; i < size; i++){
+        rv = ((const message_type_support_callbacks_t *)(
+          ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))
+          )()->data))->cdr_serialize(&ros_message->@(member.name).data[i], cdr);
+        if(rv == false){
+          break;
+        }
+      }
     }
 @[      end if]@
 @[    end if]@
@@ -281,11 +286,13 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
     }
 
     ros_message->@(member.name).size = size;
-    //Is the ros_message allocated?
     for(size_t i = 0; i < size; i++){
       rv = ((const message_type_support_callbacks_t *)(
         ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))
         )()->data))->cdr_deserialize(cdr, &ros_message->@(member.name).data[i]);
+        if(rv == false){
+          break;
+        }
     }
 @[      end if]@
 @[    end if]@
