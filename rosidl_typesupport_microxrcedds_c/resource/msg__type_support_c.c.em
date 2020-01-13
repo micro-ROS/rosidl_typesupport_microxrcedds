@@ -290,9 +290,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
       rv = ((const message_type_support_callbacks_t *)(
         ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))
         )()->data))->cdr_deserialize(cdr, &ros_message->@(member.name).data[i]);
-        if(rv == false){
-          break;
-        }
+      if(rv == false){
+        break;
+      }
     }
 @[      end if]@
 @[    end if]@
