@@ -355,13 +355,15 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
     const size_t sequence_size = ros_message->@(member.name).size;
 
     current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
-
-    size_t item_size = ((const message_type_support_callbacks_t *)(
+    
+    for(size_t i = 0; i < sequence_size; i++){
+      current_alignment += ucdr_alignment(current_alignment, item_size) + ((const message_type_support_callbacks_t *)(
         ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))
-        )()->data))->get_serialized_size(&ros_message->@(member.name).data[0]);
-
-    current_alignment += ucdr_alignment(current_alignment, item_size) + (sequence_size * item_size);
-
+        )()->data))->get_serialized_size(&ros_message->@(member.name).data[i]);
+      if(rv == false){
+        break;
+      }
+    }
 @[      end if]@
 @[    end if]@
   }
