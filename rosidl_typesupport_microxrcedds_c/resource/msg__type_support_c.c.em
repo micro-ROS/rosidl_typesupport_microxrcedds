@@ -360,7 +360,8 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
       size_t element_size = ((const message_type_support_callbacks_t *)(
         ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))
         )()->data))->get_serialized_size(&ros_message->@(member.name).data[i]);
-      current_alignment += ucdr_alignment(current_alignment, element_size) + element_size;
+      uint8_t alignment_size = (element_size < MICROXRCEDDS_PADDING) ? element_size : MICROXRCEDDS_PADDING;
+      current_alignment += ucdr_alignment(current_alignment, alignment_size) + element_size;
     }
 @[      end if]@
 @[    end if]@
