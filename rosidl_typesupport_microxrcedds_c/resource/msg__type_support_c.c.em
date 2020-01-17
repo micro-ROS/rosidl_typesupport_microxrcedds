@@ -205,6 +205,20 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
 @[      if isinstance(member.type.value_type, BasicType)]@
     const size_t size = ros_message->@(member.name).size;
     rv = ucdr_serialize_sequence_@(get_suffix(member.type.value_type.typename))(cdr, ros_message->@(member.name).data, size);
+@[      elif isinstance(member.type.value_type, NamespacedType)]@
+    const size_t size = ros_message->@(member.name).size;
+    rv = ucdr_serialize_uint32_t(cdr, size);
+
+    if(rv == true){
+      for(size_t i = 0; i < size; i++){
+        rv = ((const message_type_support_callbacks_t *)(
+          ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))
+          )()->data))->cdr_serialize(&ros_message->@(member.name).data[i], cdr);
+        if(rv == false){
+          break;
+        }
+      }
+    }
 @[      end if]@
 @[    end if]@
   }
@@ -260,6 +274,26 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
     uint32_t size;
     const size_t capacity = ros_message->@(member.name).capacity;
     rv = ucdr_deserialize_sequence_@(get_suffix(member.type.value_type.typename))(cdr, ros_message->@(member.name).data, capacity, &size);
+    ros_message->@(member.name).size = size;
+@[      elif isinstance(member.type.value_type, NamespacedType)]@
+    size_t size, capacity;
+    capacity = ros_message->@(member.name).capacity;
+    rv = ucdr_deserialize_uint32_t(cdr, &size);
+
+    if(size > capacity){
+      fprintf(stderr, "cannot allocate received sequence in ros_message\n");
+      return 0;
+    }
+
+    ros_message->@(member.name).size = size;
+    for(size_t i = 0; i < size; i++){
+      rv = ((const message_type_support_callbacks_t *)(
+        ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))
+        )()->data))->cdr_deserialize(cdr, &ros_message->@(member.name).data[i]);
+      if(rv == false){
+        break;
+      }
+    }
 @[      end if]@
 @[    end if]@
   }
@@ -317,6 +351,18 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
     size_t item_size = sizeof(ros_message->@(member.name).data[0]);
     current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
     current_alignment += ucdr_alignment(current_alignment, item_size) + (sequence_size * item_size);
+@[      elif isinstance(member.type.value_type, NamespacedType)]@
+    const size_t sequence_size = ros_message->@(member.name).size;
+
+    current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
+    
+    for(size_t i = 0; i < sequence_size; i++){
+      size_t element_size = ((const message_type_support_callbacks_t *)(
+        ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))
+        )()->data))->get_serialized_size(&ros_message->@(member.name).data[i]);
+      uint8_t alignment_size = (element_size < MICROXRCEDDS_PADDING) ? element_size : MICROXRCEDDS_PADDING;
+      current_alignment += ucdr_alignment(current_alignment, alignment_size) + element_size;
+    }
 @[      end if]@
 @[    end if]@
   }
