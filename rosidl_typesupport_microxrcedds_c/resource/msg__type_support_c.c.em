@@ -1,4 +1,4 @@
-@# Included from rosidl_typesupport_fastrtps_c/resource/idl__type_support_c.cpp.em
+@# Included from rosidl_typesupport_microxrcedds_c/resource/idl__type_support_c.cpp.em
 @{
 from rosidl_cmake import convert_camel_case_to_lower_case_underscore
 from rosidl_parser.definition import AbstractGenericString
@@ -276,11 +276,10 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
     rv = ucdr_deserialize_sequence_@(get_suffix(member.type.value_type.typename))(cdr, ros_message->@(member.name).data, capacity, &size);
     ros_message->@(member.name).size = size;
 @[      elif isinstance(member.type.value_type, NamespacedType)]@
-    size_t size, capacity;
-    capacity = ros_message->@(member.name).capacity;
+    uint32_t size;
     rv = ucdr_deserialize_uint32_t(cdr, &size);
 
-    if(size > capacity){
+    if(size > ros_message->@(member.name).capacity){
       fprintf(stderr, "cannot allocate received sequence in ros_message\n");
       return 0;
     }
