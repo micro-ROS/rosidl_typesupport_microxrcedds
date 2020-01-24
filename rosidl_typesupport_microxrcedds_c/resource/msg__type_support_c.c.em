@@ -1,4 +1,4 @@
-@# Included from rosidl_typesupport_fastrtps_c/resource/idl__type_support_c.cpp.em
+@# Included from rosidl_typesupport_microxrcedds_c/resource/idl__type_support_c.cpp.em
 @{
 from rosidl_cmake import convert_camel_case_to_lower_case_underscore
 from rosidl_parser.definition import AbstractGenericString
