@@ -54,6 +54,12 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+if(BUILD_SHARED_LIBS)
+  set(${PROJECT_NAME}_LIBRARY_TYPE "SHARED")
+else()
+  set(${PROJECT_NAME}_LIBRARY_TYPE "STATIC")
+endif()
+
 ament_package(
   CONFIG_EXTRAS "rosidl_typesupport_microxrcedds_cpp-extras.cmake.in"
   )

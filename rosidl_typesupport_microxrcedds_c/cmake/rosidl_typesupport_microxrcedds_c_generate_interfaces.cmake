@@ -115,6 +115,7 @@ set(_target_suffix "__rosidl_typesupport_microxrcedds_c")
 
 # generate Micro XRCE-DDS typesupport shared library
 add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  ${rosidl_typesupport_microxrcedds_c_LIBRARY_TYPE}
   ${_generated_files}
   )
 

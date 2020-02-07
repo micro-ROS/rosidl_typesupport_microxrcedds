@@ -2,6 +2,9 @@
 # rosidl_typesupport_microxrcedds_cpp/
 #   rosidl_typesupport_microxrcedds_cpp-extras.cmake.in
 
+# use the same type of library
+set(rosidl_typesupport_microxrcedds_c_LIBRARY_TYPE "@rosidl_typesupport_microxrcedds_c_LIBRARY_TYPE@")
+
 # specific order: dependents before dependencies
 list(APPEND rosidl_typesupport_microxrcedds_cpp_LIBRARIES microcdr)
 
