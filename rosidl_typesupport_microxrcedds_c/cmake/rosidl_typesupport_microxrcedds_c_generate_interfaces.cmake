@@ -136,8 +136,6 @@ set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix} PROP
     99
   C_STANDARD_REQUIRED
     YES
-  POSITION_INDEPENDENT_CODE
-    YES
   )
 
 target_compile_options(${rosidl_generate_interfaces_TARGET}${_target_suffix}
