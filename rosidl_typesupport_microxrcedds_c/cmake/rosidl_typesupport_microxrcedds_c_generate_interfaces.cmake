@@ -172,8 +172,8 @@ endforeach()
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   "microxrcedds_client"
   "rmw"
+  "rosidl_runtime_c"
   "rosidl_typesupport_microxrcedds_c"
-  "rosidl_generator_c"
   "rosidl_typesupport_interface"
   )
 

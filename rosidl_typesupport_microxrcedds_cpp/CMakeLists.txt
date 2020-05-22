@@ -8,7 +8,7 @@ find_package(ament_cmake_python REQUIRED)
 
 ament_export_dependencies(rosidl_typesupport_microxrcedds_c)
 ament_export_dependencies(rosidl_cmake)
-ament_export_dependencies(rosidl_generator_cpp)
+ament_export_dependencies(rosidl_runtime_cpp)
 
 ament_export_include_directories(include)
 

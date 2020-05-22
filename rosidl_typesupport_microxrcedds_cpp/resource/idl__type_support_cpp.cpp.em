@@ -16,9 +16,13 @@ from rosidl_cmake import convert_camel_case_to_lower_case_underscore
 include_parts = [package_name] + list(interface_path.parents[0].parts) + \
     [convert_camel_case_to_lower_case_underscore(interface_path.stem)]
 include_base = '/'.join(include_parts)
+
+include_detail_parts = [package_name] + list(interface_path.parents[0].parts) + [
+    'detail', convert_camel_case_to_lower_case_underscore(interface_path.stem)]
+include_detail_base = '/'.join(include_detail_parts)
 }@
 #include "@(include_base)__rosidl_typesupport_microxrcedds_cpp.hpp"
-#include "@(include_base)__struct.hpp"
+#include "@(include_detail_base)__struct.hpp"
 
 @{
 include_directives = set()

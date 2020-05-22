@@ -4,7 +4,7 @@ header_files = [
     'stddef.h',
     'stdbool.h',
     'stdint.h',
-    'rosidl_generator_c/message_type_support_struct.h',
+    'rosidl_runtime_c/message_type_support_struct.h',
     'rosidl_typesupport_interface/macros.h',
     package_name + '/msg/rosidl_typesupport_microxrcedds_c__visibility_control.h',
 ]

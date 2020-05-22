@@ -157,6 +157,7 @@ target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
 
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   "rmw"
+  "rosidl_runtime_cpp"
   "rosidl_typesupport_microxrcedds_cpp"
   "rosidl_typesupport_interface"
   )
