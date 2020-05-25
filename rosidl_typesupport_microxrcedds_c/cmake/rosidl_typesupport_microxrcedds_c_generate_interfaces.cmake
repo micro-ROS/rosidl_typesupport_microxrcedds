@@ -13,6 +13,7 @@
 # limitations under the License.
 
 find_package(microcdr REQUIRED)
+find_package(rmw REQUIRED)
 
 set(_output_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c/${PROJECT_NAME}")
 set(_generated_files "")

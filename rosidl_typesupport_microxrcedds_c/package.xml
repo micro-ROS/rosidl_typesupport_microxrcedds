@@ -18,6 +18,9 @@
   <buildtool_export_depend>rosidl_cmake</buildtool_export_depend>
   <buildtool_export_depend>rosidl_runtime_c</buildtool_export_depend>
 
+  <depend>microxrcedds_client</depend>
+  <depend>rmw</depend>
+
   <exec_depend>rosidl_parser</exec_depend>
   <exec_depend>rosidl_typesupport_interface</exec_depend>
 
