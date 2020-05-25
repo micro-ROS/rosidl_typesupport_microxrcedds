@@ -18,11 +18,13 @@ project(rosidl_typesupport_microxrcedds_c LANGUAGES C)
 
 find_package(ament_cmake REQUIRED)
 find_package(microcdr REQUIRED)
+find_package(microxrcedds_client REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 
 ament_export_dependencies(rosidl_cmake)
 ament_export_dependencies(rosidl_runtime_c)
 ament_export_dependencies(microcdr)
+ament_export_dependencies(microxrcedds_client)
 
 ament_export_include_directories(include)
 
