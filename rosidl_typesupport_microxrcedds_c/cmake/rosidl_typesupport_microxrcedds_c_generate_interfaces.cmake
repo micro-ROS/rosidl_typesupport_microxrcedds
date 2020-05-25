@@ -30,7 +30,7 @@ endforeach()
 
 set(_dependency_files "")
 set(_dependencies "")
-foreach(_pck_name ${rosidl_generated_interfaces_DEPENDENCY_PACKAGE_NAMES})
+foreach(_pkg_name ${rosidl_generated_interfaces_DEPENDENCY_PACKAGE_NAMES})
   foreach(_idl_file ${${_pkg_name}_IDL_FILES})
     set(_abs_idl_file "${${_pkg_name}_DIR}/../${_idl_file}")
     normalize_path(_abs_idl_file "${_abs_idl_file}")
