@@ -8,17 +8,16 @@
   <license>Apache License 2.0</license>
   <author>Borja Outerelo</author>
 
-  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
   <buildtool_depend>microcdr</buildtool_depend>
   <buildtool_depend>rosidl_cmake</buildtool_depend>
   <buildtool_depend>rosidl_runtime_c</buildtool_depend>
 
-  <buildtool_export_depend>ament_cmake</buildtool_export_depend>
+  <buildtool_export_depend>ament_cmake_ros</buildtool_export_depend>
   <buildtool_export_depend>microcdr</buildtool_export_depend>
   <buildtool_export_depend>rosidl_cmake</buildtool_export_depend>
   <buildtool_export_depend>rosidl_runtime_c</buildtool_export_depend>
 
-  <depend>microxrcedds_client</depend>
   <depend>rmw</depend>
 
   <exec_depend>rosidl_parser</exec_depend>
