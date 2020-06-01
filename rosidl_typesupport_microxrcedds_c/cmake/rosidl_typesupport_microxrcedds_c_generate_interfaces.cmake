@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+find_package(ament_cmake_ros REQUIRED)
 find_package(microcdr REQUIRED)
 find_package(rmw REQUIRED)
 
 set(_output_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c/${PROJECT_NAME}")
+
 set(_generated_files "")
 foreach(_abs_idl_file ${rosidl_generate_interfaces_ABS_IDL_FILES})
   get_filename_component(_parent_folder "${_abs_idl_file}" DIRECTORY)
@@ -23,8 +25,8 @@ foreach(_abs_idl_file ${rosidl_generate_interfaces_ABS_IDL_FILES})
   get_filename_component(_idl_name "${_abs_idl_file}" NAME_WE)
   string_camel_case_to_lower_case_underscore("${_idl_name}" _header_name)
   list(APPEND _generated_files
-    "${_output_path}/${_parent_folder}/${_header_name}__rosidl_typesupport_microxrcedds_c.h"
-    "${_output_path}/${_parent_folder}/${_header_name}__type_support_c.c"
+    "${_output_path}/${_parent_folder}/detail/microxrcedds/${_header_name}__type_support_c.c"
+    "${_output_path}/${_parent_folder}/detail/${_header_name}__rosidl_typesupport_microxrcedds_c.h"
     )
 endforeach()
 
@@ -39,23 +41,7 @@ foreach(_pkg_name ${rosidl_generated_interfaces_DEPENDENCY_PACKAGE_NAMES})
   endforeach()
 endforeach()
 
-# list dependences
-set(_dependency_files "")
-set(_dependencies "")
-foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
-  foreach(_idl_file ${${_pkg_name}_INTERFACE_FILES})
-  get_filename_component(_extension "${_idl_file}" EXT)
-    if(_extension STREQUAL ".msg")
-      set(_abs_idl_file "${${_pkg_name}_DIR}/../${_idl_file}")
-      normalize_path(_abs_idl_file "${_abs_idl_file}")
-      list(APPEND _dependency_files "${_abs_idl_file}")
-      list(APPEND _dependencies "${_pkg_name}:${_abs_idl_file}")
-    endif()
-  endforeach()
-endforeach()
-
-
-# check if all templates exits
+# Check if all templates exits
 set(target_dependencies
   "${rosidl_typesupport_microxrcedds_c_BIN}"
   ${rosidl_typesupport_microxrcedds_c_GENERATOR_FILES}
@@ -74,10 +60,10 @@ foreach(dep ${target_dependencies})
   endif()
 endforeach()
 
-
-# generate script argument file
+# Generate script argument file
 set(generator_arguments_file "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c__arguments.json")
-rosidl_write_generator_arguments("${generator_arguments_file}"
+rosidl_write_generator_arguments(
+  "${generator_arguments_file}"
   PACKAGE_NAME "${PROJECT_NAME}"
   IDL_TUPLES "${rosidl_generate_interfaces_IDL_TUPLES}"
   ROS_INTERFACE_DEPENDENCIES "${_dependencies}"
@@ -86,8 +72,7 @@ rosidl_write_generator_arguments("${generator_arguments_file}"
   TARGET_DEPENDENCIES ${target_dependencies}
   )
 
-
-# execute python script
+# Execute python script
 add_custom_command(
   OUTPUT
     ${_generated_files}
@@ -101,8 +86,7 @@ add_custom_command(
   VERBATIM
   )
 
-
-# generate header to switch between export and import for a specific package
+# Generate header to switch between export and import for a specific package
 set(_visibility_control_file
 "${_output_path}/msg/rosidl_typesupport_microxrcedds_c__visibility_control.h")
 string(TOUPPER "${PROJECT_NAME}" PROJECT_NAME_UPPER)
@@ -114,17 +98,13 @@ configure_file(
 
 set(_target_suffix "__rosidl_typesupport_microxrcedds_c")
 
-# generate Micro XRCE-DDS typesupport shared library
+# Generate Micro XRCE-DDS typesupport library
 add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   ${rosidl_typesupport_microxrcedds_c_LIBRARY_TYPE}
   ${_generated_files}
   )
 
-target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  PRIVATE
-      $<$<PLATFORM_ID:Windows>:"ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_BUILDING_DLL_${PROJECT_NAME}">
-  )
-
+# Change output library name if asked to
 if(rosidl_generate_interfaces_LIBRARY_NAME)
   set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix} PROPERTIES
     OUTPUT_NAME
@@ -132,6 +112,7 @@ if(rosidl_generate_interfaces_LIBRARY_NAME)
     )
 endif()
 
+# Set C standard
 set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix} PROPERTIES
   C_STANDARD
     99
@@ -139,6 +120,13 @@ set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix} PROP
     YES
   )
 
+# Set flag for visibility macro
+target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  PRIVATE
+      $<$<PLATFORM_ID:Windows>:"ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_BUILDING_DLL_${PROJECT_NAME}">
+  )
+
+# Set compiler flags
 target_compile_options(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   PRIVATE
     $<$<PLATFORM_ID:Linux>:-Wall>
@@ -147,36 +135,30 @@ target_compile_options(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     $<$<PLATFORM_ID:Windows>:/W4>
   )
 
+# Include headers from other generators
 target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c
     ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c
   )
-foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
-  set(_msg_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/msg/dds_microxrcedds")
-  set(_srv_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/srv/dds_microxrcedds")
-  set(_action_include_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/action/dds_microxrcedds")
-  normalize_path(_msg_include_dir "${_msg_include_dir}")
-  normalize_path(_srv_include_dir "${_srv_include_dir}")
-  normalize_path(_action_include_dir "${_action_include_dir}")
-  target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-    PUBLIC
-      "${_msg_include_dir}"
-      "${_srv_include_dir}"
-      "${_action_include_dir}"
-    )
-  ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-    ${_pkg_name}
-    )
-endforeach()
 
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  "microxrcedds_client"
+  "microcdr"
   "rmw"
   "rosidl_runtime_c"
   "rosidl_typesupport_microxrcedds_c"
   "rosidl_typesupport_interface"
   )
+
+# Depend on dependencies
+foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
+  ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+    ${_pkg_name}
+    )
+  target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+    ${${_pkg_name}_LIBRARIES${_target_suffix}}
+    )
+endforeach()
 
 target_link_libraries(
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
@@ -184,8 +166,16 @@ target_link_libraries(
   microcdr
   )
 
-add_dependencies(${rosidl_generate_interfaces_TARGET}
+# Make top level generation target depend on this library
+add_dependencies(
+  ${rosidl_generate_interfaces_TARGET}
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  )
+
+# Make this library depend on target created by rosidl_generator_cpp
+add_dependencies(
+  ${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  ${rosidl_generate_interfaces_TARGET}__cpp
   )
 
 if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
@@ -213,7 +203,9 @@ if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
       bin
     )
 
-  ament_export_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix})
+  rosidl_export_typesupport_libraries(${_target_suffix}
+    ${rosidl_generate_interfaces_TARGET}${_target_suffix}
+    )
 endif()
 
 
