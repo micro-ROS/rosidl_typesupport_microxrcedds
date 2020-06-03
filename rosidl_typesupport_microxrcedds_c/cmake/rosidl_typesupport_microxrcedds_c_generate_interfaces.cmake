@@ -80,7 +80,7 @@ add_custom_command(
     ${PYTHON_EXECUTABLE} ${rosidl_typesupport_microxrcedds_c_BIN}
     --generator-arguments-file "${generator_arguments_file}"
   DEPENDS
-    ${target_dependencies} ${_dds_idl_files}
+    ${target_dependencies}
   COMMENT
     "Generating C type support for eProsima Micro XRCE-DDS"
   VERBATIM
@@ -138,8 +138,8 @@ target_compile_options(${rosidl_generate_interfaces_TARGET}${_target_suffix}
 # Include headers from other generators
 target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   PUBLIC
-    ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c
-    ${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c>"
   )
 
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
@@ -172,10 +172,10 @@ add_dependencies(
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
   )
 
-# Make this library depend on target created by rosidl_generator_cpp
+# Make this library depend on target created by rosidl_generator_c
 add_dependencies(
   ${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  ${rosidl_generate_interfaces_TARGET}__cpp
+  ${rosidl_generate_interfaces_TARGET}__rosidl_generator_c
   )
 
 if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
