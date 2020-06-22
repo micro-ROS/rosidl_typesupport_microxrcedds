@@ -219,6 +219,18 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
         }
       }
     }
+@[      elif isinstance(member.type.value_type, AbstractString)]@
+    const size_t size = ros_message->@(member.name).size;
+    rv = ucdr_serialize_uint32_t(cdr, size);
+    
+    if(rv == true){
+      for(size_t i = 0; i < size; i++){
+        rv = ucdr_serialize_string(cdr, ros_message->@(member.name).data[i].data);
+        if(rv == false){
+          break;
+        }
+      }
+    }
 @[      end if]@
 @[    end if]@
   }
