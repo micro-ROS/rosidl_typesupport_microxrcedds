@@ -84,7 +84,7 @@ ament_package(
 
 install(
   PROGRAMS
-    bin/rosidl_typesupport_microxrcedds_cpp
+    main/rosidl_typesupport_microxrcedds_cpp
   DESTINATION
     lib/rosidl_typesupport_microxrcedds_cpp
   )
