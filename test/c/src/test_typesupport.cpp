@@ -15,30 +15,22 @@
 
 #include <gtest/gtest.h>
 
+#include "rosidl_runtime_cpp/message_type_support_decl.hpp"
+#include "rosidl_typesupport_cpp/message_type_support.hpp"
+
+#include "rosidl_typesupport_microxrcedds_test_msg/msg/primitive.h"
 
 #include <rosidl_typesupport_microxrcedds_c/identifier.h>
 #include <rosidl_typesupport_microxrcedds_c/message_type_support.h>
-
-#include <rosidl_typesupport_microxrcedds_test_msg/msg/primitive.h>
-#include \
-  <rosidl_typesupport_microxrcedds_test_msg/msg/primitive__rosidl_typesupport_microxrcedds_c.h>
-
 
 class TestTypeSupport : public ::testing::Test
 {
 protected:
   void SetUp()
   {
-    rosidl_message_type_support =
-      ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(
-      rosidl_typesupport_microxrcedds_c,
-      rosidl_typesupport_microxrcedds_test_msg,
-      msg,
-      Primitive)();
+    rosidl_message_type_support = get_message_typesupport_handle(ROSIDL_GET_MSG_TYPE_SUPPORT(rosidl_typesupport_microxrcedds_test_msg, msg, Primitive), ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE);
 
-    message_type_support_callbacks =
-      (const message_type_support_callbacks_t *)rosidl_message_type_support->data;
-
+    message_type_support_callbacks = (const message_type_support_callbacks_t *)rosidl_message_type_support->data;
     primitive_test.bool_test = 0x01;
     primitive_test.byte_test = 0x01;
     primitive_test.char_test = 0x01;
