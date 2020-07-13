@@ -2,7 +2,7 @@ name: CI TypeSupport_MicroXRCEDDS
 
 on:
     pull_request:
-      branches: [ foxy ]
+      branches: [ * ]
 
 jobs:
 
