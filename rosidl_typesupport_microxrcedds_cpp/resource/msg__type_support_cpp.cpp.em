@@ -149,6 +149,12 @@ cdr_serialize(
 @[        else]@
     rv = ucdr_serialize_sequence_@(get_suffix(member.type.value_type.typename))(cdr, &ros_message.@(member.name)[0], size);
 @[        end if]@
+@[      elif isinstance(member.type.value_type, AbstractString)]@
+    size_t size = ros_message.@(member.name).size();
+    rv = ucdr_serialize_uint32_t(cdr, size);
+    for (size_t i = 0; rv && i < size; ++i) {
+      rv = ucdr_serialize_string(cdr, ros_message.@(member.name)[i].c_str());
+    }
 @[      end if]@
 @[    end if]@
   }
@@ -216,6 +222,27 @@ cdr_deserialize(
 @[        end if]@
     if (rv) {
       ros_message.@(member.name).resize(size);
+    }
+@[      elif isinstance(member.type.value_type, AbstractString)]@
+    uint32_t size;
+    rv = ucdr_deserialize_uint32_t(cdr, &size);
+
+    if (size > ros_message.@(member.name).capacity()) {
+      ros_message.@(member.name).resize(size);
+    } else {
+      ros_message.@(member.name).resize(ros_message.@(member.name).capacity());
+    }
+
+    for (size_t i = 0; rv && i < size; i++) {
+      uint32_t capacity = ros_message.@(member.name)[i].capacity();
+      char * temp = static_cast<char *>(malloc(capacity * sizeof(char)));
+      rv = ucdr_deserialize_string(cdr, temp, capacity);
+      if (rv) {
+        std::string stemp(temp);
+        stemp.shrink_to_fit();
+        ros_message.@(member.name)[i] = std::move(stemp);
+      }
+      free(temp);
     }
 @[      end if]@
 @[    end if]@

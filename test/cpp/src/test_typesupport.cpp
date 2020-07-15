@@ -24,6 +24,7 @@
 
 // Specific defined types used during testing
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/primitive.hpp"
+#include "rosidl_typesupport_microxrcedds_test_msg/msg/sequence.hpp"
 
 /*
  * @brief TestTypeSupport class, used to automate typesupport testing for a specific type.
@@ -90,6 +91,10 @@ public:
     ucdrBuffer mb_writer;
     ucdrBuffer mb_reader;
 
+    /*
+     * TODO(jamoralp): improve this buffer's creation in terms of size.
+     * Maybe we can use CDR max serialized size here, also to check that this method works properly.
+     */
     uint8_t mb_buffer[5000];
     ucdr_init_buffer(&mb_writer, mb_buffer, sizeof(mb_buffer));
     ucdr_init_buffer(&mb_reader, mb_buffer, sizeof(mb_buffer));
@@ -182,6 +187,41 @@ TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
   init_primitive.nested_test.unbounded_string4 = "TYZ0123456789";
 
   this->setup(std::move(init_primitive), compare_primitives);
+  this->check_identifier();
+  this->test_serialize_deserialize();
+}
+
+/*
+ * @brief Sequence ROS 2 types serialization and deserialization tests.
+ */
+template <typename T>
+class SequencesTestTypeSupport : public TestTypeSupport<T> {};
+
+TYPED_TEST_CASE(SequencesTestTypeSupport,
+  testing::Types<rosidl_typesupport_microxrcedds_test_msg::msg::Sequence>);
+TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
+{
+  std::function<void (
+      const rosidl_typesupport_microxrcedds_test_msg::msg::Sequence &,
+      const rosidl_typesupport_microxrcedds_test_msg::msg::Sequence &)> compare_sequences ([](
+          const rosidl_typesupport_microxrcedds_test_msg::msg::Sequence & A,
+          const rosidl_typesupport_microxrcedds_test_msg::msg::Sequence & B) -> void
+  {
+    EXPECT_EQ(A.sequence_string_test.size(), B.sequence_string_test.size());
+
+    for (size_t i = 0; i < A.sequence_string_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_string_test[i].compare(B.sequence_string_test[i]), 0);
+    }
+  });
+
+  rosidl_typesupport_microxrcedds_test_msg::msg::Sequence init_sequence;
+  init_sequence.sequence_string_test.emplace_back("This");
+  init_sequence.sequence_string_test.emplace_back("is");
+  init_sequence.sequence_string_test.emplace_back("a");
+  init_sequence.sequence_string_test.emplace_back("test");
+
+  this->setup(std::move(init_sequence), compare_sequences);
   this->check_identifier();
   this->test_serialize_deserialize();
 }

@@ -15,15 +15,16 @@
 
 #include <gtest/gtest.h>
 
-#include "rosidl_runtime_cpp/message_type_support_decl.hpp"
-#include "rosidl_typesupport_cpp/message_type_support.hpp"
+#include "rosidl_runtime_c/message_type_support_struct.h"
 
 // Generic MicroXRCE-DDS typesupport includes
 #include <rosidl_typesupport_microxrcedds_c/identifier.h>
 #include <rosidl_typesupport_microxrcedds_c/message_type_support.h>
 
-// Specific defined types used during testi
+// Specific defined types used during testing
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/primitive.h"
+#include "rosidl_typesupport_microxrcedds_test_msg/msg/sequence.h"
+#include "rosidl_runtime_c/string_functions.h"
 
 /*
  * @brief TestTypeSupport class, used to automate typesupport testing for a specific type.
@@ -57,11 +58,12 @@ public:
    * @param[in] compare_func_handle Function used for comparing two instances of T type.
    */
   void setup(
+      const rosidl_message_type_support_t * rosidl_msg_type_support,
       T && init_test_type,
       std::function <void (const T &, const T &)> & compare_func_handle)
   {
-    rosidl_message_type_support_ = get_message_typesupport_handle(ROSIDL_GET_MSG_TYPE_SUPPORT(
-      rosidl_typesupport_microxrcedds_test_msg, msg, Primitive), ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE);
+    rosidl_message_type_support_ = get_message_typesupport_handle(
+      rosidl_msg_type_support, ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE);
 
     message_type_support_callbacks_ = static_cast<const message_type_support_callbacks_t *>(
       rosidl_message_type_support_->data);
@@ -204,7 +206,80 @@ TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
   out_deserialized.nested_test.unbounded_string4.data = string4;
   out_deserialized.nested_test.unbounded_string4.capacity = sizeof(string4);
 
-  this->setup(std::move(init_primitive), compare_primitives);
+  const rosidl_message_type_support_t * primitive_msg_type_support =
+    ROSIDL_GET_MSG_TYPE_SUPPORT(rosidl_typesupport_microxrcedds_test_msg, msg, Primitive);
+  EXPECT_NE(primitive_msg_type_support, nullptr);
+
+  this->setup(primitive_msg_type_support, std::move(init_primitive), compare_primitives);
+  this->check_identifier();
+  this->test_serialize_deserialize(out_deserialized);
+}
+
+/*
+ * @brief Sequence ROS 2 types serialization and deserialization tests.
+ */
+template <typename T>
+class SequencesTestTypeSupport : public TestTypeSupport<T> {};
+
+TYPED_TEST_CASE(SequencesTestTypeSupport,
+  testing::Types<rosidl_typesupport_microxrcedds_test_msg__msg__Sequence>);
+TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
+{
+  std::function<void (
+      const rosidl_typesupport_microxrcedds_test_msg__msg__Sequence &,
+      const rosidl_typesupport_microxrcedds_test_msg__msg__Sequence &)> compare_sequences ([](
+          const rosidl_typesupport_microxrcedds_test_msg__msg__Sequence & A,
+          const rosidl_typesupport_microxrcedds_test_msg__msg__Sequence & B) -> void
+  {
+    EXPECT_EQ(A.sequence_string_test.size, B.sequence_string_test.size);
+
+    for (size_t i = 0; i < A.sequence_string_test.size; ++i)
+    {
+      EXPECT_EQ(A.sequence_string_test.data[i].size, B.sequence_string_test.data[i].size);
+      EXPECT_EQ(strcmp(A.sequence_string_test.data[i].data, B.sequence_string_test.data[i].data), 0);
+    }
+  });
+
+  rosidl_typesupport_microxrcedds_test_msg__msg__Sequence init_sequence;
+  ASSERT_TRUE(rosidl_runtime_c__String__Sequence__init(
+    &init_sequence.sequence_string_test, 4));
+
+  // Initialize data to be serialized and deserialized
+  init_sequence.sequence_string_test.data[0].data = const_cast<char *>("This");
+  init_sequence.sequence_string_test.data[0].size =
+    strlen(init_sequence.sequence_string_test.data[0].data);
+  init_sequence.sequence_string_test.data[1].data = const_cast<char *>("is");
+  init_sequence.sequence_string_test.data[1].size =
+    strlen(init_sequence.sequence_string_test.data[1].data);
+  init_sequence.sequence_string_test.data[2].data = const_cast<char *>("a");
+  init_sequence.sequence_string_test.data[2].size =
+    strlen(init_sequence.sequence_string_test.data[2].data);
+  init_sequence.sequence_string_test.data[3].data = const_cast<char *>("test");
+  init_sequence.sequence_string_test.data[3].size =
+    strlen(init_sequence.sequence_string_test.data[3].data);
+
+  // Prepare deserialization output instance
+  rosidl_typesupport_microxrcedds_test_msg__msg__Sequence out_deserialized;
+  ASSERT_TRUE(rosidl_runtime_c__String__Sequence__init(
+    &out_deserialized.sequence_string_test, 4));
+  char data_0[10] = {0};
+  out_deserialized.sequence_string_test.data[0].data = data_0;
+  out_deserialized.sequence_string_test.data[0].capacity = sizeof(data_0);
+  char data_1[10] = {0};
+  out_deserialized.sequence_string_test.data[1].data = data_1;
+  out_deserialized.sequence_string_test.data[1].capacity = sizeof(data_1);
+  char data_2[10] = {0};
+  out_deserialized.sequence_string_test.data[2].data = data_2;
+  out_deserialized.sequence_string_test.data[2].capacity = sizeof(data_2);
+  char data_3[10] = {0};
+  out_deserialized.sequence_string_test.data[3].data = data_3;
+  out_deserialized.sequence_string_test.data[3].capacity = sizeof(data_3);
+
+  const rosidl_message_type_support_t * sequence_msg_type_support =
+    ROSIDL_GET_MSG_TYPE_SUPPORT(rosidl_typesupport_microxrcedds_test_msg, msg, Sequence);
+  EXPECT_NE(sequence_msg_type_support, nullptr);
+
+  this->setup(sequence_msg_type_support, std::move(init_sequence), compare_sequences);
   this->check_identifier();
   this->test_serialize_deserialize(out_deserialized);
 }

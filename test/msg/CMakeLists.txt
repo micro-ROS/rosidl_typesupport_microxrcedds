@@ -19,13 +19,14 @@ project(rosidl_typesupport_microxrcedds_test_msg)
 find_package(ament_cmake REQUIRED)
 
 if(BUILD_TESTING)
-  
+
   find_package(builtin_interfaces REQUIRED)
   find_package(rosidl_default_generators REQUIRED)
 
   set(msg_files
     "msg/UnboundedString.msg"
     "msg/Primitive.msg"
+    "msg/Sequence.msg"
     )
 
   rosidl_generate_interfaces(${PROJECT_NAME}
