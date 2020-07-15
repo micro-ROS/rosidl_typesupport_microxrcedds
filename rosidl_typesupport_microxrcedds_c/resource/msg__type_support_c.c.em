@@ -219,6 +219,12 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
         }
       }
     }
+@[      elif isinstance(member.type.value_type, AbstractString)]@
+    const size_t size = ros_message->@(member.name).size;
+    rv = ucdr_serialize_uint32_t(cdr, size);
+    for (size_t i = 0; rv && i < size; ++i) {
+      rv = ucdr_serialize_string(cdr, ros_message->@(member.name).data[i].data);
+    }
 @[      end if]@
 @[    end if]@
   }
@@ -291,6 +297,24 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
         )()->data))->cdr_deserialize(cdr, &ros_message->@(member.name).data[i]);
       if(rv == false){
         break;
+      }
+    }
+@[      elif isinstance(member.type.value_type, AbstractString)]@
+    uint32_t size;
+    rv = ucdr_deserialize_uint32_t(cdr, &size);
+
+    if(size > ros_message->@(member.name).capacity){
+      fprintf(stderr, "cannot allocate received sequence in ros_message\n");
+      return 0;
+    }
+    ros_message->@(member.name).size = size;
+
+    for (size_t i = 0; rv && i < size; i++) {
+      size_t capacity = ros_message->@(member.name).data[i].capacity;
+      char * data = ros_message->@(member.name).data[i].data;
+      rv = ucdr_deserialize_string(cdr, data, capacity);
+      if (rv) {
+        ros_message->@(member.name).data[i].size = strlen(data);
       }
     }
 @[      end if]@
