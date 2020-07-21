@@ -15,7 +15,7 @@
 #ifndef ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__MESSAGE_TYPE_SUPPORT_H_
 #define ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__MESSAGE_TYPE_SUPPORT_H_
 
-#include "rosidl_generator_c/message_type_support_struct.h"
+#include "rosidl_runtime_c/message_type_support_struct.h"
 
 #include <ucdr/microcdr.h>
 

@@ -19,9 +19,12 @@ project(rosidl_typesupport_microxrcedds_c LANGUAGES C)
 find_package(ament_cmake REQUIRED)
 find_package(microcdr REQUIRED)
 find_package(ament_cmake_python REQUIRED)
+find_package(rosidl_runtime_c REQUIRED)
 
+ament_export_dependencies(rmw)
 ament_export_dependencies(rosidl_cmake)
-ament_export_dependencies(rosidl_generator_c)
+ament_export_dependencies(rosidl_runtime_c)
+ament_export_dependencies(rosidl_typesupport_interface)
 ament_export_dependencies(microcdr)
 
 ament_export_include_directories(include)
@@ -38,16 +41,25 @@ target_compile_definitions(${PROJECT_NAME}
     $<$<PLATFORM_ID:Windows>:"ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_BUILDING_DLL">
   )
 
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+
+ament_target_dependencies(${PROJECT_NAME}
+  "rosidl_runtime_c"
+  )
+ament_export_libraries(${PROJECT_NAME})
+ament_export_targets(${PROJECT_NAME})
+
+ament_index_register_resource("rosidl_typesupport_c")
+
 target_compile_options(${PROJECT_NAME}
   PRIVATE
     $<$<C_COMPILER_ID:GNU>:-Wall>
     $<$<C_COMPILER_ID:GNU>:-Wextra>
     $<$<C_COMPILER_ID:GNU>:-Wpedantic>
-  )
-
-target_include_directories(${PROJECT_NAME}
-  PUBLIC
-    include
   )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -56,10 +68,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   C_STANDARD_REQUIRED
     YES
   )
-
-ament_export_libraries(${PROJECT_NAME})
-
-ament_index_register_resource("rosidl_typesupport_c")
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -78,14 +86,15 @@ ament_package(
 
 install(
   PROGRAMS
-    bin/rosidl_typesupport_microxrcedds_c
+    main/rosidl_typesupport_microxrcedds_c
   DESTINATION
     lib/rosidl_typesupport_microxrcedds_c
   )
 
 install(
   DIRECTORY
-    cmake resource
+    cmake
+    resource
   DESTINATION
     share/${PROJECT_NAME}
   )
@@ -99,6 +108,8 @@ install(
 
 install(
   TARGETS
+    ${PROJECT_NAME}
+  EXPORT
     ${PROJECT_NAME}
   ARCHIVE DESTINATION
     lib

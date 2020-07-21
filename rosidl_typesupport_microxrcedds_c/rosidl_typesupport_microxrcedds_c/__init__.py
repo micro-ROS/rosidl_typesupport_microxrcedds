@@ -17,7 +17,7 @@ from rosidl_cmake import generate_files
 
 def generate_typesupport_microxrcedds_c(generator_arguments_file):
     mapping = {
-        'idl__rosidl_typesupport_microxrcedds_c.h.em': '%s__rosidl_typesupport_microxrcedds_c.h',
-        'idl__type_support_c.c.em': '%s__type_support_c.c',
+        'idl__rosidl_typesupport_microxrcedds_c.h.em': 'detail/%s__rosidl_typesupport_microxrcedds_c.h',
+        'idl__type_support_c.c.em': 'detail/microxrcedds/%s__type_support_c.c',
     }
     generate_files(generator_arguments_file, mapping)

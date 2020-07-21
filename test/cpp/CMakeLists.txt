@@ -23,7 +23,9 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(rosidl_typesupport_microxrcedds_cpp REQUIRED)
-  find_package(rosidl_typesupport_microxrcedds_test_msg REQUIRED)
+  find_package(rosidl_typesupport_microxrcedds_test_msg REQUIRED)  
+  find_package(rosidl_runtime_cpp REQUIRED)
+  find_package(rosidl_typesupport_cpp REQUIRED)
   find_package(ament_cmake_gtest REQUIRED)
 
   set(TEST_NAME test_typesupport)
@@ -34,6 +36,8 @@ if(BUILD_TESTING)
   ament_target_dependencies(${TEST_NAME}
     rosidl_typesupport_microxrcedds_test_msg
     rosidl_typesupport_microxrcedds_cpp
+    rosidl_runtime_c
+    rosidl_typesupport_c
     )
 
   target_link_libraries(${TEST_NAME}
