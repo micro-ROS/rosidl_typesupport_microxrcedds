@@ -25,6 +25,7 @@
 // Specific defined types used during testing
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/primitive.hpp"
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/sequence.hpp"
+#include "rosidl_typesupport_microxrcedds_test_msg/msg/array.hpp"
 
 /*
  * @brief TestTypeSupport class, used to automate typesupport testing for a specific type.
@@ -79,6 +80,17 @@ public:
   {
     ASSERT_EQ(strcmp(rosidl_message_type_support_->typesupport_identifier,
       ROSIDL_TYPESUPPORT_MICROXRCEDDS_CPP__IDENTIFIER_VALUE), 0);
+  }
+
+  /*
+   * @brief Compares sequences and arrays member by member.
+   */
+  void memberwise_comparison(int size, )
+  {
+    for (size_t i = 0; i < A.sequence_bool_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_bool_test[i].compare(B.sequence_bool_test[i]), 0);
+    }
   }
 
   /*
@@ -159,6 +171,7 @@ TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
     EXPECT_EQ(A.uint32_test, B.uint32_test);
     EXPECT_EQ(A.int64_test, B.int64_test);
     EXPECT_EQ(A.uint64_test, B.uint64_test);
+    EXPECT_EQ(A.string_test, B.string_test);
 
     EXPECT_EQ(A.nested_test.unbounded_string1.compare(B.nested_test.unbounded_string1), 0);
     EXPECT_EQ(A.nested_test.unbounded_string2.compare(B.nested_test.unbounded_string2), 0);
@@ -181,6 +194,7 @@ TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
   init_primitive.uint32_test = 0x01010101;
   init_primitive.int64_test = 0x0101010101010101;
   init_primitive.uint64_test = 0x0101010101010101;
+  init_primitive.string_test = "Hello";
   init_primitive.nested_test.unbounded_string1 = "ABCDEF";
   init_primitive.nested_test.unbounded_string2 = "TGHIJKLMNO";
   init_primitive.nested_test.unbounded_string3 = "PQRSTVWX";
@@ -207,21 +221,272 @@ TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
           const rosidl_typesupport_microxrcedds_test_msg::msg::Sequence & A,
           const rosidl_typesupport_microxrcedds_test_msg::msg::Sequence & B) -> void
   {
+    EXPECT_EQ(A.sequence_bool_test.size(), B.sequence_bool_test.size());
+    EXPECT_EQ(A.sequence_byte_test.size(), B.sequence_byte_test.size());
+    EXPECT_EQ(A.sequence_char_test.size(), B.sequence_char_test.size());
+    EXPECT_EQ(A.sequence_float32_test.size(), B.sequence_float32_test.size());
+    EXPECT_EQ(A.sequence_double_test.size(), B.sequence_double_test.size());
+    EXPECT_EQ(A.sequence_int8_test.size(), B.sequence_int8_test.size());
+    EXPECT_EQ(A.sequence_uint8_test.size(), B.sequence_uint8_test.size());
+    EXPECT_EQ(A.sequence_int16_test.size(), B.sequence_int16_test.size());
+    EXPECT_EQ(A.sequence_uint16_test.size(), B.sequence_uint16_test.size());
+    EXPECT_EQ(A.sequence_int32_test.size(), B.sequence_int32_test.size());
+    EXPECT_EQ(A.sequence_uint32_test.size(), B.sequence_uint32_test.size());
+    EXPECT_EQ(A.sequence_int64_test.size(), B.sequence_int64_test.size());
+    EXPECT_EQ(A.sequence_uint64_test.size(), B.sequence_uint64_test.size());
     EXPECT_EQ(A.sequence_string_test.size(), B.sequence_string_test.size());
 
+    for (size_t i = 0; i < A.sequence_bool_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_bool_test[i].compare(B.sequence_bool_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_byte_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_byte_test[i].compare(B.sequence_byte_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_char_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_char_test[i].compare(B.sequence_char_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_float32_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_float32_test[i].compare(B.sequence_float32_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_double_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_double_test[i].compare(B.sequence_double_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_int8_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_int8_test[i].compare(B.sequence_int8_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_uint8_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_uint8_test[i].compare(B.sequence_uint8_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_int16_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_int16_test[i].compare(B.sequence_int16_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_uint16_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_uint16_test[i].compare(B.sequence_uint16_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_int32_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_int32_test[i].compare(B.sequence_int32_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_uint32_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_uint32_test[i].compare(B.sequence_uint32_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_int64_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_int64_test[i].compare(B.sequence_int64_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.sequence_uint64_test.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_uint64_test[i].compare(B.sequence_uint64_test[i]), 0);
+    }
     for (size_t i = 0; i < A.sequence_string_test.size(); ++i)
     {
       EXPECT_EQ(A.sequence_string_test[i].compare(B.sequence_string_test[i]), 0);
     }
   });
 
+  // Initialize data to be serialized and deserialized
+
   rosidl_typesupport_microxrcedds_test_msg::msg::Sequence init_sequence;
+
+  init_sequence.sequence_bool_test.emplace_back(true);
+  init_sequence.sequence_bool_test.emplace_back(true);
+  init_sequence.sequence_bool_test.emplace_back(false);
+
+  init_sequence.sequence_byte_test.emplace_back(0);
+  init_sequence.sequence_byte_test.emplace_back(1);
+
+  init_sequence.sequence_char_test.emplace_back('z');
+  init_sequence.sequence_char_test.emplace_back('y');
+  init_sequence.sequence_char_test.emplace_back('x');
+  init_sequence.sequence_char_test.emplace_back('w');
+  init_sequence.sequence_char_test.emplace_back('v');
+
+  init_sequence.sequence_float32_test.emplace_back(1.23);
+  init_sequence.sequence_float32_test.emplace_back(45.6);
+  init_sequence.sequence_float32_test.emplace_back(-222.0);
+  init_sequence.sequence_float32_test.emplace_back(1287.9);
+
+  init_sequence.sequence_double_test.emplace_back(5287483999.3);
+  init_sequence.sequence_double_test.emplace_back(-46.5);
+
+  init_sequence.sequence_int8_test.emplace_back(1);
+  init_sequence.sequence_int8_test.emplace_back(2);
+  init_sequence.sequence_int8_test.emplace_back(-124);
+
+  init_sequence.sequence_uint8_test.emplace_back(11);
+  init_sequence.sequence_uint8_test.emplace_back(12);
+  init_sequence.sequence_uint8_test.emplace_back(13);
+  init_sequence.sequence_uint8_test.emplace_back(250);
+
+  init_sequence.sequence_int16_test.emplace_back(-360);
+  init_sequence.sequence_int16_test.emplace_back(1);
+
+  init_sequence.sequence_uint16_test.emplace_back(360);
+  init_sequence.sequence_uint16_test.emplace_back(800);
+  init_sequence.sequence_uint16_test.emplace_back(13);
+
+  init_sequence.sequence_int32_test.emplace_back(1000);
+  init_sequence.sequence_int32_test.emplace_back(16843009);
+
+  init_sequence.sequence_uint32_test.emplace_back(1000);
+  init_sequence.sequence_uint32_test.emplace_back(16843009);
+  init_sequence.sequence_uint32_test.emplace_back(3000);
+  init_sequence.sequence_uint32_test.emplace_back(2);
+
+  init_sequence.sequence_int64_test.emplace_back(72340172838076673L);
+  init_sequence.sequence_int64_test.emplace_back(16843009);
+  init_sequence.sequence_int64_test.emplace_back(-3000);
+  init_sequence.sequence_int64_test.emplace_back(2);
+  init_sequence.sequence_int64_test.emplace_back(16);
+
+  init_sequence.sequence_uint64_test.emplace_back(21);
+  init_sequence.sequence_uint64_test.emplace_back(72340172838076673L);
+
   init_sequence.sequence_string_test.emplace_back("This");
   init_sequence.sequence_string_test.emplace_back("is");
   init_sequence.sequence_string_test.emplace_back("a");
   init_sequence.sequence_string_test.emplace_back("test");
 
   this->setup(std::move(init_sequence), compare_sequences);
+  this->check_identifier();
+  this->test_serialize_deserialize();
+}
+
+/*
+ * @brief Array ROS 2 types serialization and deserialization tests.
+ */
+
+template <typename T>
+class ArraysTestTypeSupport : public TestTypeSupport<T> {};
+
+TYPED_TEST_CASE(ArraysTestTypeSupport,
+  testing::Types<rosidl_typesupport_microxrcedds_test_msg::msg::Array>);
+TYPED_TEST(ArraysTestTypeSupport, serialize_array_types)
+{
+  std::function<void (
+      const rosidl_typesupport_microxrcedds_test_msg::msg::Array &,
+      const rosidl_typesupport_microxrcedds_test_msg::msg::Array &)> compare_arrays ([](
+          const rosidl_typesupport_microxrcedds_test_msg::msg::Array & A,
+          const rosidl_typesupport_microxrcedds_test_msg::msg::Array & B) -> void
+  {
+
+    EXPECT_EQ(A.array_bool_test.size(), 3);
+    EXPECT_EQ(A.array_byte_test.size(), 3);
+    EXPECT_EQ(A.array_char_test.size(), 3);
+    EXPECT_EQ(A.array_float32_test.size(), 3);
+    EXPECT_EQ(A.array_double_test.size(), 3);
+    EXPECT_EQ(A.array_int8_test.size(), 3);
+    EXPECT_EQ(A.array_uint8_test.size(), 3);
+    EXPECT_EQ(A.array_int16_test.size(), 3);
+    EXPECT_EQ(A.array_uint16_test.size(), 3);
+    EXPECT_EQ(A.array_int32_test.size(), 3);
+    EXPECT_EQ(A.array_uint32_test.size(), 3);
+    EXPECT_EQ(A.array_int64_test.size(), 3);
+    EXPECT_EQ(A.array_uint64_test.size(), 3);
+    EXPECT_EQ(A.array_string_test.size(), 3);
+
+    EXPECT_EQ(A.array_bool_test.size(), B.array_bool_test.size());
+    EXPECT_EQ(A.array_byte_test.size(), B.array_byte_test.size());
+    EXPECT_EQ(A.array_char_test.size(), B.array_char_test.size());
+    EXPECT_EQ(A.array_float32_test.size(), B.array_float32_test.size());
+    EXPECT_EQ(A.array_double_test.size(), B.array_double_test.size());
+    EXPECT_EQ(A.array_int8_test.size(), B.array_int8_test.size());
+    EXPECT_EQ(A.array_uint8_test.size(), B.array_uint8_test.size());
+    EXPECT_EQ(A.array_int16_test.size(), B.array_int16_test.size());
+    EXPECT_EQ(A.array_uint16_test.size(), B.array_uint16_test.size());
+    EXPECT_EQ(A.array_int32_test.size(), B.array_int32_test.size());
+    EXPECT_EQ(A.array_uint32_test.size(), B.array_uint32_test.size());
+    EXPECT_EQ(A.array_int64_test.size(), B.array_int64_test.size());
+    EXPECT_EQ(A.array_uint64_test.size(), B.array_uint64_test.size());
+    EXPECT_EQ(A.array_string_test.size(), B.array_string_test.size());
+
+    for (size_t i = 0; i < A.array_bool_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_bool_test[i].compare(B.array_bool_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_byte_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_byte_test[i].compare(B.array_byte_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_char_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_char_test[i].compare(B.array_char_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_float32_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_float32_test[i].compare(B.array_float32_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_double_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_double_test[i].compare(B.array_double_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_int8_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_int8_test[i].compare(B.array_int8_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_uint8_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_uint8_test[i].compare(B.array_uint8_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_int16_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_int16_test[i].compare(B.array_int16_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_uint16_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_uint16_test[i].compare(B.array_uint16_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_int32_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_int32_test[i].compare(B.array_int32_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_uint32_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_uint32_test[i].compare(B.array_uint32_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_int64_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_int64_test[i].compare(B.array_int64_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_uint64_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_uint64_test[i].compare(B.array_uint64_test[i]), 0);
+    }
+    for (size_t i = 0; i < A.array_string_test.size(); ++i)
+    {
+      EXPECT_EQ(A.array_string_test[i].compare(B.array_string_test[i]), 0);
+    }
+  });
+
+  // Initialize data to be serialized and deserialized
+
+  rosidl_typesupport_microxrcedds_test_msg::msg::Array init_array;
+  init_array.array_bool_test = {true, true, false};
+  init_array.array_byte_test = {0, 1, 1};
+  init_array.array_char_test = {'y', 'x', 'w'};
+  init_array.array_float32_test = {1.23, 45.6, -222.0);
+  init_array.array_double_test = {5287483999.3, -46.5, 2.};
+  init_array.array_int8_test = {1, 2, -124};
+  init_array.array_uint8_test = {11, 12, 13};
+  init_array.array_int16_test = {-360, 1, 1};
+  init_array.array_uint16_test = {360, 800, 13};
+  init_array.array_int32_test = {1000, 16843009, - 244};
+  init_array.array_uint32_test = {1000, 3000, 2};
+  init_array.array_int64_test = {72340172838076673L, -3000, 16};
+  init_array.array_uint64_test = {21, 72340172838076673L, 14};
+  init_array.array_string_test = {"This", "is", "it"};
+
+  this->setup(std::move(init_array), compare_arrays);
   this->check_identifier();
   this->test_serialize_deserialize();
 }

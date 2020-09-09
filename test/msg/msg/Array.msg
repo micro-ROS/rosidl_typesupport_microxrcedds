@@ -1,0 +1,14 @@
+bool[3] array_bool_test
+byte[3] array_byte_test
+char[3] array_char_test
+float32[3] array_float32_test
+float64[3] array_double_test
+int8[3] array_int8_test
+uint8[3] array_uint8_test
+int16[3] array_int16_test
+uint16[3] array_uint16_test
+int32[3] array_int32_test
+uint32[3] array_uint32_test
+int64[3] array_int64_test
+uint64[3] array_uint64_test
+string[3] array_string_test

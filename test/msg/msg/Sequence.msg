@@ -1,1 +1,14 @@
+bool[] sequence_bool_test
+byte[] sequence_byte_test
+char[] sequence_char_test
+float32[] sequence_float32_test
+float64[] sequence_double_test
+int8[] sequence_int8_test
+uint8[] sequence_uint8_test
+int16[] sequence_int16_test
+uint16[] sequence_uint16_test
+int32[] sequence_int32_test
+uint32[] sequence_uint32_test
+int64[] sequence_int64_test
+uint64[] sequence_uint64_test
 string[] sequence_string_test
