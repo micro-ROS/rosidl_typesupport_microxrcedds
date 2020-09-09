@@ -18,7 +18,7 @@
 #include "rosidl_runtime_c/message_type_support_struct.h"
 
 // Generic MicroXRCE-DDS typesupport includes
-#include <rosidl_typesupport_microxrcedds_c/identifier.h>F
+#include <rosidl_typesupport_microxrcedds_c/identifier.h>
 #include <rosidl_typesupport_microxrcedds_c/message_type_support.h>
 
 // Specific defined types used during testing
