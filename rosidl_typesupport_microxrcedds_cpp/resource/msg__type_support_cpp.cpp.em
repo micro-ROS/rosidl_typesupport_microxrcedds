@@ -397,6 +397,15 @@ static uint32_t _@(message.structure.namespaced_type.name)__get_serialized_size(
   return static_cast<uint32_t>(get_serialized_size(*typed_message, 0));
 }
 
+static uint32_t _@(message.structure.namespaced_type.name)__get_serialized_size_with_initial_aligment(
+  const void * untyped_ros_message, size_t current_alignment)
+{
+  auto typed_message =
+    static_cast<const @('::'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])) *>(
+    untyped_ros_message);
+  return static_cast<uint32_t>(get_serialized_size(*typed_message, current_alignment));
+}
+
 static size_t _@(message.structure.namespaced_type.name)__max_serialized_size()
 {
   bool full_bounded;
@@ -409,6 +418,7 @@ static message_type_support_callbacks_t _@(message.structure.namespaced_type.nam
   _@(message.structure.namespaced_type.name)__cdr_serialize,
   _@(message.structure.namespaced_type.name)__cdr_deserialize,
   _@(message.structure.namespaced_type.name)__get_serialized_size,
+  _@(message.structure.namespaced_type.name)__get_serialized_size_with_initial_aligment,
   _@(message.structure.namespaced_type.name)__max_serialized_size
 };
 

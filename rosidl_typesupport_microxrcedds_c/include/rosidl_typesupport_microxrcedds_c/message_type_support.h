@@ -38,6 +38,11 @@ typedef struct message_type_support_callbacks_t
   uint32_t (* get_serialized_size)(
     const void *);
 
+  // Function to get size of data with initial aligment
+  uint32_t (* get_serialized_size_with_initial_aligment)(
+    const void *,
+    size_t);
+
   // Function for type support initialization
   size_t (* max_serialized_size)();
 
