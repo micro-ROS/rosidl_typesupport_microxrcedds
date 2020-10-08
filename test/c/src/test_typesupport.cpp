@@ -409,9 +409,6 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_sequence_types)
   const rosidl_message_type_support_t * compound_msg_type_support =
     ROSIDL_GET_MSG_TYPE_SUPPORT(rosidl_typesupport_microxrcedds_test_msg, msg, Compound);
   EXPECT_NE(compound_msg_type_support, nullptr);
-
-  this->setup(compound_msg_type_support, std::move(msg), compare_sequences);
-  this->check_identifier();
   
   // Iterate for all possible paddings
   for (size_t count = 1; count <= 8; count++)
@@ -419,6 +416,8 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_sequence_types)
     sprintf(string_in,"%s", std::string(count, 'a').c_str());
     msg.string_data.size = count;
 
+    this->setup(compound_msg_type_support, std::move(msg), compare_sequences);
+    this->check_identifier();
     this->test_serialize_deserialize(msg_out);
   }
 
