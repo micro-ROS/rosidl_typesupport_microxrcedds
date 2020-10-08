@@ -27,6 +27,7 @@ if(BUILD_TESTING)
     "msg/UnboundedString.msg"
     "msg/Primitive.msg"
     "msg/Sequence.msg"
+    "msg/Compound.msg"
     )
 
   rosidl_generate_interfaces(${PROJECT_NAME}
