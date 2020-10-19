@@ -25,6 +25,7 @@
 // Specific defined types used during testing
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/primitive.hpp"
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/sequence.hpp"
+#include "rosidl_typesupport_microxrcedds_test_msg/msg/compound.hpp"
 
 /*
  * @brief TestTypeSupport class, used to automate typesupport testing for a specific type.
