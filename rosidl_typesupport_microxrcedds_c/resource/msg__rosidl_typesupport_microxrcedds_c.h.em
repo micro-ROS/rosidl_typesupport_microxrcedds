@@ -31,12 +31,12 @@ extern "C"
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(package_name)
 size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))(
   const void * untyped_ros_message,
-  size_t current_aligment);
+  size_t current_alignment);
 
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(package_name)
 size_t max_serialized_size_@('__'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))(
   bool * full_bounded,
-  size_t current_aligment);
+  size_t current_alignment);
 
 ROSIDL_TYPESUPPORT_MICROXRCEDDS_C_PUBLIC_@(package_name)
 const rosidl_message_type_support_t *
