@@ -301,7 +301,7 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
     primitive_elem.nested_test.unbounded_string3 = "RSTUVWXYZ";
     primitive_elem.nested_test.unbounded_string4 = std::to_string(1111111 * i);
 
-    init_compound.emplace_back(std::move(primitive_elem));
+    init_compound.sequence_data.emplace_back(std::move(primitive_elem));
 
     this->setup(std::move(init_compound), compare_compound);
     this->check_identifier();
