@@ -191,16 +191,16 @@ TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
   init_primitive.int64_test = 0x0101010101010101;
   init_primitive.uint64_test = 0x0101010101010101;
   init_primitive.nested_test.unbounded_string1.data = const_cast<char *>("ABCDEF");
-  init_primitive.nested_test.unbounded_string1.size = 
+  init_primitive.nested_test.unbounded_string1.size =
     strlen(init_primitive.nested_test.unbounded_string1.data);
   init_primitive.nested_test.unbounded_string2.data = const_cast<char *>("TGHIJKLMNO");
-  init_primitive.nested_test.unbounded_string2.size = 
+  init_primitive.nested_test.unbounded_string2.size =
     strlen(init_primitive.nested_test.unbounded_string2.data);
   init_primitive.nested_test.unbounded_string3.data = const_cast<char *>("PQRSTVWX");
-  init_primitive.nested_test.unbounded_string3.size = 
+  init_primitive.nested_test.unbounded_string3.size =
     strlen(init_primitive.nested_test.unbounded_string3.data);
   init_primitive.nested_test.unbounded_string4.data = const_cast<char *>("TYZ0123456789");
-  init_primitive.nested_test.unbounded_string4.size = 
+  init_primitive.nested_test.unbounded_string4.size =
     strlen(init_primitive.nested_test.unbounded_string4.data);
 
   // Prepare deserialization output instance
@@ -304,11 +304,11 @@ class CompoundSequencesTestTypeSupport : public TestTypeSupport<T> {};
 
 TYPED_TEST_CASE(CompoundSequencesTestTypeSupport,
   testing::Types<rosidl_typesupport_microxrcedds_test_msg__msg__Compound>);
-TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_sequence_types)
+TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
 {
   std::function<void (
       const rosidl_typesupport_microxrcedds_test_msg__msg__Compound &,
-      const rosidl_typesupport_microxrcedds_test_msg__msg__Compound &)> compare_sequences ([](
+      const rosidl_typesupport_microxrcedds_test_msg__msg__Compound &)> compare_compound ([](
           const rosidl_typesupport_microxrcedds_test_msg__msg__Compound & A,
           const rosidl_typesupport_microxrcedds_test_msg__msg__Compound & B) -> void
   {
@@ -362,16 +362,16 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_sequence_types)
   primitive_element.int64_test = 0x0101010101010101;
   primitive_element.uint64_test = 0x0101010101010101;
   primitive_element.nested_test.unbounded_string1.data = const_cast<char *>("ABCDEF");
-  primitive_element.nested_test.unbounded_string1.size = 
+  primitive_element.nested_test.unbounded_string1.size =
     strlen(primitive_element.nested_test.unbounded_string1.data);
   primitive_element.nested_test.unbounded_string2.data = const_cast<char *>("TGHIJKLMNO");
-  primitive_element.nested_test.unbounded_string2.size = 
+  primitive_element.nested_test.unbounded_string2.size =
     strlen(primitive_element.nested_test.unbounded_string2.data);
   primitive_element.nested_test.unbounded_string3.data = const_cast<char *>("PQRSTVWX");
-  primitive_element.nested_test.unbounded_string3.size = 
+  primitive_element.nested_test.unbounded_string3.size =
     strlen(primitive_element.nested_test.unbounded_string3.data);
   primitive_element.nested_test.unbounded_string4.data = const_cast<char *>("TYZ0123456789");
-  primitive_element.nested_test.unbounded_string4.size = 
+  primitive_element.nested_test.unbounded_string4.size =
     strlen(primitive_element.nested_test.unbounded_string4.data);
 
   rosidl_typesupport_microxrcedds_test_msg__msg__Compound msg;
@@ -409,16 +409,15 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_sequence_types)
   const rosidl_message_type_support_t * compound_msg_type_support =
     ROSIDL_GET_MSG_TYPE_SUPPORT(rosidl_typesupport_microxrcedds_test_msg, msg, Compound);
   EXPECT_NE(compound_msg_type_support, nullptr);
-  
+
   // Iterate for all possible paddings
   for (size_t count = 1; count <= 8; count++)
   {
     sprintf(string_in,"%s", std::string(count, 'a').c_str());
     msg.string_data.size = count;
 
-    this->setup(compound_msg_type_support, std::move(msg), compare_sequences);
+    this->setup(compound_msg_type_support, std::move(msg), compare_compound);
     this->check_identifier();
     this->test_serialize_deserialize(msg_out);
   }
-
 }
