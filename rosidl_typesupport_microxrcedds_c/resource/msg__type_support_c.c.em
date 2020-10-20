@@ -378,7 +378,7 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
     const size_t sequence_size = ros_message->@(member.name).size;
 
     current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
-    
+
     for(size_t i = 0; i < sequence_size; i++){
       size_t element_size = ((const message_type_support_callbacks_t *)(
         ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))

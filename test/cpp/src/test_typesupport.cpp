@@ -277,13 +277,13 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
 
   // Initialize data to be serialized and deserialized
   rosidl_typesupport_microxrcedds_test_msg::msg::Compound init_compound;
-  init_compound.string_data = "This is a compound message";
+  init_compound.string_data = "AAAAAAAAAAA";
 
   size_t compound_seq_size = 4;
   for (size_t i = 1; i <= compound_seq_size; ++i)
   {
     rosidl_typesupport_microxrcedds_test_msg::msg::Primitive primitive_elem;
-    primitive_elem.bool_test = 0x01 * i;
+    primitive_elem.bool_test = 0x01;
     primitive_elem.byte_test = 0x01 * i;
     primitive_elem.char_test = 0x01 * i;
     primitive_elem.float32_test = 100.001 * i;
@@ -302,9 +302,9 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
     primitive_elem.nested_test.unbounded_string4 = std::to_string(1111111 * i);
 
     init_compound.sequence_data.emplace_back(std::move(primitive_elem));
-
-    this->setup(std::move(init_compound), compare_compound);
-    this->check_identifier();
-    this->test_serialize_deserialize();
   }
+
+  this->setup(std::move(init_compound), compare_compound);
+  this->check_identifier();
+  this->test_serialize_deserialize();
 }

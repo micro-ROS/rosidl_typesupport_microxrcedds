@@ -155,6 +155,17 @@ cdr_serialize(
     for (size_t i = 0; rv && i < size; ++i) {
       rv = ucdr_serialize_string(cdr, ros_message.@(member.name)[i].c_str());
     }
+@[      elif isinstance(member.type.value_type, NamespacedType)]@
+    size_t size = ros_message.@(member.name).size();
+    rv = ucdr_serialize_uint32_t(cdr, size);
+
+    size_t i = 0;
+    while (i < size && rv) {
+      rv = @('::'.join(member.type.value_type.namespaces))::typesupport_microxrcedds_cpp::cdr_serialize(
+        ros_message.@(member.name)[i],
+        cdr);
+      i++;
+    }
 @[      end if]@
 @[    end if]@
   }
@@ -244,6 +255,18 @@ cdr_deserialize(
       }
       free(temp);
     }
+@[      elif isinstance(member.type.value_type, NamespacedType)]@
+    uint32_t size;
+    rv = ucdr_deserialize_uint32_t(cdr, &size);
+    ros_message.@(member.name).resize(size);
+
+    size_t i = 0;
+    while (i < size && rv) {
+      rv = @('::'.join(member.type.value_type.namespaces))::typesupport_microxrcedds_cpp::cdr_deserialize(
+        cdr,
+        ros_message.@(member.name)[i]);
+      i++;
+    }
 @[      end if]@
 @[    end if]@
   }
@@ -291,11 +314,30 @@ get_serialized_size(
     current_alignment += ucdr_alignment(current_alignment, item_size) + (array_size * item_size);
 @[      end if]@
 @[    elif isinstance(member.type, AbstractSequence)]@
+  // Member is abstractsequence
 @[      if isinstance(member.type.value_type, BasicType)]@
     size_t sequence_size = ros_message.@(member.name).size();
     size_t item_size = sizeof(ros_message.@(member.name)[0]);
     current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
     current_alignment += ucdr_alignment(current_alignment, item_size) + (sequence_size * item_size);
+@[      elif isinstance(member.type.value_type, NamespacedType)]@
+    const size_t sequence_size = ros_message.@(member.name).size();
+    current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
+
+    for (size_t i = 0; i < sequence_size; i++) {
+      const size_t item_size = @('::'.join(member.type.value_type.namespaces))::typesupport_microxrcedds_cpp::get_serialized_size(
+        ros_message.@(member.name)[i],
+        current_alignment);
+      current_alignment += ucdr_alignment(current_alignment, item_size) + item_size;
+    }
+@[      elif isinstance(member.type.value_type, AbstractString)]@
+    const size_t sequence_size = ros_message.@(member.name).size();
+    current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
+
+    for (size_t i = 0; i < sequence_size; i++) {
+      const size_t item_size = ros_message.@(member.name)[i].size() + 1;
+      current_alignment += ucdr_alignment(current_alignment, item_size) + item_size;
+    }
 @[      end if]@
 @[    end if]@
   }
@@ -397,13 +439,13 @@ static uint32_t _@(message.structure.namespaced_type.name)__get_serialized_size(
   return static_cast<uint32_t>(get_serialized_size(*typed_message, 0));
 }
 
-static uint32_t _@(message.structure.namespaced_type.name)__get_serialized_size_with_initial_alignment(
+static size_t _@(message.structure.namespaced_type.name)__get_serialized_size_with_initial_alignment(
   const void * untyped_ros_message, size_t current_alignment)
 {
   auto typed_message =
     static_cast<const @('::'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name])) *>(
     untyped_ros_message);
-  return static_cast<uint32_t>(get_serialized_size(*typed_message, current_alignment));
+  return static_cast<size_t>(get_serialized_size(*typed_message, current_alignment));
 }
 
 static size_t _@(message.structure.namespaced_type.name)__max_serialized_size()
