@@ -25,6 +25,7 @@
 // Specific defined types used during testing
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/primitive.hpp"
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/sequence.hpp"
+#include "rosidl_typesupport_microxrcedds_test_msg/msg/compound.hpp"
 
 /*
  * @brief TestTypeSupport class, used to automate typesupport testing for a specific type.
@@ -215,6 +216,7 @@ TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
     }
   });
 
+  // Initialize data to be serialized and deserialized
   rosidl_typesupport_microxrcedds_test_msg::msg::Sequence init_sequence;
   init_sequence.sequence_string_test.emplace_back("This");
   init_sequence.sequence_string_test.emplace_back("is");
@@ -222,6 +224,87 @@ TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
   init_sequence.sequence_string_test.emplace_back("test");
 
   this->setup(std::move(init_sequence), compare_sequences);
+  this->check_identifier();
+  this->test_serialize_deserialize();
+}
+
+/*
+ * @brief Compound ROS 2 types serialization and deseralization tests,
+ *        when padding is required for sequences.
+ */
+template <typename T>
+class CompoundSequencesTestTypeSupport : public TestTypeSupport<T> {};
+
+TYPED_TEST_CASE(CompoundSequencesTestTypeSupport,
+    testing::Types<rosidl_typesupport_microxrcedds_test_msg::msg::Compound>);
+TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
+{
+  std::function<void (
+    const rosidl_typesupport_microxrcedds_test_msg::msg::Compound &,
+    const rosidl_typesupport_microxrcedds_test_msg::msg::Compound &)> compare_compound ([](
+      const rosidl_typesupport_microxrcedds_test_msg::msg::Compound & A,
+      const rosidl_typesupport_microxrcedds_test_msg::msg::Compound & B) -> void
+  {
+    EXPECT_EQ(A.string_data.compare(B.string_data), 0);
+
+    EXPECT_EQ(A.sequence_data.size(), B.sequence_data.size());
+    for (size_t i = 0; i < A.sequence_data.size(); ++i)
+    {
+      EXPECT_EQ(A.sequence_data[i].bool_test, B.sequence_data[i].bool_test);
+      EXPECT_EQ(A.sequence_data[i].byte_test, B.sequence_data[i].byte_test);
+      EXPECT_EQ(A.sequence_data[i].char_test, B.sequence_data[i].char_test);
+      EXPECT_EQ(A.sequence_data[i].float32_test, B.sequence_data[i].float32_test);
+      EXPECT_EQ(A.sequence_data[i].double_test, B.sequence_data[i].double_test);
+      EXPECT_EQ(A.sequence_data[i].int8_test, B.sequence_data[i].int8_test);
+      EXPECT_EQ(A.sequence_data[i].uint8_test, B.sequence_data[i].uint8_test);
+      EXPECT_EQ(A.sequence_data[i].int16_test, B.sequence_data[i].int16_test);
+      EXPECT_EQ(A.sequence_data[i].uint16_test, B.sequence_data[i].uint16_test);
+      EXPECT_EQ(A.sequence_data[i].int32_test, B.sequence_data[i].int32_test);
+      EXPECT_EQ(A.sequence_data[i].uint32_test, B.sequence_data[i].uint32_test);
+      EXPECT_EQ(A.sequence_data[i].int64_test, B.sequence_data[i].int64_test);
+      EXPECT_EQ(A.sequence_data[i].uint64_test, B.sequence_data[i].uint64_test);
+
+      EXPECT_EQ(A.sequence_data[i].nested_test.unbounded_string1.compare(
+        B.sequence_data[i].nested_test.unbounded_string1), 0);
+      EXPECT_EQ(A.sequence_data[i].nested_test.unbounded_string2.compare(
+        B.sequence_data[i].nested_test.unbounded_string2), 0);
+      EXPECT_EQ(A.sequence_data[i].nested_test.unbounded_string3.compare(
+        B.sequence_data[i].nested_test.unbounded_string3), 0);
+      EXPECT_EQ(A.sequence_data[i].nested_test.unbounded_string4.compare(
+        B.sequence_data[i].nested_test.unbounded_string4), 0);
+    }
+  });
+
+  // Initialize data to be serialized and deserialized
+  rosidl_typesupport_microxrcedds_test_msg::msg::Compound init_compound;
+  init_compound.string_data = "AAAAAAAAAAA";
+
+  size_t compound_seq_size = 4;
+  for (size_t i = 1; i <= compound_seq_size; ++i)
+  {
+    rosidl_typesupport_microxrcedds_test_msg::msg::Primitive primitive_elem;
+    primitive_elem.bool_test = 0x01;
+    primitive_elem.byte_test = 0x01 * i;
+    primitive_elem.char_test = 0x01 * i;
+    primitive_elem.float32_test = 100.001 * i;
+    primitive_elem.double_test = 100.001 * i;
+    primitive_elem.int8_test = 0x01 * i;
+    primitive_elem.uint8_test = 0x01 * i;
+    primitive_elem.int16_test = 0x0101 * i;
+    primitive_elem.uint16_test = 0x0101 * i;
+    primitive_elem.int32_test = 0x01010101 * i;
+    primitive_elem.uint32_test = 0x01010101 * i;
+    primitive_elem.int64_test = 0x0101010101010101 * i;
+    primitive_elem.uint64_test = 0x0101010101010101 * i;
+    primitive_elem.nested_test.unbounded_string1 = "ABCDEFGH";
+    primitive_elem.nested_test.unbounded_string2 = "IJKLMNOPQ";
+    primitive_elem.nested_test.unbounded_string3 = "RSTUVWXYZ";
+    primitive_elem.nested_test.unbounded_string4 = std::to_string(1111111 * i);
+
+    init_compound.sequence_data.emplace_back(std::move(primitive_elem));
+  }
+
+  this->setup(std::move(init_compound), compare_compound);
   this->check_identifier();
   this->test_serialize_deserialize();
 }

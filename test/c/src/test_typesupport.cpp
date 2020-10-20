@@ -24,6 +24,7 @@
 // Specific defined types used during testing
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/primitive.h"
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/sequence.h"
+#include "rosidl_typesupport_microxrcedds_test_msg/msg/compound.h"
 #include "rosidl_runtime_c/string_functions.h"
 
 /*
@@ -94,11 +95,14 @@ public:
     ucdrBuffer mb_writer;
     ucdrBuffer mb_reader;
 
+    size_t topic_size = message_type_support_callbacks_->get_serialized_size(&tested_type_);
+
     uint8_t mb_buffer[5000];
     ucdr_init_buffer(&mb_writer, mb_buffer, sizeof(mb_buffer));
     ucdr_init_buffer(&mb_reader, mb_buffer, sizeof(mb_buffer));
 
     ASSERT_TRUE(message_type_support_callbacks_->cdr_serialize(&tested_type_, &mb_writer));
+    ASSERT_EQ(mb_writer.iterator-mb_writer.init, topic_size);
 
     ASSERT_TRUE(message_type_support_callbacks_->cdr_deserialize(&mb_reader, &deserialize_instance));
 
@@ -187,9 +191,17 @@ TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
   init_primitive.int64_test = 0x0101010101010101;
   init_primitive.uint64_test = 0x0101010101010101;
   init_primitive.nested_test.unbounded_string1.data = const_cast<char *>("ABCDEF");
+  init_primitive.nested_test.unbounded_string1.size =
+    strlen(init_primitive.nested_test.unbounded_string1.data);
   init_primitive.nested_test.unbounded_string2.data = const_cast<char *>("TGHIJKLMNO");
+  init_primitive.nested_test.unbounded_string2.size =
+    strlen(init_primitive.nested_test.unbounded_string2.data);
   init_primitive.nested_test.unbounded_string3.data = const_cast<char *>("PQRSTVWX");
+  init_primitive.nested_test.unbounded_string3.size =
+    strlen(init_primitive.nested_test.unbounded_string3.data);
   init_primitive.nested_test.unbounded_string4.data = const_cast<char *>("TYZ0123456789");
+  init_primitive.nested_test.unbounded_string4.size =
+    strlen(init_primitive.nested_test.unbounded_string4.data);
 
   // Prepare deserialization output instance
   rosidl_typesupport_microxrcedds_test_msg__msg__Primitive out_deserialized;
@@ -282,4 +294,130 @@ TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
   this->setup(sequence_msg_type_support, std::move(init_sequence), compare_sequences);
   this->check_identifier();
   this->test_serialize_deserialize(out_deserialized);
+}
+
+/*
+ * @brief Sequence serialization when padding is required tests.
+ */
+template <typename T>
+class CompoundSequencesTestTypeSupport : public TestTypeSupport<T> {};
+
+TYPED_TEST_CASE(CompoundSequencesTestTypeSupport,
+  testing::Types<rosidl_typesupport_microxrcedds_test_msg__msg__Compound>);
+TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
+{
+  std::function<void (
+      const rosidl_typesupport_microxrcedds_test_msg__msg__Compound &,
+      const rosidl_typesupport_microxrcedds_test_msg__msg__Compound &)> compare_compound ([](
+          const rosidl_typesupport_microxrcedds_test_msg__msg__Compound & A,
+          const rosidl_typesupport_microxrcedds_test_msg__msg__Compound & B) -> void
+  {
+
+    EXPECT_EQ(A.string_data.size, B.string_data.size);
+    EXPECT_EQ(strcmp(A.string_data.data, B.string_data.data), 0);
+
+    EXPECT_EQ(A.sequence_data.size, B.sequence_data.size);
+    for (size_t i = 0; i < A.sequence_data.size; i++)
+    {
+      EXPECT_EQ(A.sequence_data.data[i].bool_test, B.sequence_data.data[i].bool_test);
+      EXPECT_EQ(A.sequence_data.data[i].byte_test, B.sequence_data.data[i].byte_test);
+      EXPECT_EQ(A.sequence_data.data[i].char_test, B.sequence_data.data[i].char_test);
+      EXPECT_EQ(A.sequence_data.data[i].float32_test, B.sequence_data.data[i].float32_test);
+      EXPECT_EQ(A.sequence_data.data[i].double_test, B.sequence_data.data[i].double_test);
+      EXPECT_EQ(A.sequence_data.data[i].int8_test, B.sequence_data.data[i].int8_test);
+      EXPECT_EQ(A.sequence_data.data[i].uint8_test, B.sequence_data.data[i].uint8_test);
+      EXPECT_EQ(A.sequence_data.data[i].int16_test, B.sequence_data.data[i].int16_test);
+      EXPECT_EQ(A.sequence_data.data[i].uint16_test, B.sequence_data.data[i].uint16_test);
+      EXPECT_EQ(A.sequence_data.data[i].int32_test, B.sequence_data.data[i].int32_test);
+      EXPECT_EQ(A.sequence_data.data[i].uint32_test, B.sequence_data.data[i].uint32_test);
+      EXPECT_EQ(A.sequence_data.data[i].int64_test, B.sequence_data.data[i].int64_test);
+      EXPECT_EQ(A.sequence_data.data[i].uint64_test, B.sequence_data.data[i].uint64_test);
+
+      EXPECT_EQ(A.sequence_data.data[i].nested_test.unbounded_string1.size, B.sequence_data.data[i].nested_test.unbounded_string1.size);
+      EXPECT_EQ(strcmp(A.sequence_data.data[i].nested_test.unbounded_string1.data, B.sequence_data.data[i].nested_test.unbounded_string1.data), 0);
+
+      EXPECT_EQ(A.sequence_data.data[i].nested_test.unbounded_string2.size, B.sequence_data.data[i].nested_test.unbounded_string2.size);
+      EXPECT_EQ(strcmp(A.sequence_data.data[i].nested_test.unbounded_string2.data, B.sequence_data.data[i].nested_test.unbounded_string2.data), 0);
+
+      EXPECT_EQ(A.sequence_data.data[i].nested_test.unbounded_string3.size, B.sequence_data.data[i].nested_test.unbounded_string3.size);
+      EXPECT_EQ(strcmp(A.sequence_data.data[i].nested_test.unbounded_string3.data, B.sequence_data.data[i].nested_test.unbounded_string3.data), 0);
+
+      EXPECT_EQ(A.sequence_data.data[i].nested_test.unbounded_string4.size, B.sequence_data.data[i].nested_test.unbounded_string4.size);
+      EXPECT_EQ(strcmp(A.sequence_data.data[i].nested_test.unbounded_string4.data, B.sequence_data.data[i].nested_test.unbounded_string4.data), 0);
+    }
+  });
+
+  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_element;
+  primitive_element.bool_test = 0x01;
+  primitive_element.byte_test = 0x01;
+  primitive_element.char_test = 0x01;
+  primitive_element.float32_test = 100.001;
+  primitive_element.double_test = 100.001;
+  primitive_element.int8_test = 0x01;
+  primitive_element.uint8_test = 0x01;
+  primitive_element.int16_test = 0x0101;
+  primitive_element.uint16_test = 0x0101;
+  primitive_element.int32_test = 0x01010101;
+  primitive_element.uint32_test = 0x01010101;
+  primitive_element.int64_test = 0x0101010101010101;
+  primitive_element.uint64_test = 0x0101010101010101;
+  primitive_element.nested_test.unbounded_string1.data = const_cast<char *>("ABCDEF");
+  primitive_element.nested_test.unbounded_string1.size =
+    strlen(primitive_element.nested_test.unbounded_string1.data);
+  primitive_element.nested_test.unbounded_string2.data = const_cast<char *>("TGHIJKLMNO");
+  primitive_element.nested_test.unbounded_string2.size =
+    strlen(primitive_element.nested_test.unbounded_string2.data);
+  primitive_element.nested_test.unbounded_string3.data = const_cast<char *>("PQRSTVWX");
+  primitive_element.nested_test.unbounded_string3.size =
+    strlen(primitive_element.nested_test.unbounded_string3.data);
+  primitive_element.nested_test.unbounded_string4.data = const_cast<char *>("TYZ0123456789");
+  primitive_element.nested_test.unbounded_string4.size =
+    strlen(primitive_element.nested_test.unbounded_string4.data);
+
+  rosidl_typesupport_microxrcedds_test_msg__msg__Compound msg;
+  char string_in[100] = {0};
+  msg.string_data.data = string_in;
+  msg.string_data.size = strlen(primitive_element.nested_test.unbounded_string1.data);
+
+  msg.sequence_data.data = &primitive_element;
+  msg.sequence_data.size = 1;
+
+  // Prepare deserialization output instance
+  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_element_output;
+  rosidl_typesupport_microxrcedds_test_msg__msg__Compound msg_out;
+
+  char string0[100] = {0};
+  msg_out.string_data.data = string0;
+  msg_out.string_data.capacity = sizeof(string0);
+
+  msg_out.sequence_data.data = &primitive_element_output;
+  msg_out.sequence_data.size = 1;
+
+  char string1[100] = {0};
+  primitive_element_output.nested_test.unbounded_string1.data = string1;
+  primitive_element_output.nested_test.unbounded_string1.capacity = sizeof(string1);
+  char string2[100] = {0};
+  primitive_element_output.nested_test.unbounded_string2.data = string2;
+  primitive_element_output.nested_test.unbounded_string2.capacity = sizeof(string2);
+  char string3[100] = {0};
+  primitive_element_output.nested_test.unbounded_string3.data = string3;
+  primitive_element_output.nested_test.unbounded_string3.capacity = sizeof(string3);
+  char string4[100] = {0};
+  primitive_element_output.nested_test.unbounded_string4.data = string4;
+  primitive_element_output.nested_test.unbounded_string4.capacity = sizeof(string4);
+
+  const rosidl_message_type_support_t * compound_msg_type_support =
+    ROSIDL_GET_MSG_TYPE_SUPPORT(rosidl_typesupport_microxrcedds_test_msg, msg, Compound);
+  EXPECT_NE(compound_msg_type_support, nullptr);
+
+  // Iterate for all possible paddings
+  for (size_t count = 1; count <= 8; count++)
+  {
+    sprintf(string_in,"%s", std::string(count, 'a').c_str());
+    msg.string_data.size = count;
+
+    this->setup(compound_msg_type_support, std::move(msg), compare_compound);
+    this->check_identifier();
+    this->test_serialize_deserialize(msg_out);
+  }
 }
