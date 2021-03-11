@@ -4,8 +4,8 @@
 
 ## Overview
 
-All packages contained in this repository are a part of the Micro-ROS project stack.
-For more information about Micro-ROS project click [here](https://microros.github.io/micro-ROS/).
+All packages contained in this repository are a part of the micro-ROS project stack.
+For more information about micro-ROS project click [here](https://microros.github.io/).
 
 ## Packages
 
@@ -21,11 +21,9 @@ This package aims to give support to the rmw layer for ros messages in C languag
 - Support for unbounded types for incoming messages using static memory.
 - Support for building message support using ament extensions for finding not built interfaces.
 
-Only support msg interfaces for now. ROS 2 services are not yet supported.
+<!-- #### Documentation
 
-#### Documentation
-
-You can access the documentation online, which is hosted on [Read the Docs]().
+You can access the documentation online, which is hosted on [Read the Docs](). -->
 
 ## Purpose of the Project
 

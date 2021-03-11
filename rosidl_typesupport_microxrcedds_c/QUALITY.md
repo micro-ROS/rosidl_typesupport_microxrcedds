@@ -49,7 +49,7 @@ All changes will occur through a pull request.
 
 ### Contributor Origin [2.ii]
 
-**rosidl_typesupport_microxrcedds_c** uses the [Developer Certificate of Origin (DCO)](https://developercertificate.org/) as its confirmation of contributor origin policy since version 1.2.2.
+**rosidl_typesupport_microxrcedds_c** uses the [Developer Certificate of Origin (DCO)](https://developercertificate.org/) as its confirmation of contributor origin policy since version 1.0.0.
 More information can be found in [CONTRIBUTING](CONTRIBUTING.md)
 
 ### Peer Review Policy [2.iii]
@@ -62,13 +62,15 @@ All pull requests must pass CI to be considered for merging, unless maintainers 
 CI testing is automatically triggered by incoming pull requests.
 Current results can be seen here:
 
-* [![CI RMW_MicroXRCEDDS](https://github.com/micro-ROS/rmw-microxrcedds/actions/workflows/ci.yml/badge.svg)](https://github.com/micro-ROS/rmw-microxrcedds/actions/workflows/ci.yml)
-* 
+[![CI rosidl_typesupport_microxrcedds](https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/actions/workflows/ci.yml/badge.svg)](https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/actions/workflows/ci.yml)
+
 ## Documentation [3]
 
 ### Feature Documentation [3.i]
 
-TODO HERE
+Some of the **rosidl_typesupport_microxrcedds_c** features are documented on the repository level [README](../README.md).
+[eProsima Micro XRCE-DDS](https://github.com/eProsima/Micro-XRCE-DDS) has feature documentation [hosted publicly](https://micro-xrce-dds.docs.eprosima.com/en/latest/).
+[eProsima Micro CDR](https://github.com/eProsima/Micro-CDR) has feature documentation [hosted publicly](https://github.com/eProsima/Micro-CDR/blob/master/README.md).
 
 ### License [3.iii]
 
@@ -83,47 +85,34 @@ A full copy of the license can be found [here](LICENSE).
 
 ### Feature Testing [4.i]
 
-**rosidl_typesupport_microxrcedds_c** provides tests which simulate typical usage, and they are located in the [`test` directory](test).
+**rosidl_typesupport_microxrcedds_c** provides tests which simulate typical usage, and they are located in the [`test/c` directory](../test/c).
 New features are required to have tests before being added as stated in [CONTRIBUTING](CONTRIBUTING.md).
 Current results can be found here:
 
-* [![CI RMW_MicroXRCEDDS](https://github.com/micro-ROS/rmw-microxrcedds/actions/workflows/ci.yml/badge.svg)](https://github.com/micro-ROS/rmw-microxrcedds/actions/workflows/ci.yml)
+[![CI rosidl_typesupport_microxrcedds](https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/actions/workflows/ci.yml/badge.svg)](https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/actions/workflows/ci.yml)
 
 ### Coverage [4.iii]
 
-TODO
-<!-- 
-[![Coverage](https://img.shields.io/jenkins/coverage/cobertura?jobUrl=http%3A%2F%2Fjenkins.eprosima.com%3A8080%2Fview%2FMicro%2520XRCE%2Fjob%2FMicro-CDR%2520Nightly%2520Master%2520Linux%2F)](http://jenkins.eprosima.com:8080/view/Micro%20XRCE/job/Micro-CDR%20Nightly%20Master%20Linux/)
-*rosidl_typesupport_microxrcedds_c* aims to provide a line coverage **above 90%**.
-*Micro CDR* code coverage policy comprises:
-1. All contributions to *Micro CDR* must increase (or at least keep) current line coverage.
-   This is done to ensure that the **90%** line coverage goal is eventually met.
-1. Line coverage regressions are only permitted if properly justified and accepted by maintainers.
-1. If the CI system reports a coverage regression after a pull request has been merged, the maintainers must study the case and decide how to proceed, mostly reverting the changes and asking for a more thorough testing of the committed changes.
-2. This policy is enforced through the [nightly Micro CDR CI job](http://jenkins.eprosima.com:8080/view/Micro%20XRCE/job/Micro-CDR%20Nightly%20Master%20Linux/).
+**rosidl_typesupport_microxrcedds_c** checks the coverage of every commit. Last coverage can be seen in [Codecov](https://codecov.io/gh/micro-ROS/rosidl_typesupport_microxrcedds).
 
-As stated in [CONTRIBUTING.md](CONTRIBUTING.md), developers and contributors are asked to run a line coverage assessment locally before submitting a PR. -->
 ### Linters and Static Analysis [4.v]
 
 **rosidl_typesupport_microxrcedds_c** [code style](https://github.com/eProsima/cpp-style) is enforced using [*uncrustify*](https://github.com/uncrustify/uncrustify).
 Among the CI tests there are tests that ensures that every pull request is compliant with the code style.
-<!-- The latest pull request results can be seen [here](http://jenkins.eprosima.com:8080/job/Micro-CDR%20Manual%20Linux/lastBuild/). -->
+The latest CI results can be seen [here](https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/actions/workflows/ci.yml).
 
-TODO: linter test Set uncrustify
-TODO: clang tidy for static analisys.
-TODO: https://github.com/ament/ament_lint/blob/master/ament_lint_common/doc/index.rst
+**rosidl_typesupport_microxrcedds_c** uses and passes all the standard linters and static analysis tools for a C++ package as described in the [ROS 2 Developer Guide](https://index.ros.org/doc/ros2/Contributing/Developer-Guide/#linters).
+
+Results of the latest linter tests can be found [here](https://github.com/micro-ROS/rmw-rosidl_typesupport_microxrcedds/actions/workflows/ci.yml?query=branch%3Afoxy).
+
 ## Dependencies [5]
 
 ### Direct Runtime Dependencies [5.iii]
 
-**rosidl_typesupport_microxrcedds_c**  depends on the following packages:
-* `eProsima Micro XRCE-DDS-Client`: TODO
-* `eProsima Micro CDR`: TODO
-* `rcutils`: [QUALITY DECLARATION](https://github.com/ros2/rcutils/blob/master/QUALITY_DECLARATION.md)
-* `rmw`: [QUALITY DECLARATION](https://github.com/ros2/rmw/blob/master/rmw/QUALITY_DECLARATION.md)
+**rosidl_typesupport_microxrcedds_c**  has the following runtime dependencies, which are at or above **Quality Level 2**:
+* `eProsima Micro CDR`: [QUALITY DECLARATION](https://github.com/eProsima/Micro-CDR/blob/master/QUALITY.md)
 * `rosidl_runtime_c`: [QUALITY DECLARATION](https://github.com/ros2/rosidl/blob/master/rosidl_runtime_c/QUALITY_DECLARATION.md)
-* `rosidl_runtime_cpp`: [QUALITY DECLARATION](https://github.com/ros2/rosidl/blob/master/rosidl_runtime_cpp/QUALITY_DECLARATION.md)
-* `rosidl_typesupport_microxrcedds_c`: TODO
+* `rosidl_typesupport_interface`: [QUALITY DECLARATION](https://github.com/ros2/rosidl/blob/master/rosidl_typesupport_interface/QUALITY_DECLARATION.md)
 
 ## Platform Support [6]
 
@@ -153,16 +142,16 @@ The chart below compares the requirements in the [REP-2004](https://www.ros.org/
 | 2.iii   | Peer review policy                                | ✓             |
 | 2.iv    | CI policy for change requests                     | ✓             |
 | 3       | **Documentation**                                 | ---           |
-| 3.i     | Per feature documentation                         | TODO          |
+| 3.i     | Per feature documentation                         | ✓             |
 | 3.iii   | Declared License(s)                               | ✓             |
 | 3.iv    | Copyright in source files                         | ✓             |
 | 3.v.a   | Quality declaration linked to README              | ✓             |
 | 3.v.b   | Centralized declaration available for peer review | ✓             |
 | 4       | **Testing**                                       | ---           |
 | 4.i     | Feature items tests                               | ✓             |
-| 4.iii.a | Using coverage                                    | TODO          |
-| 4.v.a   | Code style enforcement (linters)                  | TODO          |
-| 4.v.b   | Use of static analysis tools                      | TODO          |
+| 4.iii.a | Using coverage                                    | ✓             |
+| 4.v.a   | Code style enforcement (linters)                  | ✓             |
+| 4.v.b   | Use of static analysis tools                      | ✓             |
 | 5       | **Dependencies**                                  | ---           |
 | 5.iii   | Justifies quality use of dependencies             | ✓             |
 | 6       | **Platform support**                              | ---           |
