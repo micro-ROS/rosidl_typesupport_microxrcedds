@@ -3,7 +3,8 @@ name: CI rosidl_typesupport_microxrcedds
 on:
     push:
       branches:
-        - [foxy, main]
+        - foxy
+        - main
     pull_request:
       branches:
         - '**'
