@@ -26,4 +26,4 @@ Any contribution that you make to this repository will be under the Apache 2 Lic
 Contributors must sign-off each commit by adding a `Signed-off-by: ...` line to commit messages to certify that they have the right to submit the code they are contributing to the project according to the [Developer Certificate of Origin (DCO)](https://developercertificate.org/).
 ## General considerations
 
-Any other contributing policie can be found in [eProsima general guidelines](https://github.com/eProsima/policies/blob/main/CONTRIBUTING.md).
+Any other contributing policy can be found in [eProsima general guidelines](https://github.com/eProsima/policies/blob/main/CONTRIBUTING.md).
