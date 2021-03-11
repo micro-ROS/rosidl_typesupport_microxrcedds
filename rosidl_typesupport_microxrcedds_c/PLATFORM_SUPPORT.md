@@ -44,5 +44,5 @@ Other Tier 3 OS:
 
 * FreeRTOS
 * Zephyr RTOS
-* Nuttx
+* NuttX
 * Bare-metal embedded
