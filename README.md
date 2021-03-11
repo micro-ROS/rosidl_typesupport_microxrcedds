@@ -5,7 +5,7 @@
 ## Overview
 
 All packages contained in this repository are a part of the micro-ROS project stack.
-For more information about micro-ROS project click [here](https://microros.github.io/).
+For more information about micro-ROS project click [here](https://micro.ros.org/).
 
 ## Packages
 
