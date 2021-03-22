@@ -36,7 +36,7 @@ jobs:
           run: | 
             . /opt/ros/foxy/setup.sh && . install/local_setup.sh 
             colcon test --packages-select=rosidl_typesupport_microxrcedds_cpp_tests --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)"
-            colcon test --packages-select=rosidl_typesupport_microxrcedds_c_tests --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)"
+            colcon test --packages-select=rosidl_typesupport_microxrcedds_c_tests --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)|(xmllint)"
 
         # - name: Uncrustify
         #   run: | 
