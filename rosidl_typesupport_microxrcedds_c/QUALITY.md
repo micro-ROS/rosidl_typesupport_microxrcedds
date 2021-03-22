@@ -32,7 +32,7 @@ All installed headers are in the include directory of the package, headers in an
 ### ABI Stability Within a Released ROS Distribution [1.v]/[1.vi]
 
 **rosidl_typesupport_microxrcedds_c**  contains C and C++ code and therefore must be concerned with ABI stability, and will maintain ABI stability within a ROS distribution.
-Any ABI break in **rosidl_typesupport_microxrcedds_c** will be done between minor versions and it should be clearly stated on the release notes.
+Any ABI break in **rosidl_typesupport_microxrcedds_c** will be done between minor versions and it should be clearly stated in the release notes.
 
 ## Change Control Process [2]
 
@@ -41,7 +41,7 @@ The change control process can be found in [CONTRIBUTING](CONTRIBUTING.md)
 
 All changes to **rosidl_typesupport_microxrcedds_c** occur through pull requests that are required to pass all CI tests.
 In case of failure, only maintainers can merge the pull request, and only when there is enough evidence that the failure is unrelated to the change.
-Additionally, all pull requests must have a positive review from one other contributor that did not author the pull request.
+Additionally, all pull requests must have at least one positive review from another contributor that did not author the pull request.
 
 ### Change Requests [2.i]
 
@@ -68,7 +68,7 @@ Current results can be seen here:
 
 ### Feature Documentation [3.i]
 
-Some of the **rosidl_typesupport_microxrcedds_c** features are documented on the repository level [README](../README.md).
+Some of the **rosidl_typesupport_microxrcedds_c** features are documented at the repository [README](../README.md) level.
 [eProsima Micro XRCE-DDS](https://github.com/eProsima/Micro-XRCE-DDS) has feature documentation [hosted publicly](https://micro-xrce-dds.docs.eprosima.com/en/latest/).
 [eProsima Micro CDR](https://github.com/eProsima/Micro-CDR) has feature documentation [hosted publicly](https://github.com/eProsima/Micro-CDR/blob/master/README.md).
 
@@ -79,7 +79,7 @@ A full copy of the license can be found [here](LICENSE).
 
 ### Copyright Statements [3.iv]
 
-**rosidl_typesupport_microxrcedds_c** copyright holder provide a statement of copyright in each source file.
+The **rosidl_typesupport_microxrcedds_c** copyright holder provides a statement of copyright in each source file.
 
 ## Testing [4]
 
@@ -93,12 +93,12 @@ Current results can be found here:
 
 ### Coverage [4.iii]
 
-**rosidl_typesupport_microxrcedds_c** checks the coverage of every commit. Last coverage can be seen in [Codecov](https://codecov.io/gh/micro-ROS/rosidl_typesupport_microxrcedds).
+**rosidl_typesupport_microxrcedds_c** checks the coverage of every commit. Last coverage assessment can be seen in [Codecov](https://codecov.io/gh/micro-ROS/rosidl_typesupport_microxrcedds).
 
 ### Linters and Static Analysis [4.v]
 
 **rosidl_typesupport_microxrcedds_c** [code style](https://github.com/eProsima/cpp-style) is enforced using [*uncrustify*](https://github.com/uncrustify/uncrustify).
-Among the CI tests there are tests that ensures that every pull request is compliant with the code style.
+Among the CI tests there are tests that ensure that every pull request is compliant with the code style.
 The latest CI results can be seen [here](https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/actions/workflows/ci.yml).
 
 **rosidl_typesupport_microxrcedds_c** uses and passes all the standard linters and static analysis tools for a C++ package as described in the [ROS 2 Developer Guide](https://index.ros.org/doc/ros2/Contributing/Developer-Guide/#linters).
@@ -116,7 +116,7 @@ Results of the latest linter tests can be found [here](https://github.com/micro-
 
 ## Platform Support [6]
 
-**rosidl_typesupport_microxrcedds_c** supports the all the platforms that are intended for. Those included GNU/Linux and POSIX systems and all the major embedded RTOS such as Zephyr RTOS, FreeRTOS and Nuttx. Windows is not included as Tier 1 platform because it is irrelevant for the nature of this package.
+**rosidl_typesupport_microxrcedds_c** is intended for micro-ROS and therefore to run on embedded platforms, so the officially supported platforms are not the same as in ROS 2. These include GNU/Linux and POSIX systems and all the major embedded RTOS such as Zephyr RTOS, FreeRTOS, and NuttX. Windows is not included as a Tier 1 platform because it is not relevant for this package due to its nature.
 
 More information about the supported platforms can be found in [PLATFORM_SUPPORT](PLATFORM_SUPPORT.md)
 

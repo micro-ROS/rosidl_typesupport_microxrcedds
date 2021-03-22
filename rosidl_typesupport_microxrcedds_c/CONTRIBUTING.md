@@ -1,6 +1,6 @@
 # Contribution Guidelines
 
-The following documents constitutes a set of guidelines to which contributors must adhere.
+The present document provides a set of guidelines to which contributors must adhere.
 
 - [Contribution Guidelines](#contribution-guidelines)
   - [Contributions Licensing](#contributions-licensing)
