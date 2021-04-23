@@ -25,6 +25,7 @@
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/primitive.h"
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/sequence.h"
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/compound.h"
+#include "rosidl_typesupport_microxrcedds_test_msg/msg/not_enought_memory_test.h"
 #include "rosidl_runtime_c/string_functions.h"
 
 /*
@@ -420,4 +421,176 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
     this->check_identifier();
     this->test_serialize_deserialize(msg_out);
   }
+}
+
+/*
+ * @brief Serialization and deserialization with lack of memory
+ */
+template <typename T>
+class MemoryCornerCasesTestTypeSupport : public TestTypeSupport<T> {};
+
+TYPED_TEST_CASE(MemoryCornerCasesTestTypeSupport,
+  testing::Types<rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest>);
+TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
+{
+
+  std::function<void (
+      const rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest &,
+      const rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest &)> compare_compound ([](
+          const rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest & A,
+          const rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest & B) -> void
+  {});
+
+  // Create sample message
+  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest msg;
+  msg.initial_byte = 0x42;
+  msg.end_byte = 0x24;
+
+  msg.string.data = const_cast<char *>("ABCDEF");
+  msg.string.size = strlen(msg.string.data);
+
+  msg.int64_sequence.data = (int64_t*) malloc(10 * sizeof(int64_t));
+  msg.int64_sequence.size = 10;
+  msg.int64_sequence.capacity = 10;
+
+  for (size_t i = 0; i < msg.int64_sequence.capacity; i++)
+  {
+    msg.int64_sequence.data[i] = i;
+  }
+
+  for (size_t i = 0; i < 10; i++)
+  {
+    msg.int16_array[i] = i;
+  }
+
+  // Prepare typesupport
+  const rosidl_message_type_support_t * not_enought_memory_msg_type_support =
+    ROSIDL_GET_MSG_TYPE_SUPPORT(rosidl_typesupport_microxrcedds_test_msg, msg, NotEnoughtMemoryTest);
+  EXPECT_NE(not_enought_memory_msg_type_support, nullptr);
+  
+  this->setup(
+      not_enought_memory_msg_type_support,
+      std::move(msg),
+      compare_compound);
+
+  // Serialize
+  ucdrBuffer mb_writer;
+  size_t topic_size = this->message_type_support_callbacks_->get_serialized_size(&msg);
+
+  uint8_t mb_buffer[5000];
+  ucdr_init_buffer(&mb_writer, mb_buffer, sizeof(mb_buffer));
+
+  ASSERT_TRUE(this->message_type_support_callbacks_->cdr_serialize(&msg, &mb_writer));
+  ASSERT_EQ(mb_writer.iterator-mb_writer.init, topic_size);
+
+  ucdrBuffer mb_reader;
+
+  // Deserializing with no string
+  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out1;
+
+  out1.string.data = NULL;
+  out1.string.capacity = 0;
+  
+  out1.int64_sequence.data = (int64_t*) malloc(10 * sizeof(int64_t));
+  out1.int64_sequence.capacity = 10;
+
+  ucdr_init_buffer(&mb_reader, mb_buffer, sizeof(mb_buffer));
+  ASSERT_TRUE(this->message_type_support_callbacks_->cdr_deserialize(&mb_reader, &out1));
+
+  ASSERT_EQ(msg.initial_byte, out1.initial_byte);
+  ASSERT_EQ(msg.end_byte, out1.end_byte);
+
+  for (size_t i = 0; i < msg.int64_sequence.capacity; i++)
+  {
+    ASSERT_EQ(msg.int64_sequence.data[i], out1.int64_sequence.data[i]);
+  }
+
+  for (size_t i = 0; i < 10; i++)
+  {
+    ASSERT_EQ(msg.int16_array[i], out1.int16_array[i]);
+  }
+
+  free(out1.int64_sequence.data);
+
+  // Deserializing with no sequence
+  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out2;
+
+  out2.string.data = (char*) malloc(10 * sizeof(char));
+  out2.string.capacity = 10;
+  
+  out2.int64_sequence.data = NULL;
+  out2.int64_sequence.capacity = 0;
+
+  ucdr_init_buffer(&mb_reader, mb_buffer, sizeof(mb_buffer));
+  ASSERT_TRUE(this->message_type_support_callbacks_->cdr_deserialize(&mb_reader, &out2));
+
+  ASSERT_EQ(msg.initial_byte, out2.initial_byte);
+  ASSERT_EQ(msg.end_byte, out2.end_byte);
+
+  ASSERT_EQ(strcmp(msg.string.data, out2.string.data), 0);
+
+  for (size_t i = 0; i < 10; i++)
+  {
+    ASSERT_EQ(msg.int16_array[i], out2.int16_array[i]);
+  } 
+
+  free(out2.string.data);
+
+  // Deserializing with no sequence no string
+  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out3;
+
+  out3.string.data = NULL;
+  out3.string.capacity = 0;
+  
+  out3.int64_sequence.data = NULL;
+  out3.int64_sequence.capacity = 0;
+
+  ucdr_init_buffer(&mb_reader, mb_buffer, sizeof(mb_buffer));
+  ASSERT_TRUE(this->message_type_support_callbacks_->cdr_deserialize(&mb_reader, &out3));
+
+  ASSERT_EQ(msg.initial_byte, out3.initial_byte);
+  ASSERT_EQ(msg.end_byte, out3.end_byte);
+
+  for (size_t i = 0; i < 10; i++)
+  {
+    ASSERT_EQ(msg.int16_array[i], out3.int16_array[i]);
+  } 
+
+  free(out3.string.data);
+
+  // Serializing empty string
+  ucdr_init_buffer(&mb_writer, mb_buffer, sizeof(mb_buffer));
+
+  msg.string.data = NULL;
+  msg.string.size = 0;
+  msg.string.capacity = 0;
+
+  ASSERT_TRUE(this->message_type_support_callbacks_->cdr_serialize(&msg, &mb_writer));
+
+  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out4;
+
+  out4.string.data = (char*) malloc(10 * sizeof(char));
+  out4.string.capacity = 10;
+  
+  out4.int64_sequence.data = (int64_t*) malloc(10 * sizeof(int64_t));
+  out4.int64_sequence.capacity = 10;
+
+  ucdr_init_buffer(&mb_reader, mb_buffer, sizeof(mb_buffer));
+  ASSERT_TRUE(this->message_type_support_callbacks_->cdr_deserialize(&mb_reader, &out4));
+
+  ASSERT_EQ(msg.initial_byte, out4.initial_byte);
+  ASSERT_EQ(msg.end_byte, out4.end_byte);
+
+  ASSERT_EQ(out4.string.size, 0);
+
+  for (size_t i = 0; i < msg.int64_sequence.capacity; i++)
+  {
+    ASSERT_EQ(msg.int64_sequence.data[i], out1.int64_sequence.data[i]);
+  }
+
+  for (size_t i = 0; i < 10; i++)
+  {
+    ASSERT_EQ(msg.int16_array[i], out1.int16_array[i]);
+  }
+
 }
