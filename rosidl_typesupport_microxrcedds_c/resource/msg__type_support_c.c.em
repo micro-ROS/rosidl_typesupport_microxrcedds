@@ -223,7 +223,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
     const size_t size = ros_message->@(member.name).size;
     rv = ucdr_serialize_uint32_t(cdr, size);
     for (size_t i = 0; rv && i < size; ++i) {
-      rv = ucdr_serialize_string(cdr, ros_message->@(member.name).data[i].data);
+      uint32_t string_len = (ros_message->@(member.name).data[i].data == NULL) ? 0 : (uint32_t)strlen(ros_message->@(member.name).data[i].data) + 1;
+      ros_message->@(member.name).data[i].size = (ros_message->@(member.name).data[i].data == NULL) ? 0 : string_len - 1;
+      rv = ucdr_serialize_sequence_char(cdr, ros_message->@(member.name).data[i].data, string_len);
     }
 @[      end if]@
 @[    end if]@
@@ -231,9 +233,10 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
 @[  elif isinstance(member.type, BasicType)]@
   rv = ucdr_serialize_@(get_suffix(member.type.typename))(cdr, ros_message->@(member.name));
 @[  elif isinstance(member.type, AbstractString)]@
-  rv = ucdr_serialize_string(cdr, ros_message->@(member.name).data);
-  if (rv) {
-    ros_message->@(member.name).size = strlen(ros_message->@(member.name).data);
+ {
+    uint32_t string_len = (ros_message->@(member.name).data == NULL) ? 0 : (uint32_t)strlen(ros_message->@(member.name).data) + 1;
+    ros_message->@(member.name).size = (ros_message->@(member.name).data == NULL) ? 0 : string_len - 1 ;
+    rv = ucdr_serialize_sequence_char(cdr, ros_message->@(member.name).data, string_len);
   }
 @[  elif isinstance(member.type, AbstractWString)]@
   // Micro CDR does not support WString type.
@@ -280,7 +283,13 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
     uint32_t size;
     const size_t capacity = ros_message->@(member.name).capacity;
     rv = ucdr_deserialize_sequence_@(get_suffix(member.type.value_type.typename))(cdr, ros_message->@(member.name).data, capacity, &size);
-    ros_message->@(member.name).size = size;
+    if (rv) {
+      ros_message->@(member.name).size = size;
+    } else if(size > capacity){
+      cdr->error = false;
+      ros_message->@(member.name).size = 0;
+      ucdr_advance_buffer(cdr, size * sizeof(@(get_suffix(member.type.value_type.typename))));
+    }
 @[      elif isinstance(member.type.value_type, NamespacedType)]@
     uint32_t size;
     rv = ucdr_deserialize_uint32_t(cdr, &size);
@@ -311,10 +320,15 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
 
     for (size_t i = 0; rv && i < size; i++) {
       size_t capacity = ros_message->@(member.name).data[i].capacity;
+      uint32_t string_size;
       char * data = ros_message->@(member.name).data[i].data;
-      rv = ucdr_deserialize_string(cdr, data, capacity);
+      rv = ucdr_deserialize_sequence_char(cdr, data, capacity, &string_size);
       if (rv) {
-        ros_message->@(member.name).data[i].size = strlen(data);
+        ros_message->@(member.name).data[i].size = (string_size == 0) ? 0 : string_size - 1;
+      } else if(string_size > capacity){
+        cdr->error = false;
+        ros_message->@(member.name).data[i].size = 0;
+        ucdr_advance_buffer(cdr, string_size);
       }
     }
 @[      end if]@
@@ -325,9 +339,14 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
 @[  elif isinstance(member.type, AbstractString)]@
   {
     size_t capacity = ros_message->@(member.name).capacity;
-    rv = ucdr_deserialize_string(cdr, ros_message->@(member.name).data, capacity);
+    uint32_t string_size;
+    rv = ucdr_deserialize_sequence_char(cdr, ros_message->@(member.name).data, capacity, &string_size);
     if (rv) {
-      ros_message->@(member.name).size = strlen(ros_message->@(member.name).data);
+      ros_message->@(member.name).size = (string_size == 0) ? 0 : string_size - 1;
+    } else if(string_size > capacity){
+      cdr->error = false;
+      ros_message->@(member.name).size = 0;
+      ucdr_advance_buffer(cdr, string_size);
     }
   }
 @[  elif isinstance(member.type, AbstractWString)]@
