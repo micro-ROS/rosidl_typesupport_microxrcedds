@@ -22,6 +22,7 @@
 #include <rosidl_typesupport_microxrcedds_c/message_type_support.h>
 
 // Specific defined types used during testing
+#include "rosidl_typesupport_microxrcedds_test_msg/msg/basic_primitive.h"
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/primitive.h"
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/sequence.h"
 #include "rosidl_typesupport_microxrcedds_test_msg/msg/compound.h"
@@ -345,6 +346,15 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
       EXPECT_EQ(A.sequence_data.data[i].nested_test.unbounded_string4.size, B.sequence_data.data[i].nested_test.unbounded_string4.size);
       EXPECT_EQ(strcmp(A.sequence_data.data[i].nested_test.unbounded_string4.data, B.sequence_data.data[i].nested_test.unbounded_string4.data), 0);
     }
+
+    size_t array_size = sizeof(A.array_data)/sizeof(A.array_data[0]);
+    for (size_t i = 0; i < array_size; i++)
+    {
+      EXPECT_EQ(A.array_data[i].a, B.array_data[i].a);
+      EXPECT_EQ(A.array_data[i].b, B.array_data[i].b);
+      EXPECT_EQ(A.array_data[i].c, B.array_data[i].c);
+    }
+
   });
 
   rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_element;
@@ -381,6 +391,13 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
 
   msg.sequence_data.data = &primitive_element;
   msg.sequence_data.size = 1;
+
+  for (size_t i = 0; i < sizeof(msg.array_data)/sizeof(msg.array_data[0]); i++)
+  {
+      msg.array_data[i].a = 1;
+      msg.array_data[i].b = 2;
+      msg.array_data[i].c = 3;
+  }
 
   // Prepare deserialization output instance
   rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_element_output;

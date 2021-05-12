@@ -28,6 +28,7 @@ if(BUILD_TESTING)
     "msg/Primitive.msg"
     "msg/Sequence.msg"
     "msg/Compound.msg"
+    "msg/BasicPrimitive.msg"
     )
 
   rosidl_generate_interfaces(${PROJECT_NAME}
