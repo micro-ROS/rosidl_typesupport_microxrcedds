@@ -26,6 +26,7 @@ if(BUILD_TESTING)
   set(msg_files
     "msg/UnboundedString.msg"
     "msg/Primitive.msg"
+    "msg/NotEnoughtMemoryTest.msg"
     "msg/Sequence.msg"
     "msg/Compound.msg"
     "msg/BasicPrimitive.msg"

@@ -13,7 +13,7 @@ jobs:
 
   rosidl_typesupport_microxrcedds_ci:
         runs-on: ubuntu-20.04
-        container: microros/micro-ros-agent:foxy
+        container: ros:foxy
     
         steps:
         - uses: actions/checkout@v2
@@ -26,7 +26,7 @@ jobs:
             git clone -b foxy https://github.com/eProsima/Micro-XRCE-DDS-Client src/Micro-XRCE-DDS-Client 
             git clone -b foxy https://github.com/micro-ROS/rmw-microxrcedds src/rmw-microxrcedds
             # Install coverage tools
-            apt update && apt install -y python3-pip
+            apt update && apt install -y python3-pip curl
             pip3 install gcovr
 
         - name: Build
