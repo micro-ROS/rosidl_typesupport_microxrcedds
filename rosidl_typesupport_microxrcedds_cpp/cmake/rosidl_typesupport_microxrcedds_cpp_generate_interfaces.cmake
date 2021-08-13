@@ -72,12 +72,16 @@ rosidl_write_generator_arguments(
   TARGET_DEPENDENCIES ${target_dependencies}
   )
 
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
 # Execute python script
 add_custom_command(
   OUTPUT
     ${_generated_files}
   COMMAND
-    ${PYTHON_EXECUTABLE} ${rosidl_typesupport_microxrcedds_cpp_BIN}
+    Python3::Interpreter
+  ARGS
+    ${rosidl_typesupport_microxrcedds_cpp_BIN}
     --generator-arguments-file "${generator_arguments_file}"
   DEPENDS
     ${target_dependencies} ${_dds_idl_files}
