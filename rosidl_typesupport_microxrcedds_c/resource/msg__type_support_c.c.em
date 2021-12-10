@@ -183,7 +183,6 @@ static bool _@(message.structure.namespaced_type.name)__cdr_serialize(
   bool rv = false;
 
   if (!untyped_ros_message) {
-    fprintf(stderr, "ros message handle is null\n");
     return false;
   }
 
@@ -272,7 +271,6 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
   bool rv = false;
 
   if (!untyped_ros_message) {
-    fprintf(stderr, "ros message handle is null\n");
     return false;
   }
   _@(message.structure.namespaced_type.name)__ros_msg_type * ros_message = (_@(message.structure.namespaced_type.name)__ros_msg_type *)(untyped_ros_message);
@@ -309,7 +307,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
       ros_message->@(member.name).size = size;
     } else if(size > capacity){
       cdr->error = false;
+      cdr->last_data_size = 1;
       ros_message->@(member.name).size = 0;
+      ucdr_align_to(cdr, sizeof(@(get_suffix(member.type.value_type.typename))));
       ucdr_advance_buffer(cdr, size * sizeof(@(get_suffix(member.type.value_type.typename))));
     }
 @[      elif isinstance(member.type.value_type, NamespacedType)]@
@@ -317,7 +317,6 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
     rv = ucdr_deserialize_uint32_t(cdr, &size);
 
     if(size > ros_message->@(member.name).capacity){
-      fprintf(stderr, "cannot allocate received sequence in ros_message\n");
       return 0;
     }
 
@@ -335,7 +334,6 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
     rv = ucdr_deserialize_uint32_t(cdr, &size);
 
     if(size > ros_message->@(member.name).capacity){
-      fprintf(stderr, "cannot allocate received sequence in ros_message\n");
       return 0;
     }
     ros_message->@(member.name).size = size;
@@ -349,7 +347,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
         ros_message->@(member.name).data[i].size = (string_size == 0) ? 0 : string_size - 1;
       } else if(string_size > capacity){
         cdr->error = false;
+        cdr->last_data_size = 1;
         ros_message->@(member.name).data[i].size = 0;
+        ucdr_align_to(cdr, sizeof(char));
         ucdr_advance_buffer(cdr, string_size);
       }
     }
@@ -367,7 +367,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
       ros_message->@(member.name).size = (string_size == 0) ? 0 : string_size - 1;
     } else if(string_size > capacity){
       cdr->error = false;
+      cdr->last_data_size = 1;
       ros_message->@(member.name).size = 0;
+      ucdr_align_to(cdr, sizeof(char));
       ucdr_advance_buffer(cdr, string_size);
     }
   }
@@ -390,7 +392,6 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
   size_t current_alignment)
 {
   if (!untyped_ros_message) {
-    fprintf(stderr, "ros message handle is null\n");
     return 0;
   }
 
@@ -410,7 +411,7 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
     current_alignment += ucdr_alignment(current_alignment, item_size) + (array_size * item_size);
 @[      elif isinstance(member.type.value_type, NamespacedType)]@
     const size_t array_size = sizeof(ros_message->@(member.name))/sizeof(ros_message->@(member.name)[0]);
-    current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING);  
+    current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING);
     for(size_t i = 0; i < array_size; i++){
       size_t element_size = ((const message_type_support_callbacks_t *)(
         ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_c, @(', '.join(member.type.value_type.namespaced_name()))
