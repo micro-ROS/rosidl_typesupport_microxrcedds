@@ -484,7 +484,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
   const rosidl_message_type_support_t * not_enought_memory_msg_type_support =
     ROSIDL_GET_MSG_TYPE_SUPPORT(rosidl_typesupport_microxrcedds_test_msg, msg, NotEnoughtMemoryTest);
   EXPECT_NE(not_enought_memory_msg_type_support, nullptr);
-  
+
   this->setup(
       not_enought_memory_msg_type_support,
       std::move(msg),
@@ -507,7 +507,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
 
   out1.string.data = NULL;
   out1.string.capacity = 0;
-  
+
   out1.int64_sequence.data = (int64_t*) malloc(10 * sizeof(int64_t));
   out1.int64_sequence.capacity = 10;
 
@@ -534,7 +534,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
 
   out2.string.data = (char*) malloc(10 * sizeof(char));
   out2.string.capacity = 10;
-  
+
   out2.int64_sequence.data = NULL;
   out2.int64_sequence.capacity = 0;
 
@@ -549,7 +549,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
   for (size_t i = 0; i < 10; i++)
   {
     ASSERT_EQ(msg.int16_array[i], out2.int16_array[i]);
-  } 
+  }
 
   free(out2.string.data);
 
@@ -558,7 +558,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
 
   out3.string.data = NULL;
   out3.string.capacity = 0;
-  
+
   out3.int64_sequence.data = NULL;
   out3.int64_sequence.capacity = 0;
 
@@ -571,7 +571,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
   for (size_t i = 0; i < 10; i++)
   {
     ASSERT_EQ(msg.int16_array[i], out3.int16_array[i]);
-  } 
+  }
 
   free(out3.string.data);
 
@@ -588,7 +588,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
 
   out4.string.data = (char*) malloc(10 * sizeof(char));
   out4.string.capacity = 10;
-  
+
   out4.int64_sequence.data = (int64_t*) malloc(10 * sizeof(int64_t));
   out4.int64_sequence.capacity = 10;
 
@@ -609,5 +609,4 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
   {
     ASSERT_EQ(msg.int16_array[i], out1.int16_array[i]);
   }
-
 }
