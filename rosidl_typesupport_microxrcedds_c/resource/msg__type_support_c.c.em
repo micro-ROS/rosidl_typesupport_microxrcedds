@@ -307,7 +307,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
       ros_message->@(member.name).size = size;
     } else if(size > capacity){
       cdr->error = false;
+      cdr->last_data_size = 1;
       ros_message->@(member.name).size = 0;
+      ucdr_align_to(cdr, sizeof(@(get_suffix(member.type.value_type.typename))));
       ucdr_advance_buffer(cdr, size * sizeof(@(get_suffix(member.type.value_type.typename))));
     }
 @[      elif isinstance(member.type.value_type, NamespacedType)]@
@@ -345,7 +347,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
         ros_message->@(member.name).data[i].size = (string_size == 0) ? 0 : string_size - 1;
       } else if(string_size > capacity){
         cdr->error = false;
+        cdr->last_data_size = 1;
         ros_message->@(member.name).data[i].size = 0;
+        ucdr_align_to(cdr, sizeof(char));
         ucdr_advance_buffer(cdr, string_size);
       }
     }
@@ -363,7 +367,9 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
       ros_message->@(member.name).size = (string_size == 0) ? 0 : string_size - 1;
     } else if(string_size > capacity){
       cdr->error = false;
+      cdr->last_data_size = 1;
       ros_message->@(member.name).size = 0;
+      ucdr_align_to(cdr, sizeof(char));
       ucdr_advance_buffer(cdr, string_size);
     }
   }
