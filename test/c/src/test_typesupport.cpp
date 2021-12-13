@@ -178,7 +178,7 @@ TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
   });
 
   // Initialize data to be serialized and deserialized
-  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive init_primitive;
+  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive init_primitive = {};
   init_primitive.bool_test = 0x01;
   init_primitive.byte_test = 0x01;
   init_primitive.char_test = 0x01;
@@ -206,7 +206,7 @@ TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
     strlen(init_primitive.nested_test.unbounded_string4.data);
 
   // Prepare deserialization output instance
-  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive out_deserialized;
+  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive out_deserialized = {};
   char string1[100] = {0};
   out_deserialized.nested_test.unbounded_string1.data = string1;
   out_deserialized.nested_test.unbounded_string1.capacity = sizeof(string1);
@@ -254,7 +254,7 @@ TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
     }
   });
 
-  rosidl_typesupport_microxrcedds_test_msg__msg__Sequence init_sequence;
+  rosidl_typesupport_microxrcedds_test_msg__msg__Sequence init_sequence = {};
   ASSERT_TRUE(rosidl_runtime_c__String__Sequence__init(
     &init_sequence.sequence_string_test, 4));
 
@@ -273,7 +273,7 @@ TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
     strlen(init_sequence.sequence_string_test.data[3].data);
 
   // Prepare deserialization output instance
-  rosidl_typesupport_microxrcedds_test_msg__msg__Sequence out_deserialized;
+  rosidl_typesupport_microxrcedds_test_msg__msg__Sequence out_deserialized = {};
   ASSERT_TRUE(rosidl_runtime_c__String__Sequence__init(
     &out_deserialized.sequence_string_test, 4));
   char data_0[10] = {0};
@@ -358,7 +358,7 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
 
   });
 
-  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_element;
+  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_element = {};
   primitive_element.bool_test = 0x01;
   primitive_element.byte_test = 0x01;
   primitive_element.char_test = 0x01;
@@ -385,9 +385,10 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
   primitive_element.nested_test.unbounded_string4.size =
     strlen(primitive_element.nested_test.unbounded_string4.data);
 
-  rosidl_typesupport_microxrcedds_test_msg__msg__Compound msg;
+  rosidl_typesupport_microxrcedds_test_msg__msg__Compound msg = {};
   char string_in[100] = {0};
   msg.string_data.data = string_in;
+  msg.string_data.size = 0;
   msg.string_data.size = strlen(primitive_element.nested_test.unbounded_string1.data);
 
   msg.sequence_data.data = &primitive_element;
@@ -401,15 +402,17 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
   }
 
   // Prepare deserialization output instance
-  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_element_output;
-  rosidl_typesupport_microxrcedds_test_msg__msg__Compound msg_out;
+  rosidl_typesupport_microxrcedds_test_msg__msg__Primitive primitive_element_output = {};
+  rosidl_typesupport_microxrcedds_test_msg__msg__Compound msg_out = {};
 
   char string0[100] = {0};
   msg_out.string_data.data = string0;
+  msg_out.string_data.size = 0;
   msg_out.string_data.capacity = sizeof(string0);
 
   msg_out.sequence_data.data = &primitive_element_output;
-  msg_out.sequence_data.size = 1;
+  msg_out.sequence_data.size = 0;
+  msg_out.sequence_data.capacity = 1;
 
   char string1[100] = {0};
   primitive_element_output.nested_test.unbounded_string1.data = string1;
@@ -459,7 +462,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
   {});
 
   // Create sample message
-  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest msg;
+  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest msg = {};
   msg.initial_byte = 0x42;
   msg.end_byte = 0x24;
 
@@ -503,7 +506,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
   ucdrBuffer mb_reader;
 
   // Deserializing with no string
-  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out1;
+  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out1 = {};
 
   out1.string.data = NULL;
   out1.string.capacity = 0;
@@ -530,7 +533,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
   free(out1.int64_sequence.data);
 
   // Deserializing with no sequence
-  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out2;
+  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out2 = {};
 
   out2.string.data = (char*) malloc(10 * sizeof(char));
   out2.string.capacity = 10;
@@ -554,7 +557,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
   free(out2.string.data);
 
   // Deserializing with no sequence no string
-  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out3;
+  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out3 = {};
 
   out3.string.data = NULL;
   out3.string.capacity = 0;
@@ -584,7 +587,7 @@ TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
 
   ASSERT_TRUE(this->message_type_support_callbacks_->cdr_serialize(&msg, &mb_writer));
 
-  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out4;
+  rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest out4 = {};
 
   out4.string.data = (char*) malloc(10 * sizeof(char));
   out4.string.capacity = 10;
