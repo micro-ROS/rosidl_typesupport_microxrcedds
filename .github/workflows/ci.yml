@@ -13,7 +13,7 @@ jobs:
 
   rosidl_typesupport_microxrcedds_ci:
         runs-on: ubuntu-20.04
-        container: ros:rolling
+        container: ros:humble
 
         steps:
         - uses: actions/checkout@v2
@@ -24,7 +24,7 @@ jobs:
           run: |
             git clone -b ros2 https://github.com/eProsima/Micro-CDR src/Micro-CDR
             git clone -b ros2 https://github.com/eProsima/Micro-XRCE-DDS-Client src/Micro-XRCE-DDS-Client
-            git clone -b main https://github.com/micro-ROS/rmw-microxrcedds src/rmw-microxrcedds
+            git clone -b humble https://github.com/micro-ROS/rmw-microxrcedds src/rmw-microxrcedds
             # Install coverage tools
             apt update && apt install -y python3-pip curl
             pip3 install gcovr
