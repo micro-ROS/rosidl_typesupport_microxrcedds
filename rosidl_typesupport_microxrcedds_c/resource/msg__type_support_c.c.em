@@ -423,9 +423,12 @@ size_t get_serialized_size_@('__'.join([package_name] + list(interface_path.pare
 @[    elif isinstance(member.type, AbstractSequence)]@
 @[      if isinstance(member.type.value_type, BasicType)]@
     size_t sequence_size = ros_message->@(member.name).size;
-    size_t item_size = sizeof(ros_message->@(member.name).data[0]);
     current_alignment += ucdr_alignment(current_alignment, MICROXRCEDDS_PADDING) + MICROXRCEDDS_PADDING;
-    current_alignment += ucdr_alignment(current_alignment, item_size) + (sequence_size * item_size);
+
+    if (0 < sequence_size) {
+      size_t item_size = sizeof(ros_message->@(member.name).data[0]);
+      current_alignment += ucdr_alignment(current_alignment, item_size) + (sequence_size * item_size);
+    }
 @[      elif isinstance(member.type.value_type, NamespacedType)]@
     const size_t sequence_size = ros_message->@(member.name).size;
 
