@@ -30,8 +30,6 @@ if(BUILD_TESTING)
     "msg/Sequence.msg"
     "msg/Compound.msg"
     "msg/BasicPrimitive.msg"
-    "msg/Regression10.msg"
-    "msg/Regression11.msg"
     )
 
   rosidl_generate_interfaces(${PROJECT_NAME}

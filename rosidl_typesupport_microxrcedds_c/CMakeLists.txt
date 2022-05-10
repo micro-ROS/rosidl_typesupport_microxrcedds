@@ -33,6 +33,7 @@ ament_python_install_package(${PROJECT_NAME})
 
 add_library(${PROJECT_NAME}
   src/identifier.c
+  src/deserialize_buffer_utility.c
   )
 
 target_compile_definitions(${PROJECT_NAME}
