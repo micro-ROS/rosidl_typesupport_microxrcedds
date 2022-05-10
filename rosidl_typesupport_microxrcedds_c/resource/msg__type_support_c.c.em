@@ -28,7 +28,6 @@ header_files = [
     'rosidl_typesupport_microxrcedds_c/identifier.h',
     # Provides the definition of the message_type_support_callbacks_t struct.
     'rosidl_typesupport_microxrcedds_c/message_type_support.h',
-    'rosidl_typesupport_microxrcedds_c/deserialize_buffer_utility.h',
     package_name + '/msg/rosidl_typesupport_microxrcedds_c__visibility_control.h',
     include_base + '__struct.h',
     include_base + '__functions.h',
