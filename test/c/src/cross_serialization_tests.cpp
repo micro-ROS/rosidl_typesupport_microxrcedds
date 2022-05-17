@@ -159,6 +159,21 @@ TEST(SerDesTests, Regression10) {
 
   ASSERT_TRUE(serdes.check());
   DataType msg = {};
+  msg.a = 0x01;     // byte
+  msg.b = 0x1111;   // uint16
+  msg.c = 0x1010;   // uint16
+  msg.d = 0x10;     // uint8
+
+  // Regression11[10]
+  for (size_t i = 0; i < sizeof(msg.e)/sizeof(msg.e[0]); i++) {
+    msg.e[i].f = i + 0x01;       // byte
+    msg.e[i].g = i + 0x0101;     // uint16
+    msg.e[i].h = i + 0x10;       // byte
+    msg.e[i].i = true;           // bool
+    msg.e[i].j = i + 0x10101010; // int32
+    msg.e[i].k = i + 0.1;        // float32
+    msg.e[i].l = i + 0x1010;     // uint16
+  }
   serdes.introspection->init_function(&msg, ROSIDL_RUNTIME_C_MSG_INIT_ALL);
 
   EXPECT_TRUE(serdes.serialize_and_compare_buffers(msg));
