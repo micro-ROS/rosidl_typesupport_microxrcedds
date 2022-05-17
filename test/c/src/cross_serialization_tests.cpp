@@ -105,13 +105,7 @@ class CrossSerialization {
 
     QUICK_RETURN(xrce_cdr.offset == fast_cdr.getSerializedDataLength());
 
-    bool equal_buffers = true;
-    for(size_t i = 0; i < xrce_size && equal_buffers; ++i){
-      equal_buffers &= xrce_buffer[i] == fast_buffer[i];
-      if(!equal_buffers) {
-        std::cout << "Error at position " << i << std::endl;
-      }
-    }
+    bool equal_buffers = memcmp(xrce_buffer, fast_buffer, xrce_size) == 0;
     QUICK_RETURN(equal_buffers);
 
     return true;
