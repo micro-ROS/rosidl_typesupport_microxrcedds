@@ -88,10 +88,10 @@ class CrossSerialization {
     fast_size = fast_callbacks->get_serialized_size(&msg);
     QUICK_RETURN(xrce_size == fast_size);
 
-    // size_t xrce_max_size = xrce_callbacks->max_serialized_size();
-    // bool full_bounded;
-    // size_t fast_max_size = fast_callbacks->max_serialized_size(full_bounded);
-    // QUICK_RETURN(xrce_max_size == fast_max_size);
+    size_t xrce_max_size = xrce_callbacks->max_serialized_size();
+    bool full_bounded;
+    size_t fast_max_size = fast_callbacks->max_serialized_size(full_bounded);
+    QUICK_RETURN(xrce_max_size == fast_max_size);
 
     xrce_buffer = (uint8_t *) calloc(xrce_size, sizeof(uint8_t));
     ucdrBuffer xrce_cdr;
