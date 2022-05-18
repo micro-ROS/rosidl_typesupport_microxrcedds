@@ -2,9 +2,9 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rosidl_typesupport_microxrcedds_c</name>
-  <version>0.0.1</version>
+  <version>1.0.0</version>
   <description>Generate the C interfaces for eProsima Micro XRCE-DDS.</description>
-  <maintainer email="borjaouterelo@eprosima.com">Borja Outerelo</maintainer>
+  <maintainer email="pablogarrido@eprosima.com">Pablo Garrido</maintainer>
   <license>Apache License 2.0</license>
   <author>Borja Outerelo</author>
 
@@ -25,7 +25,7 @@
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
- 
+
   <member_of_group>rosidl_typesupport_c_packages</member_of_group>
 
   <export>
