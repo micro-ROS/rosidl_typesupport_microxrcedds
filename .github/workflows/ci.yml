@@ -37,7 +37,6 @@ jobs:
         - name: Test
           run: |
             . /opt/ros/$ROS_DISTRO/setup.sh && . install/local_setup.sh
-            colcon test --packages-select=rosidl_typesupport_microxrcedds_cpp_tests --event-handlers console_direct+ --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)"
             colcon test --packages-select=rosidl_typesupport_microxrcedds_c_tests --event-handlers console_direct+ --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)|(xmllint)"
 
         # - name: Uncrustify
