@@ -490,11 +490,6 @@ size_t max_serialized_size_@('__'.join([package_name] + list(interface_path.pare
 @[      if isinstance(member.type.value_type, BasicType)]@
     const size_t array_size = @(member.type.size);
     current_alignment += ucdr_alignment(current_alignment, sizeof(@(get_suffix(member.type.value_type.typename)))) + (array_size * sizeof(@(get_suffix(member.type.value_type.typename))));
-@[      elif isinstance(member.type.value_type, NamespacedType)]@
-    const size_t array_size = @(member.type.size);
-    for (size_t index = 0; index < array_size; ++index) {
-      current_alignment += max_serialized_size_@('__'.join(member.type.value_type.namespaced_name()))(full_bounded, current_alignment);
-    }
 @[      else]@
     *full_bounded = false;
 @[      end if]@
