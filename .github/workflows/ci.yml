@@ -51,23 +51,6 @@ jobs:
           colcon test --packages-select=rosidl_typesupport_microxrcedds_cpp_tests --event-handlers console_direct+ --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)"
           colcon test --packages-select=rosidl_typesupport_microxrcedds_c_tests --event-handlers console_direct+ --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)|(xmllint)"
 
-      # - name: Uncrustify
-      #   run: |
-      #     # Install Uncrustify
-      #     git clone https://github.com/uncrustify/uncrustify.git --branch uncrustify-0.72.0 --single-branch uncrustify
-      #     mkdir -p uncrustify/build
-      #     cd uncrustify/build
-      #     cmake -DCMAKE_INSTALL_PREFIX=../install ..
-      #     cmake --build . --target install -- -j$(nproc)
-      #     cd ../..
-      #     export PATH=${PWD}/uncrustify/install/bin:$PATH
-      #     # Check Uncrustify
-      #     curl -l https://raw.githubusercontent.com/eProsima/cpp-style/master/uncrustify.cfg -o uncrustify.cfg
-      #     cd src/rosidl_typesupport_microxrcedds/rosidl_typesupport_microxrcedds_c
-      #     find . \( -name "*.cpp" -o -name "*.c" -o -name "*.h" -o -name "*.hpp" \) -exec ../../../uncrustify -c uncrustify.cfg --check {} +
-      #     cd src/rosidl_typesupport_microxrcedds/rosidl_typesupport_microxrcedds_c
-      #     find . \( -name "*.cpp" -o -name "*.c" -o -name "*.h" -o -name "*.hpp" \) -exec ../../../uncrustify -c uncrustify.cfg --check {} +
-
       - name: Coverage
         run: |
           cd src/rosidl_typesupport_microxrcedds/rosidl_typesupport_microxrcedds_c
