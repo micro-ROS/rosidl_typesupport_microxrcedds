@@ -35,7 +35,7 @@ jobs:
         run: |
           git clone -b ros2 https://github.com/eProsima/Micro-CDR src/Micro-CDR
           git clone -b ros2 https://github.com/eProsima/Micro-XRCE-DDS-Client src/Micro-XRCE-DDS-Client
-          git clone -b ${{ matrix.ros_distribution }} https://github.com/micro-ROS/rmw-microxrcedds src/rmw-microxrcedds
+          git clone -b main https://github.com/micro-ROS/rmw-microxrcedds src/rmw-microxrcedds
           # Install coverage tools
           apt update && apt install -y python3-pip curl
           pip3 install gcovr
