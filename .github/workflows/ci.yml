@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  rosidl_typesupport_microxrcedds_ci:
+    rosidl_typesupport_microxrcedds_ci:
         runs-on: ubuntu-latest
         strategy:
         fail-fast: false
