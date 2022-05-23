@@ -1,14 +1,14 @@
 name: CI rosidl_typesupport_microxrcedds
 
 on:
-    push:
-      branches:
-        - humble
     pull_request:
       branches:
+        - 'humble'
+    schedule:
       - cron: '33 6 * * *'
 
 jobs:
+
   rosidl_typesupport_microxrcedds_ci:
         runs-on: ubuntu-latest
         strategy:
