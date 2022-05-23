@@ -40,7 +40,7 @@ jobs:
           apt update && apt install -y python3-pip curl
           pip3 install gcovr
           # Install RMW Fast DDS
-          apt update && apt install -y ros-${ROS_DISTRO}-rmw-fastrtps-cpp
+          apt update && apt install -y ros-${{ matrix.ros_distribution }}-rmw-fastrtps-cpp
 
       - uses : ros-tooling/action-ros-ci@0.2.5
         with:
@@ -50,7 +50,7 @@ jobs:
 
       - name: Test
         run: |
-          . /opt/ros/$ROS_DISTRO/setup.sh && . install/local_setup.sh
+          . /opt/ros/${{ matrix.ros_distribution }}/setup.sh && . install/local_setup.sh
           colcon test --packages-select=rosidl_typesupport_microxrcedds_cpp_tests --event-handlers console_direct+ --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)"
           colcon test --packages-select=rosidl_typesupport_microxrcedds_c_tests --event-handlers console_direct+ --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)|(xmllint)"
 
