@@ -3,22 +3,33 @@ name: CI rosidl_typesupport_microxrcedds
 on:
     push:
       branches:
-        - foxy
-        - main
+        - humble
     pull_request:
       branches:
-        - '**'
+      - cron: '33 6 * * *'
 
 jobs:
-
   rosidl_typesupport_microxrcedds_ci:
-        runs-on: ubuntu-20.04
-        container: ros:humble
+        runs-on: ubuntu-latest
+        strategy:
+        fail-fast: false
+        matrix:
+          os: [ ubuntu-20.04 ]
+          ros_distribution: [ humble ]
+          include:
+            - docker_image: ubuntu:jammy
+              ros_distribution: humble
+      container:
+        image: ubuntu:jammy
 
         steps:
         - uses: actions/checkout@v2
           with:
             path: src/rosidl_typesupport_microxrcedds
+        - uses: ros-tooling/setup-ros@0.3.2
+          with:
+            use-ros2-testing: true
+            required-ros-distributions: ${{ matrix.ros_distribution }}
 
         - name: Download dependencies
           run: |
@@ -31,8 +42,11 @@ jobs:
             # Install RMW Fast DDS
             apt update && apt install -y ros-${ROS_DISTRO}-rmw-fastrtps-cpp
 
-        - name: Build
-          run: . /opt/ros/$ROS_DISTRO/setup.sh && colcon build --symlink-install --cmake-args -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_CXX_OUTPUT_EXTENSION_REPLACE=ON -DCMAKE_C_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_C_OUTPUT_EXTENSION_REPLACE=ON
+        - uses : ros-tooling/action-ros-ci@0.2.5
+          with:
+            package-name: "rosidl_typesupport_microxrcedds_c"
+            target-ros2-distro: ${{ matrix.ros_distribution }}
+            extra-cmake-args: -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_CXX_OUTPUT_EXTENSION_REPLACE=ON -DCMAKE_C_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_C_OUTPUT_EXTENSION_REPLACE=ON
 
         - name: Test
           run: |
