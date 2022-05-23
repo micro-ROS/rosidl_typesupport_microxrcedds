@@ -42,16 +42,14 @@ jobs:
           # Install RMW Fast DDS
           apt update && apt install -y ros-${{ matrix.ros_distribution }}-rmw-fastrtps-cpp
 
-      - uses : ros-tooling/action-ros-ci@0.2.5
-        with:
-          target-ros2-distro: ${{ matrix.ros_distribution }}
-          extra-cmake-args: -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_CXX_OUTPUT_EXTENSION_REPLACE=ON -DCMAKE_C_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_C_OUTPUT_EXTENSION_REPLACE=ON
+      - name: Build
+        run: . /opt/ros/$ROS_DISTRO/setup.sh && colcon build --symlink-install --cmake-args -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_CXX_OUTPUT_EXTENSION_REPLACE=ON -DCMAKE_C_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_C_OUTPUT_EXTENSION_REPLACE=ON
 
-      # - name: Test
-      #   run: |
-      #     . /opt/ros/${{ matrix.ros_distribution }}/setup.sh && . install/local_setup.sh
-      #     colcon test --packages-select=rosidl_typesupport_microxrcedds_cpp_tests --event-handlers console_direct+ --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)"
-      #     colcon test --packages-select=rosidl_typesupport_microxrcedds_c_tests --event-handlers console_direct+ --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)|(xmllint)"
+      - name: Test
+        run: |
+          . /opt/ros/${{ matrix.ros_distribution }}/setup.sh && . install/local_setup.sh
+          colcon test --packages-select=rosidl_typesupport_microxrcedds_cpp_tests --event-handlers console_direct+ --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)"
+          colcon test --packages-select=rosidl_typesupport_microxrcedds_c_tests --event-handlers console_direct+ --return-code-on-test-failure --ctest-args -E "(cpplint)|(lint_cmake)|(uncrustify)|(xmllint)"
 
       # - name: Uncrustify
       #   run: |
