@@ -137,7 +137,7 @@ protected:
 template <typename T>
 class PrimitivesTestTypeSupport : public TestTypeSupport<T> {};
 
-TYPED_TEST_CASE(PrimitivesTestTypeSupport,
+TYPED_TEST_SUITE(PrimitivesTestTypeSupport,
   testing::Types<rosidl_typesupport_microxrcedds_test_msg::msg::Primitive>);
 TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
 {
@@ -198,7 +198,7 @@ TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
 template <typename T>
 class SequencesTestTypeSupport : public TestTypeSupport<T> {};
 
-TYPED_TEST_CASE(SequencesTestTypeSupport,
+TYPED_TEST_SUITE(SequencesTestTypeSupport,
   testing::Types<rosidl_typesupport_microxrcedds_test_msg::msg::Sequence>);
 TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
 {
@@ -235,7 +235,7 @@ TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
 template <typename T>
 class CompoundSequencesTestTypeSupport : public TestTypeSupport<T> {};
 
-TYPED_TEST_CASE(CompoundSequencesTestTypeSupport,
+TYPED_TEST_SUITE(CompoundSequencesTestTypeSupport,
     testing::Types<rosidl_typesupport_microxrcedds_test_msg::msg::Compound>);
 TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
 {
