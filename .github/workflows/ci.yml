@@ -43,7 +43,7 @@ jobs:
           apt update && apt install -y ros-${{ matrix.ros_distribution }}-rmw-fastrtps-cpp
 
       - name: Build
-        run: . /opt/ros/$ROS_DISTRO/setup.sh && colcon build --symlink-install --cmake-args -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_CXX_OUTPUT_EXTENSION_REPLACE=ON -DCMAKE_C_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_C_OUTPUT_EXTENSION_REPLACE=ON
+        run: . /opt/ros/${{ matrix.ros_distribution }}/setup.sh && colcon build --symlink-install --cmake-args -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_CXX_OUTPUT_EXTENSION_REPLACE=ON -DCMAKE_C_FLAGS="-ftest-coverage --coverage -fno-inline -fno-inline-small-functions -fno-default-inline" -DCMAKE_C_OUTPUT_EXTENSION_REPLACE=ON
 
       - name: Test
         run: |
