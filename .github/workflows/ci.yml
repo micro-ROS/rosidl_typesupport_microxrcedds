@@ -17,10 +17,10 @@ jobs:
           os: [ ubuntu-20.04 ]
           ros_distribution: [ foxy ]
           include:
-            - docker_image: ubuntu:jammy
+            - docker_image: ubuntu:20.04
               ros_distribution: foxy
       container:
-        image: ubuntu:jammy
+        image: ubuntu:20.04
 
       steps:
       - uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
           path: src/rosidl_typesupport_microxrcedds
       - uses: ros-tooling/setup-ros@0.3.2
         with:
-          use-ros2-testing: true
+          use-ros2-testing: false
           required-ros-distributions: ${{ matrix.ros_distribution }}
 
       - name: Download dependencies
