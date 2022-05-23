@@ -140,7 +140,7 @@ protected:
 template <typename T>
 class PrimitivesTestTypeSupport : public TestTypeSupport<T> {};
 
-TYPED_TEST_SUITE(PrimitivesTestTypeSupport,
+TYPED_TEST_CASE(PrimitivesTestTypeSupport,
   testing::Types<rosidl_typesupport_microxrcedds_test_msg__msg__Primitive>);
 TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
 {
@@ -235,7 +235,7 @@ TYPED_TEST(PrimitivesTestTypeSupport, serialize_primitive_types)
 template <typename T>
 class SequencesTestTypeSupport : public TestTypeSupport<T> {};
 
-TYPED_TEST_SUITE(SequencesTestTypeSupport,
+TYPED_TEST_CASE(SequencesTestTypeSupport,
   testing::Types<rosidl_typesupport_microxrcedds_test_msg__msg__Sequence>);
 TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
 {
@@ -304,7 +304,7 @@ TYPED_TEST(SequencesTestTypeSupport, serialize_sequence_types)
 template <typename T>
 class CompoundSequencesTestTypeSupport : public TestTypeSupport<T> {};
 
-TYPED_TEST_SUITE(CompoundSequencesTestTypeSupport,
+TYPED_TEST_CASE(CompoundSequencesTestTypeSupport,
   testing::Types<rosidl_typesupport_microxrcedds_test_msg__msg__Compound>);
 TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
 {
@@ -449,7 +449,7 @@ TYPED_TEST(CompoundSequencesTestTypeSupport, serialize_compound_types)
 template <typename T>
 class MemoryCornerCasesTestTypeSupport : public TestTypeSupport<T> {};
 
-TYPED_TEST_SUITE(MemoryCornerCasesTestTypeSupport,
+TYPED_TEST_CASE(MemoryCornerCasesTestTypeSupport,
   testing::Types<rosidl_typesupport_microxrcedds_test_msg__msg__NotEnoughtMemoryTest>);
 TYPED_TEST(MemoryCornerCasesTestTypeSupport, memory_corner_cases)
 {
