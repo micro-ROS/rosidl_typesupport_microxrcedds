@@ -10,8 +10,8 @@ on:
 jobs:
 
     rosidl_typesupport_microxrcedds_ci:
-        runs-on: ubuntu-latest
-        strategy:
+      runs-on: ubuntu-latest
+      strategy:
         fail-fast: false
         matrix:
           os: [ ubuntu-20.04 ]
