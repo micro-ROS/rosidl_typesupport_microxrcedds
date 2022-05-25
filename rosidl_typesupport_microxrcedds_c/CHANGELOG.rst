@@ -2,8 +2,8 @@
 Changelog for package rosidl_typesupport_microxrcedds_c
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.0.0 (2022-05-25)
+------------------
 * Fix bug on empty seq size (`#52 <https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/issues/52>`_)
 * Fix regression aligment (`#46 <https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/issues/46>`_) (`#56 <https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/issues/56>`_)
 * Fix ifdef _cplusplus (`#42 <https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/issues/42>`_)
