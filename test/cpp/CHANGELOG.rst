@@ -2,5 +2,5 @@
 Changelog for package rosidl_typesupport_microxrcedds_cpp_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2022-05-25)
+------------------
