@@ -1,5 +1,9 @@
 @# Included from rosidl_typesupport_microxrcedds_c/resource/idl__type_support_c.c.em
 @{
+from rosidl_generator_type_description import GET_DESCRIPTION_FUNC
+from rosidl_generator_type_description import GET_HASH_FUNC
+from rosidl_generator_type_description import GET_SOURCES_FUNC
+
 TEMPLATE(
     'msg__type_support_c.c.em',
     package_name=package_name,
@@ -58,6 +62,10 @@ static rosidl_service_type_support_t @(service.namespaced_type.name)__handle = {
   ROSIDL_TYPESUPPORT_MICROXRCEDDS_C__IDENTIFIER_VALUE,
   &@(service.namespaced_type.name)__callbacks,
   get_service_typesupport_handle_function,
+
+  &@(idl_structure_type_to_c_typename(service.namespaced_type))__@(GET_HASH_FUNC),
+  &@(idl_structure_type_to_c_typename(service.namespaced_type))__@(GET_DESCRIPTION_FUNC),
+  &@(idl_structure_type_to_c_typename(service.namespaced_type))__@(GET_SOURCES_FUNC),
 };
 
 const rosidl_service_type_support_t *
