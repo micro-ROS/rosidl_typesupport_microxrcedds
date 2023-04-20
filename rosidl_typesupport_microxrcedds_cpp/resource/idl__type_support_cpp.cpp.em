@@ -22,6 +22,7 @@ include_detail_parts = [package_name] + list(interface_path.parents[0].parts) + 
 include_detail_base = '/'.join(include_detail_parts)
 }@
 #include "@(include_base)__rosidl_typesupport_microxrcedds_cpp.hpp"
+#include "@(include_base)__functions.h"
 #include "@(include_detail_base)__struct.hpp"
 
 @{
