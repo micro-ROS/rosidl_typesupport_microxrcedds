@@ -11,6 +11,9 @@ from rosidl_parser.definition import AbstractSequence
 from rosidl_parser.definition import AbstractString
 from rosidl_parser.definition import BoundedString
 from rosidl_parser.definition import AbstractWString
+from rosidl_parser.definition import SERVICE_REQUEST_MESSAGE_SUFFIX
+from rosidl_parser.definition import SERVICE_RESPONSE_MESSAGE_SUFFIX
+from rosidl_parser.definition import SERVICE_EVENT_MESSAGE_SUFFIX
 from rosidl_parser.definition import ACTION_FEEDBACK_SUFFIX
 from rosidl_parser.definition import ACTION_GOAL_SUFFIX
 from rosidl_parser.definition import ACTION_RESULT_SUFFIX
@@ -113,6 +116,12 @@ for member in message.structure.members:
         keys.add('rosidl_runtime_c/u16string.h')
         keys.add('rosidl_runtime_c/u16string_functions.h')
     elif isinstance(type_, NamespacedType):
+        import sys
+        if (
+            type_.name.endswith(SERVICE_REQUEST_MESSAGE_SUFFIX) or
+            type_.name.endswith(SERVICE_RESPONSE_MESSAGE_SUFFIX)
+        ):
+            continue
         if (
             type_.name.endswith(ACTION_GOAL_SUFFIX) or
             type_.name.endswith(ACTION_RESULT_SUFFIX) or
