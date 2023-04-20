@@ -26,6 +26,15 @@ TEMPLATE(
 }@
 
 @{
+TEMPLATE(
+    'msg__rosidl_typesupport_microxrcedds_c.h.em',
+    package_name=package_name,
+    interface_path=interface_path,
+    message=service.event_message,
+    include_directives=include_directives)
+}@
+
+@{
 from rosidl_cmake import convert_camel_case_to_lower_case_underscore
 
 include_parts = [package_name] + list(interface_path.parents[0].parts) + \
@@ -70,6 +79,15 @@ static rosidl_service_type_support_t @(service.namespaced_type.name)__handle = {
   &_@(service.namespaced_type.name)@(SERVICE_REQUEST_MESSAGE_SUFFIX)__type_support,
   &_@(service.namespaced_type.name)@(SERVICE_RESPONSE_MESSAGE_SUFFIX)__type_support,
   &_@(service.namespaced_type.name)@(SERVICE_EVENT_MESSAGE_SUFFIX)__type_support,
+
+  ROSIDL_TYPESUPPORT_INTERFACE__SERVICE_CREATE_EVENT_MESSAGE_SYMBOL_NAME(
+    rosidl_typesupport_c,
+    @(',\n    '.join(service.namespaced_type.namespaced_name()))
+  ),
+  ROSIDL_TYPESUPPORT_INTERFACE__SERVICE_DESTROY_EVENT_MESSAGE_SYMBOL_NAME(
+    rosidl_typesupport_c,
+    @(',\n    '.join(service.namespaced_type.namespaced_name()))
+  ),
 
   &@(idl_structure_type_to_c_typename(service.namespaced_type))__@(GET_HASH_FUNC),
   &@(idl_structure_type_to_c_typename(service.namespaced_type))__@(GET_DESCRIPTION_FUNC),
