@@ -1,10 +1,6 @@
 @# Included from rosidl_typesupport_microxrcedds_cpp/resource/idl__type_support.cpp.em
 @{
 from rosidl_cmake import convert_camel_case_to_lower_case_underscore
-from rosidl_generator_c import idl_structure_type_to_c_typename
-from rosidl_generator_type_description import GET_DESCRIPTION_FUNC
-from rosidl_generator_type_description import GET_HASH_FUNC
-from rosidl_generator_type_description import GET_SOURCES_FUNC
 
 include_parts = [package_name] + list(interface_path.parents[0].parts) + \
     [convert_camel_case_to_lower_case_underscore(interface_path.stem)]
@@ -25,15 +21,6 @@ TEMPLATE(
     package_name=package_name,
     interface_path=interface_path,
     message=service.response_message,
-    include_directives=include_directives)
-}@
-
-@{
-TEMPLATE(
-    'msg__type_support_cpp.cpp.em',
-    package_name=package_name,
-    interface_path=interface_path,
-    message=service.event_message,
     include_directives=include_directives)
 }@
 
@@ -74,9 +61,6 @@ static rosidl_service_type_support_t _@(service.namespaced_type.name)__handle = 
   rosidl_typesupport_microxrcedds_cpp::typesupport_identifier,
   &_@(service.namespaced_type.name)__callbacks,
   get_service_typesupport_handle_function,
-  &@(idl_structure_type_to_c_typename(service.namespaced_type))__@(GET_HASH_FUNC),
-  &@(idl_structure_type_to_c_typename(service.namespaced_type))__@(GET_DESCRIPTION_FUNC),
-  &@(idl_structure_type_to_c_typename(service.namespaced_type))__@(GET_SOURCES_FUNC),
 };
 
 }  // namespace typesupport_microxrcedds_cpp
