@@ -14,11 +14,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          os: [ ubuntu-20.04 ]
           ros_distribution: [ rolling ]
-          include:
-            - docker_image: ubuntu:jammy
-              ros_distribution: rolling
       container:
         image: ubuntu:jammy
 
