@@ -18,6 +18,7 @@ include_parts = [package_name] + list(interface_path.parents[0].parts) + [
 include_base = '/'.join(include_parts)
 }@
 #include "@(include_base)__rosidl_typesupport_microxrcedds_c.h"
+#include "@(include_base)__functions.h"
 
 @{
 include_directives = set()
