@@ -2,6 +2,9 @@
 Changelog for package rosidl_typesupport_microxrcedds_cpp
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 3.0.0 (2022-05-25)
 ------------------
 * Fix ifdef _cplusplus (`#42 <https://github.com/micro-ROS/rosidl_typesupport_microxrcedds/issues/42>`_)
