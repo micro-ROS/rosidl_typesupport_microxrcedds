@@ -16,13 +16,13 @@ jobs:
         matrix:
           ros_distribution: [ rolling ]
       container:
-        image: ubuntu:jammy
+        image: ubuntu:24.04
 
       steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: src/rosidl_typesupport_microxrcedds
-      - uses: ros-tooling/setup-ros@0.6.2
+      - uses: ros-tooling/setup-ros@0.7.7
         with:
           use-ros2-testing: false
           required-ros-distributions: ${{ matrix.ros_distribution }}
@@ -33,8 +33,7 @@ jobs:
           git clone -b ros2 https://github.com/eProsima/Micro-XRCE-DDS-Client src/Micro-XRCE-DDS-Client
           git clone -b rolling https://github.com/micro-ROS/rmw-microxrcedds src/rmw-microxrcedds
           # Install coverage tools
-          apt update && apt install -y python3-pip curl
-          pip3 install gcovr
+          apt update && apt install -y python3-pip curl gcovr
           # Install RMW Fast DDS
           apt update && apt install -y ros-${{ matrix.ros_distribution }}-rmw-fastrtps-cpp
 
