@@ -46,8 +46,8 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:include>
   )
 
-ament_target_dependencies(${PROJECT_NAME}
-  "rosidl_runtime_c"
+target_link_libraries(${PROJECT_NAME}
+  rosidl_runtime_c::rosidl_runtime_c
   )
 ament_export_libraries(${PROJECT_NAME})
 ament_export_targets(${PROJECT_NAME})
