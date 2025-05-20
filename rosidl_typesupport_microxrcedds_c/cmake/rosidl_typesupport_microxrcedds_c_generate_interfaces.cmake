@@ -146,21 +146,18 @@ target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c>"
   )
 
-ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  "microcdr"
-  "rmw"
-  "rosidl_runtime_c"
-  "rosidl_typesupport_microxrcedds_c"
-  "rosidl_typesupport_interface"
+target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  microcdr
+  rmw::rmw
+  rosidl_runtime_c::rosidl_runtime_c
+  rosidl_typesupport_microxrcedds_c::rosidl_typesupport_microxrcedds_c
+  rosidl_typesupport_interface::rosidl_typesupport_interface
   )
 
 # Depend on dependencies
 foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
-  ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-    ${_pkg_name}
-    )
   target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-    ${${_pkg_name}_LIBRARIES${_target_suffix}}
+    ${_pkg_name}::${_pkg_name}
     )
 endforeach()
 
