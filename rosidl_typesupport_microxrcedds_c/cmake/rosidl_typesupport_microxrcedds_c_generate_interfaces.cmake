@@ -157,7 +157,7 @@ target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
 # Depend on dependencies
 foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
   target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-    ${_pkg_name}::${_pkg_name}
+    ${${_pkg_name}_LIBRARIES${_target_suffix}}
     )
 endforeach()
 
