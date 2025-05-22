@@ -33,11 +33,11 @@ if(BUILD_TESTING)
     src/test_typesupport.cpp
     )
 
-  ament_target_dependencies(${TEST_NAME}
-    rosidl_typesupport_microxrcedds_test_msg
-    rosidl_typesupport_microxrcedds_cpp
-    rosidl_runtime_c
-    rosidl_typesupport_c
+  target_link_libraries(${TEST_NAME}
+    ${rosidl_typesupport_microxrcedds_test_msg_TARGETS}
+    rosidl_typesupport_microxrcedds_cpp::rosidl_typesupport_microxrcedds_cpp
+    rosidl_runtime_c::rosidl_runtime_c
+    rosidl_typesupport_c::rosidl_typesupport_c
     )
 
   target_link_libraries(${TEST_NAME}

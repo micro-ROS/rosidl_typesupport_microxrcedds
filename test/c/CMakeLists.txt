@@ -38,13 +38,13 @@ if(BUILD_TESTING)
     src/cross_serialization_tests.cpp
     )
 
-  ament_target_dependencies(${TEST_NAME}
-    rosidl_typesupport_microxrcedds_test_msg
-    rosidl_typesupport_microxrcedds_c
-    rosidl_typesupport_fastrtps_c
-    rosidl_typesupport_introspection_c
-    rosidl_runtime_cpp
-    rosidl_typesupport_cpp
+  target_link_libraries(${TEST_NAME}
+    ${rosidl_typesupport_microxrcedds_test_msg_TARGETS}
+    rosidl_typesupport_microxrcedds_c::rosidl_typesupport_microxrcedds_c
+    rosidl_typesupport_fastrtps_c::rosidl_typesupport_fastrtps_c
+    rosidl_typesupport_introspection_c::rosidl_typesupport_introspection_c
+    rosidl_runtime_cpp::rosidl_runtime_cpp
+    rosidl_typesupport_cpp::rosidl_typesupport_cpp
     )
 
   target_link_libraries(${TEST_NAME}

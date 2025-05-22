@@ -98,7 +98,7 @@ class CrossSerialization {
     eprosima::fastcdr::Cdr fast_cdr(fast_cdr_buffer);
     QUICK_RETURN(fast_callbacks->cdr_serialize(&msg, fast_cdr));
 
-    QUICK_RETURN(xrce_cdr.offset == fast_cdr.getSerializedDataLength());
+    QUICK_RETURN(xrce_cdr.offset == fast_cdr.get_serialized_data_length());
 
     bool equal_buffers = memcmp(xrce_buffer, fast_buffer, xrce_size) == 0;
     QUICK_RETURN(equal_buffers);
