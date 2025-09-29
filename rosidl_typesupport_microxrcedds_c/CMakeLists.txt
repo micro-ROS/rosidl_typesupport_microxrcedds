@@ -21,7 +21,6 @@ find_package(microcdr REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rosidl_runtime_c REQUIRED)
 
-ament_export_dependencies(rmw)
 ament_export_dependencies(rosidl_cmake)
 ament_export_dependencies(rosidl_runtime_c)
 ament_export_dependencies(rosidl_typesupport_interface)

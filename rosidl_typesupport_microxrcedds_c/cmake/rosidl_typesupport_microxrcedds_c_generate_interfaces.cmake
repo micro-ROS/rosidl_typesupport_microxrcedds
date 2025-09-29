@@ -14,7 +14,6 @@
 
 find_package(ament_cmake_ros REQUIRED)
 find_package(microcdr REQUIRED)
-find_package(rmw REQUIRED)
 
 set(_output_path "${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_microxrcedds_c/${PROJECT_NAME}")
 
@@ -148,7 +147,6 @@ target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
 
 ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
   "microcdr"
-  "rmw"
   "rosidl_runtime_c"
   "rosidl_typesupport_microxrcedds_c"
   "rosidl_typesupport_interface"
