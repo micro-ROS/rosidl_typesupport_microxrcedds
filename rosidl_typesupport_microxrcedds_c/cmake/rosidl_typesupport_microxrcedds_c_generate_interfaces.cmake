@@ -187,7 +187,7 @@ if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
     DIRECTORY
       "${_output_path}/"
     DESTINATION
-      "include/${PROJECT_NAME}"
+      "include/${PROJECT_NAME}/${PROJECT_NAME}"
     PATTERN
       "*.c" EXCLUDE
     )
