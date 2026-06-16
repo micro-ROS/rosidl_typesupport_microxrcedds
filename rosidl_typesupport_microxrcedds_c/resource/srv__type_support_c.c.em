@@ -4,7 +4,6 @@ from rosidl_generator_c import idl_structure_type_to_c_typename
 from rosidl_generator_type_description import GET_DESCRIPTION_FUNC
 from rosidl_generator_type_description import GET_HASH_FUNC
 from rosidl_generator_type_description import GET_SOURCES_FUNC
-from rosidl_parser.definition import SERVICE_EVENT_MESSAGE_SUFFIX
 from rosidl_parser.definition import SERVICE_REQUEST_MESSAGE_SUFFIX
 from rosidl_parser.definition import SERVICE_RESPONSE_MESSAGE_SUFFIX
 
@@ -22,15 +21,6 @@ TEMPLATE(
     package_name=package_name,
     interface_path=interface_path,
     message=service.response_message,
-    include_directives=include_directives)
-}@
-
-@{
-TEMPLATE(
-    'msg__type_support_c.c.em',
-    package_name=package_name,
-    interface_path=interface_path,
-    message=service.event_message,
     include_directives=include_directives)
 }@
 
@@ -78,16 +68,10 @@ static rosidl_service_type_support_t @(service.namespaced_type.name)__handle = {
 
   &_@(service.namespaced_type.name)@(SERVICE_REQUEST_MESSAGE_SUFFIX)__type_support,
   &_@(service.namespaced_type.name)@(SERVICE_RESPONSE_MESSAGE_SUFFIX)__type_support,
-  &_@(service.namespaced_type.name)@(SERVICE_EVENT_MESSAGE_SUFFIX)__type_support,
+  NULL,
 
-  ROSIDL_TYPESUPPORT_INTERFACE__SERVICE_CREATE_EVENT_MESSAGE_SYMBOL_NAME(
-    rosidl_typesupport_c,
-    @(',\n    '.join(service.namespaced_type.namespaced_name()))
-  ),
-  ROSIDL_TYPESUPPORT_INTERFACE__SERVICE_DESTROY_EVENT_MESSAGE_SYMBOL_NAME(
-    rosidl_typesupport_c,
-    @(',\n    '.join(service.namespaced_type.namespaced_name()))
-  ),
+  NULL,
+  NULL,
 
   &@(idl_structure_type_to_c_typename(service.namespaced_type))__@(GET_HASH_FUNC),
   &@(idl_structure_type_to_c_typename(service.namespaced_type))__@(GET_DESCRIPTION_FUNC),

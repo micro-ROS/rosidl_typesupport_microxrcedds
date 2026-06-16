@@ -160,9 +160,41 @@ foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
   ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     ${_pkg_name}
     )
-  target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-    ${${_pkg_name}_LIBRARIES${_target_suffix}}
+  set(_dep_tslibs "")
+  get_filename_component(_dep_prefix "${${_pkg_name}_DIR}/../../.." ABSOLUTE)
+  foreach(_dep_tslib ${${_pkg_name}_LIBRARIES${_target_suffix}})
+    if(IS_ABSOLUTE "${_dep_tslib}" AND EXISTS "${_dep_tslib}")
+      list(APPEND _dep_tslibs "${_dep_tslib}")
+    else()
+      unset(_dep_tslib_abs CACHE)
+      unset(_dep_tslib_abs)
+      find_library(_dep_tslib_abs
+        NAMES "${_dep_tslib}" "${_pkg_name}${_target_suffix}"
+        HINTS "${_dep_prefix}/lib" "${_dep_prefix}/lib64"
+        NO_DEFAULT_PATH
+      )
+      if(_dep_tslib_abs)
+        list(APPEND _dep_tslibs "${_dep_tslib_abs}")
+      endif()
+    endif()
+  endforeach()
+  if(NOT _dep_tslibs)
+    unset(_dep_tslib_abs CACHE)
+    unset(_dep_tslib_abs)
+    find_library(_dep_tslib_abs
+      NAMES "${_pkg_name}${_target_suffix}"
+      HINTS "${_dep_prefix}/lib" "${_dep_prefix}/lib64"
+      NO_DEFAULT_PATH
     )
+    if(_dep_tslib_abs)
+      list(APPEND _dep_tslibs "${_dep_tslib_abs}")
+    endif()
+  endif()
+  if(_dep_tslibs)
+    target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+      ${_dep_tslibs}
+      )
+  endif()
 endforeach()
 
 target_link_libraries(
