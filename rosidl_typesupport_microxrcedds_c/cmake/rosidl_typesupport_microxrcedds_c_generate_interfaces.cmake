@@ -169,11 +169,15 @@ foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
       unset(_dep_tslib_abs)
       find_library(_dep_tslib_abs
         NAMES "${_dep_tslib}" "${_pkg_name}${_target_suffix}"
-        HINTS "${_dep_prefix}/lib" "${_dep_prefix}/lib64"
+        HINTS "${_dep_prefix}"
+        PATH_SUFFIXES lib lib64 "lib/${CMAKE_LIBRARY_ARCHITECTURE}"
         NO_DEFAULT_PATH
       )
       if(_dep_tslib_abs)
         list(APPEND _dep_tslibs "${_dep_tslib_abs}")
+      else()
+        # Preserve previous behavior if resolution fails (e.g. plain link name or CMake target)
+        list(APPEND _dep_tslibs "${_dep_tslib}")
       endif()
     endif()
   endforeach()
