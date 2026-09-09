@@ -468,6 +468,9 @@ static rosidl_message_type_support_t _@(message.structure.namespaced_type.name)_
   rosidl_typesupport_microxrcedds_cpp::typesupport_identifier,
   &_@(message.structure.namespaced_type.name)__callbacks,
   get_message_typesupport_handle_function,
+  nullptr,  // get_type_hash_func
+  nullptr,  // get_type_description_func
+  nullptr,  // get_type_description_sources_func
 };
 
 }  // namespace typesupport_microxrcedds_cpp
