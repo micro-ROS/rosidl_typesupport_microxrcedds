@@ -14,8 +14,6 @@
 
 #include <gtest/gtest.h>
 
-#include <cstdbool>
-
 #include "rosidl_runtime_c/message_type_support_struct.h"
 
 #include <rosidl_typesupport_microxrcedds_c/identifier.h>
