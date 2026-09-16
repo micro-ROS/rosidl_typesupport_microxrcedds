@@ -319,6 +319,39 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
 @[      end if]@
 @[    elif isinstance(member.type, AbstractSequence)]@
 @[      if isinstance(member.type.value_type, BasicType)]@
+    // Same heap-overflow class as the AbstractString case below (and
+    // fixed the same way): ucdr_deserialize_sequence_@(get_suffix(member.type.value_type.typename))()'s
+    // own capacity check (ucdr_deserialize_sequence_header(), micro-CDR's
+    // sequence.c) only sets an out-of-band ucdrBuffer.error flag when the
+    // incoming length exceeds `capacity` -- it does NOT stop the very next
+    // step, an unconditional ucdr_deserialize_endian_array_@(get_suffix(member.type.value_type.typename))()
+    // call that memcpy()s (or, for a mismatched-endianness buffer,
+    // element-by-element writes) the FULL incoming length into `data`
+    // regardless (micro-CDR's array.c, UCDR_DESERIALIZE_ARRAY_BYTE_N).
+    // An unbounded sequence's destination starts at capacity 0 for any
+    // freshly-constructed message, so this is not a rare edge case.
+    // Unlike the AbstractString/NamespacedType sequence cases, a
+    // BasicType element is a plain scalar with no sub-allocations of its
+    // own to preserve or release, so a single realloc() to fit -- no
+    // fresh-destination-only restriction, no zeroing needed, since the
+    // real deserialize call below fully overwrites every element up to
+    // the new size anyway -- is sufficient for every case, not just the
+    // common one.
+    uint32_t incoming_size = 0;
+    {
+      ucdrBuffer peek_cdr = *cdr;
+      ucdr_deserialize_uint32_t(&peek_cdr, &incoming_size);
+    }
+    if (incoming_size > ros_message->@(member.name).capacity) {
+      void * new_data = realloc(
+        ros_message->@(member.name).data,
+        (size_t)incoming_size * sizeof(*ros_message->@(member.name).data));
+      if (new_data == NULL) {
+        return false;
+      }
+      ros_message->@(member.name).data = new_data;
+      ros_message->@(member.name).capacity = incoming_size;
+    }
     uint32_t size;
     const size_t capacity = ros_message->@(member.name).capacity;
     rv = ucdr_deserialize_sequence_@(get_suffix(member.type.value_type.typename))(cdr, ros_message->@(member.name).data, capacity, &size);
