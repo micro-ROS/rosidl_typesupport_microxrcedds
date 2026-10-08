@@ -25,6 +25,15 @@ TEMPLATE(
 }@
 
 @{
+TEMPLATE(
+    'msg__type_support_cpp.cpp.em',
+    package_name=package_name,
+    interface_path=interface_path,
+    message=service.event_message,
+    include_directives=include_directives)
+}@
+
+@{
 header_files = [
     'rmw/error_handling.h',
     'rosidl_typesupport_microxrcedds_c/service_type_support.h',
@@ -61,6 +70,9 @@ static rosidl_service_type_support_t _@(service.namespaced_type.name)__handle = 
   rosidl_typesupport_microxrcedds_cpp::typesupport_identifier,
   &_@(service.namespaced_type.name)__callbacks,
   get_service_typesupport_handle_function,
+  nullptr,
+  nullptr,
+  ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_microxrcedds_cpp, @(', '.join([package_name] + list(interface_path.parents[0].parts))), @(service.namespaced_type.name)_Event)(),
 };
 
 }  // namespace typesupport_microxrcedds_cpp

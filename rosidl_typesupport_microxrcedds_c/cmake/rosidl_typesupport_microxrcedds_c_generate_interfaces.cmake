@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-find_package(ament_cmake_ros REQUIRED)
+find_package(ament_cmake_ros_core REQUIRED)
 find_package(microcdr REQUIRED)
 find_package(rmw REQUIRED)
 
@@ -196,6 +196,8 @@ if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
   install(
     TARGETS
       ${rosidl_generate_interfaces_TARGET}${_target_suffix}
+    EXPORT
+      ${rosidl_generate_interfaces_TARGET}${_target_suffix}
     ARCHIVE DESTINATION
       lib
     LIBRARY DESTINATION
@@ -204,9 +206,10 @@ if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
       bin
     )
 
-  rosidl_export_typesupport_libraries(${_target_suffix}
+  rosidl_export_typesupport_targets(${_target_suffix}
     ${rosidl_generate_interfaces_TARGET}${_target_suffix}
     )
+  ament_export_targets(${rosidl_generate_interfaces_TARGET}${_target_suffix})
 endif()
 
 
