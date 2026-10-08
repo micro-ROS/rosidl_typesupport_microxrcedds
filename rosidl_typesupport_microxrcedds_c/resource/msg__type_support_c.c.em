@@ -30,7 +30,12 @@ include_base = '/'.join(include_parts)
 header_files = [
     'stdint.h',
     'stdio.h',
+    'stdlib.h',
     'string.h',
+    # Provides rosidl_runtime_c__String__Sequence__init/__fini(), used to
+    # grow an unbounded sequence<string> member to fit an incoming message
+    # (see the AbstractSequence/AbstractString deserialize branch below).
+    'rosidl_runtime_c/string_functions.h',
     # Provides the rosidl_typesupport_microxrcedds_c__identifier symbol declaration.
     'rosidl_typesupport_microxrcedds_c/identifier.h',
     # Provides the definition of the message_type_support_callbacks_t struct.
@@ -314,6 +319,39 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
 @[      end if]@
 @[    elif isinstance(member.type, AbstractSequence)]@
 @[      if isinstance(member.type.value_type, BasicType)]@
+    // Same heap-overflow class as the AbstractString case below (and
+    // fixed the same way): ucdr_deserialize_sequence_@(get_suffix(member.type.value_type.typename))()'s
+    // own capacity check (ucdr_deserialize_sequence_header(), micro-CDR's
+    // sequence.c) only sets an out-of-band ucdrBuffer.error flag when the
+    // incoming length exceeds `capacity` -- it does NOT stop the very next
+    // step, an unconditional ucdr_deserialize_endian_array_@(get_suffix(member.type.value_type.typename))()
+    // call that memcpy()s (or, for a mismatched-endianness buffer,
+    // element-by-element writes) the FULL incoming length into `data`
+    // regardless (micro-CDR's array.c, UCDR_DESERIALIZE_ARRAY_BYTE_N).
+    // An unbounded sequence's destination starts at capacity 0 for any
+    // freshly-constructed message, so this is not a rare edge case.
+    // Unlike the AbstractString/NamespacedType sequence cases, a
+    // BasicType element is a plain scalar with no sub-allocations of its
+    // own to preserve or release, so a single realloc() to fit -- no
+    // fresh-destination-only restriction, no zeroing needed, since the
+    // real deserialize call below fully overwrites every element up to
+    // the new size anyway -- is sufficient for every case, not just the
+    // common one.
+    uint32_t incoming_size = 0;
+    {
+      ucdrBuffer peek_cdr = *cdr;
+      ucdr_deserialize_uint32_t(&peek_cdr, &incoming_size);
+    }
+    if (incoming_size > ros_message->@(member.name).capacity) {
+      void * new_data = realloc(
+        ros_message->@(member.name).data,
+        (size_t)incoming_size * sizeof(*ros_message->@(member.name).data));
+      if (new_data == NULL) {
+        return false;
+      }
+      ros_message->@(member.name).data = new_data;
+      ros_message->@(member.name).capacity = incoming_size;
+    }
     uint32_t size;
     const size_t capacity = ros_message->@(member.name).capacity;
     rv = ucdr_deserialize_sequence_@(get_suffix(member.type.value_type.typename))(cdr, ros_message->@(member.name).data, capacity, &size);
@@ -329,9 +367,51 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
 @[      elif isinstance(member.type.value_type, NamespacedType)]@
     uint32_t size;
     rv = ucdr_deserialize_uint32_t(cdr, &size);
+    if (!rv) {
+      return false;
+    }
 
-    if(size > ros_message->@(member.name).capacity){
-      return 0;
+    if (size > ros_message->@(member.name).capacity) {
+      // Sibling bug to the AbstractString case below (see its comment for
+      // the full rationale): an *unbounded* sequence<NamespacedType>
+      // (e.g. a nested message array) also starts out completely empty
+      // (capacity 0) for any freshly-constructed destination. Properly
+      // growing it would call the *other* message package's own generated
+      // <Type>__Sequence__init() (so each new element is correctly
+      // default-constructed, e.g. its own nested strings/sequences zeroed
+      // the same way this file already zeroes them for its own type) --
+      // but that function isn't available here: this file deliberately
+      // never links directly against sibling message packages beyond
+      // their struct layout (already visible via the include chain),
+      // reaching their cdr_serialize/cdr_deserialize only indirectly
+      // through the generic message_type_support_callbacks_t v-table
+      // below, which has no "construct a default instance" entry of its
+      // own. Only handle the common case -- a genuinely empty
+      // (never-yet-allocated) destination -- with a plain zero-filled
+      // allocation (`sizeof(*ros_message->@(member.name).data)` gives the
+      // element size without needing that other package's literal C
+      // typename at all: `sizeof(*ptr)` is a compile-time property of
+      // `ptr`'s pointee TYPE, evaluated without ever dereferencing `ptr`,
+      // so this is safe even though `data` is NULL here). This is
+      // equivalent to a proper per-element __init() for the overwhelming
+      // majority of message types, whose own fields all default to their
+      // natural zero value (0/false/empty-string/empty-sequence) -- the
+      // same assumption every other "empty means zeroed" message struct
+      // in this codegen already relies on. A destination that's *already*
+      // partially populated and still too small (capacity > 0 but < size)
+      // falls back to the previous behavior instead of growing, since
+      // properly releasing its existing elements' own sub-allocations
+      // needs that same unavailable per-type fini().
+      if (ros_message->@(member.name).capacity == 0) {
+        void * new_data = calloc(size, sizeof(*ros_message->@(member.name).data));
+        if (new_data == NULL) {
+          return false;
+        }
+        ros_message->@(member.name).data = new_data;
+        ros_message->@(member.name).capacity = size;
+      } else {
+        return 0;
+      }
     }
 
     ros_message->@(member.name).size = size;
@@ -346,13 +426,73 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
 @[      elif isinstance(member.type.value_type, AbstractString)]@
     uint32_t size;
     rv = ucdr_deserialize_uint32_t(cdr, &size);
+    if (!rv) {
+      return false;
+    }
 
-    if(size > ros_message->@(member.name).capacity){
-      return 0;
+    if (size > ros_message->@(member.name).capacity) {
+      // Unlike a bounded sequence<string> (whose destination is already
+      // allocated at its full maximum_size, so this branch is unreachable
+      // for it), an *unbounded* sequence<string>'s destination starts out
+      // completely empty (capacity 0) -- it's default-constructed well
+      // before the real wire size is known, e.g. by rcl_take_request_with_
+      // info()'s own create_from_py(pyrequest_type) building a fresh,
+      // empty request to deserialize into. `size > capacity` is therefore
+      // not an error here; it's the normal case for any non-empty
+      // unbounded sequence<string>. The previous `return 0;` here silently
+      // rejected every such message before ever reaching the per-element
+      // loop below (and its own capacity handling, fixed in #86) --
+      // confirmed empirically: a real rclpy service request carrying a
+      // single-element `string[]` field consistently failed
+      // cdr_deserialize() this way, even though the exact same bytes
+      // decode correctly once this sequence is pre-sized to fit.
+      // rosidl_runtime_c__String__Sequence__fini() is safe to call
+      // unconditionally, including on an already-empty (all-zero)
+      // sequence -- it only frees `data` when non-NULL -- so this also
+      // correctly handles the rarer case of a destination that was
+      // already partially populated (from a previous, differently-sized
+      // deserialize into the same reused message object) instead of
+      // leaking its old element buffers.
+      rosidl_runtime_c__String__Sequence__fini(&ros_message->@(member.name));
+      if (!rosidl_runtime_c__String__Sequence__init(&ros_message->@(member.name), size)) {
+        return false;
+      }
     }
     ros_message->@(member.name).size = size;
 
     for (size_t i = 0; rv && i < size; i++) {
+      // NOTE: unlike a bounded string (sized once, at IDL-compile-time,
+      // and correctly rejected/skipped when oversized by the `else if`
+      // branch below), the destination buffer here was allocated by
+      // `rosidl_runtime_c__String__init()` at message-construction time,
+      // long before the actual wire content is known -- it defaults to an
+      // empty string (capacity 1). `ucdr_deserialize_sequence_char()`
+      // does NOT clamp to `capacity` on its own: its internal
+      // `ucdr_buffer_to_array()` memcpy()s the FULL incoming length into
+      // the destination regardless of the capacity check it performs
+      // first (that check only ever sets `cdr->error`, an out-of-band
+      // flag inspected by the caller, not something that stops the copy
+      // already in flight) -- so calling it with a too-small destination
+      // is a real heap buffer overflow, not merely a rejected/truncated
+      // string. Peek the incoming length first (via a throwaway copy of
+      // `cdr`'s cursor -- `ucdrBuffer` is a plain value type with no
+      // self-referential pointers, so copying it is a safe, side-effect-free
+      // way to read ahead) and grow the destination first if needed, so the
+      // real deserialize call below is always given a large-enough buffer.
+      uint32_t incoming_size = 0;
+      {
+        ucdrBuffer peek_cdr = *cdr;
+        ucdr_deserialize_uint32_t(&peek_cdr, &incoming_size);
+      }
+      if (incoming_size > ros_message->@(member.name).data[i].capacity) {
+        char * new_data = (char *)realloc(ros_message->@(member.name).data[i].data, incoming_size);
+        if (new_data == NULL) {
+          rv = false;
+          break;
+        }
+        ros_message->@(member.name).data[i].data = new_data;
+        ros_message->@(member.name).data[i].capacity = incoming_size;
+      }
       size_t capacity = ros_message->@(member.name).data[i].capacity;
       uint32_t string_size;
       char * data = ros_message->@(member.name).data[i].data;
@@ -374,6 +514,23 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
   rv = ucdr_deserialize_@(get_suffix(member.type.typename))(cdr, &ros_message->@(member.name));
 @[  elif isinstance(member.type, AbstractString)]@
   {
+    // See the sequence-of-strings branch above for the full rationale:
+    // grow the destination buffer to fit the incoming string BEFORE
+    // calling ucdr_deserialize_sequence_char(), which does not clamp its
+    // own memcpy to the capacity it's given.
+    uint32_t incoming_size = 0;
+    {
+      ucdrBuffer peek_cdr = *cdr;
+      ucdr_deserialize_uint32_t(&peek_cdr, &incoming_size);
+    }
+    if (incoming_size > ros_message->@(member.name).capacity) {
+      char * new_data = (char *)realloc(ros_message->@(member.name).data, incoming_size);
+      if (new_data == NULL) {
+        return false;
+      }
+      ros_message->@(member.name).data = new_data;
+      ros_message->@(member.name).capacity = incoming_size;
+    }
     size_t capacity = ros_message->@(member.name).capacity;
     uint32_t string_size;
     rv = ucdr_deserialize_sequence_char(cdr, ros_message->@(member.name).data, capacity, &string_size);
