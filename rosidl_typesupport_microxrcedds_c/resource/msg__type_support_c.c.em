@@ -353,19 +353,7 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
     ros_message->@(member.name).size = size;
 
     for (size_t i = 0; rv && i < size; i++) {
-      size_t capacity = ros_message->@(member.name).data[i].capacity;
-      uint32_t string_size;
-      char * data = ros_message->@(member.name).data[i].data;
-      rv = ucdr_deserialize_sequence_char(cdr, data, capacity, &string_size);
-      if (rv) {
-        ros_message->@(member.name).data[i].size = (string_size == 0) ? 0 : string_size - 1;
-      } else if(string_size > capacity){
-        cdr->error = false;
-        cdr->last_data_size = 1;
-        ros_message->@(member.name).data[i].size = 0;
-        ucdr_align_to(cdr, sizeof(char));
-        ucdr_advance_buffer(cdr, string_size);
-      }
+      rv = rosidl_typesupport_microxrcedds_c__deserialize_string(cdr, &ros_message->@(member.name).data[i]);
     }
 @[      end if]@
 @[    end if]@
@@ -373,20 +361,7 @@ static bool _@(message.structure.namespaced_type.name)__cdr_deserialize(
 @[  elif isinstance(member.type, BasicType)]@
   rv = ucdr_deserialize_@(get_suffix(member.type.typename))(cdr, &ros_message->@(member.name));
 @[  elif isinstance(member.type, AbstractString)]@
-  {
-    size_t capacity = ros_message->@(member.name).capacity;
-    uint32_t string_size;
-    rv = ucdr_deserialize_sequence_char(cdr, ros_message->@(member.name).data, capacity, &string_size);
-    if (rv) {
-      ros_message->@(member.name).size = (string_size == 0) ? 0 : string_size - 1;
-    } else if(string_size > capacity){
-      cdr->error = false;
-      cdr->last_data_size = 1;
-      ros_message->@(member.name).size = 0;
-      ucdr_align_to(cdr, sizeof(char));
-      ucdr_advance_buffer(cdr, string_size);
-    }
-  }
+  rv = rosidl_typesupport_microxrcedds_c__deserialize_string(cdr, &ros_message->@(member.name));
 @[  elif isinstance(member.type, AbstractWString)]@
   // Micro CDR does not support WString type.
 @[  elif isinstance(member.type, NamespacedType)]@

@@ -19,8 +19,10 @@ project(rosidl_typesupport_microxrcedds_c LANGUAGES C)
 find_package(ament_cmake REQUIRED)
 find_package(microcdr REQUIRED)
 find_package(ament_cmake_python REQUIRED)
+find_package(rcutils REQUIRED)
 find_package(rosidl_runtime_c REQUIRED)
 
+ament_export_dependencies(rcutils)
 ament_export_dependencies(rmw)
 ament_export_dependencies(rosidl_cmake)
 ament_export_dependencies(rosidl_runtime_c)
@@ -47,6 +49,7 @@ target_include_directories(${PROJECT_NAME}
   )
 
 target_link_libraries(${PROJECT_NAME}
+  rcutils::rcutils
   rosidl_runtime_c::rosidl_runtime_c
   )
 ament_export_libraries(${PROJECT_NAME})
