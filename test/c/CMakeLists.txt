@@ -36,6 +36,7 @@ if(BUILD_TESTING)
   ament_add_gtest(${TEST_NAME}
     src/test_typesupport.cpp
     src/cross_serialization_tests.cpp
+    src/test_string_reservation.cpp
     )
 
   target_link_libraries(${TEST_NAME}
